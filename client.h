@@ -4,6 +4,8 @@
 #include <QtCore>
 #include <QtNetwork>
 #include <opencv2/opencv.hpp>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 class Client
 {
@@ -14,8 +16,8 @@ public:
     bool connectToHost(QString serverIp = "127.0.0.1", quint16 portNum = 2500);
     bool disconnectToHost();
 
-    bool send(cv::Mat const &);
-    bool sendData(const QByteArray &);
+    bool send(cv::Mat const & data);
+    bool sendData(const QByteArray & data);
 
 private:
     QTcpSocket * sock;
