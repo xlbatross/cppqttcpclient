@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 project(test1 VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_OSX_ARCHITECTURES "x86_64")
+set(CMAKE_OSX_ARCHITECTURES x86_64)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -16,6 +16,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # opencv
 if(WIN32)
     set(OpenCV_DIR "C:/openCV-MinGW")
+elseif(APPLE)
+    set(OpenCV_DIR "/usr/local/Cellar/opencv/4.6.0_1/lib/cmake/opencv4")
 endif()
 
 find_package(OpenCV REQUIRED)

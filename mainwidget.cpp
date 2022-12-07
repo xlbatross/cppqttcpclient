@@ -8,6 +8,9 @@ MainWidget::MainWidget(QWidget *parent)
 {
     ui->setupUi(this);
 
+    while (!this->cap.isOpened())
+        this->cap.open(0);
+
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
