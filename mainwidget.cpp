@@ -8,9 +8,6 @@ MainWidget::MainWidget(QWidget *parent)
 {
     ui->setupUi(this);
 
-    while (!this->cap.isOpened())
-        this->cap.open(0);
-
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
@@ -49,6 +46,8 @@ void MainWidget::readCapture()
     else
     {
         this->cap.open(0);
+        this->cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
+        this->cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
     }
 }
 
