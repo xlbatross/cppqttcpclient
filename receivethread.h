@@ -2,12 +2,25 @@
 #define RECEIVETHREAD_H
 
 #include <QThread>
+#include "client.h"
 
 class ReceiveThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit ReceiveThread(QObject *parent = nullptr);
+    explicit ReceiveThread(Client * client, QObject *parent = nullptr);
+
+    void run() override;
+
+
+private:
+    Client * client;
+    bool isRunning;
+    QByteArray headerByteArray;
+    QByteArray receiverByteArray;
+
+public slots:
+    void start();
 
 
 };

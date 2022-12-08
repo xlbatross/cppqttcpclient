@@ -6,6 +6,7 @@
 #include <QTimer>
 #include "opencvimagelabel.h"
 #include "client.h"
+#include "dataheader.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWidget; }
@@ -20,10 +21,14 @@ public:
     ~MainWidget();
 
 private:
-    Client * client;
     Ui::MainWidget *ui;
+
+    DataHeader * dataHeader;
+    Client * client;
+
     cv::VideoCapture cap;
     cv::Mat img;
+
     QTimer * timer;
     OpenCVImageLabel * label;
 

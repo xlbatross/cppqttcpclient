@@ -39,6 +39,8 @@ set(PROJECT_SOURCES
         client.cpp
         receivethread.h
         receivethread.cpp
+        dataheader.h
+        dataheader.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

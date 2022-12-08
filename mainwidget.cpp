@@ -4,7 +4,8 @@
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
-    , client(new Client(this))
+    , dataHeader(new DataHeader)
+    , client(new Client(this->dataHeader))
 {
     ui->setupUi(this);
 

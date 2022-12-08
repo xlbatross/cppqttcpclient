@@ -6,11 +6,12 @@
 #include <opencv2/opencv.hpp>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "dataheader.h"
 
 class Client
 {
 public:
-    Client(QObject * parent);
+    Client(DataHeader * dataHeader);
     ~Client();
 
     bool connectToHost(QString serverIp = "127.0.0.1", quint16 portNum = 2500);
@@ -20,13 +21,12 @@ public:
     bool sendData(const char * data, const qint32 dataSize);;
     QByteArray dataSizeToByteArray(const qint32 dataSize);
 
-    QJsonDocument receive();
-    QByteArray receiveData();
+    bool receiveData(QByteArray & receiver);
     qint32 byteArrayToDataSize(QByteArray dataSize);
 
 private:
     QTcpSocket * sock;
-    char * header;
+    DataHeader * dataHeader;
 };
 
 #endif // CLIENT_H
