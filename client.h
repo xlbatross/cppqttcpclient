@@ -19,6 +19,8 @@ public:
     bool send(cv::Mat const & data);
     bool sendData(const QByteArray & data);
 
+    QByteArray dataSizeToByteArray(const qint32 dataSize);
+
 private:
     QTcpSocket * sock;
 };

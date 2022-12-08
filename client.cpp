@@ -54,9 +54,25 @@ bool Client::send(cv::Mat const & data)
 
 bool Client::sendData(const QByteArray & data)
 {
+    this->sock->write(this->dataSizeToByteArray(data.size()));
     this->sock->write(data);
     return this->sock->waitForBytesWritten(-1);
 }
+
+// Use qint32 to ensure that the number have 4 bytes
+QByteArray Client::dataSizeToByteArray(const qint32 dataSize)
+{
+    // Avoid use of cast, this is the Qt way to serialize objects
+    QByteArray temp;
+    QDataStream ds(&temp, QIODevice::ReadWrite);
+    ds << dataSize;
+    return temp;
+}
+
+
+
+
+
 
 
 
