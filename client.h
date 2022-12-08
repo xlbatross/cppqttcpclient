@@ -17,12 +17,16 @@ public:
     bool disconnectToHost();
 
     bool send(cv::Mat const & data);
-    bool sendData(const QByteArray & data);
-
+    bool sendData(const char * data, const qint32 dataSize);;
     QByteArray dataSizeToByteArray(const qint32 dataSize);
+
+    QJsonDocument receive();
+    QByteArray receiveData();
+    qint32 byteArrayToDataSize(QByteArray dataSize);
 
 private:
     QTcpSocket * sock;
+    char * header;
 };
 
 #endif // CLIENT_H

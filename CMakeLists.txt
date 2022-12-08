@@ -37,6 +37,8 @@ set(PROJECT_SOURCES
         opencvimagelabel.cpp
         client.h
         client.cpp
+        receivethread.h
+        receivethread.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

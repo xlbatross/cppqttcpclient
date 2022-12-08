@@ -8,6 +8,7 @@ Client::Client(QObject * parent)
 
 Client::~Client()
 {
+    delete [] this->header;
     delete this->sock;
 }
 
@@ -25,37 +26,44 @@ bool Client::disconnectToHost()
 
 bool Client::send(cv::Mat const & data)
 {
-    /* JSON template
-     * {
-     *     "dataType" : "Image",
-     *     "attribute" :
-     *     {
-     *          "width" : <int>,
-     *          "height" : <int>,
-     *          "channels" : <int>
-     *     },
-     *     "data" : <cv::Mat data to base64 encoding string>
-     * }
+    /*
+     * header
+     * datatype : 1(image) (32bite, 4byte, int)
+     * attr:
+     *     height <32bit, 4byte, int>
+     *     width <32bit, 4byte, int>
+     *     channels <32bit, 4byte, int>
      */
-    QJsonDocument doc;
-    QJsonObject body;
-    QJsonObject attr;
 
-    body["dataType"] = "Image";
-    attr["width"] = data.cols;
-    attr["height"] = data.rows;
-    attr["channels"] = data.channels();
-    body["attribute"] = attr;
-    body["data"] = QString::fromLatin1(QByteArray((char *)data.data, data.cols * data.rows * data.channels()).toBase64());
-    doc.setObject(body);
+    qint32 dataType = 1; // image
+    qint32 height = data.rows;
+    qint32 width = data.cols;
+    qint32 channels = data.channels();
 
-    return this->sendData(doc.toJson());
+    bool isSend = false;
+
+    this->header = new char[sizeof(qint32) * 4]();
+    memcpy(this->header + sizeof(qint32) * 0, &dataType, sizeof(qint32)); // datatype
+    memcpy(this->header + sizeof(qint32) * 1, &height, sizeof(qint32)); // height
+    memcpy(this->header + sizeof(qint32) * 2, &width, sizeof(qint32)); // width
+    memcpy(this->header + sizeof(qint32) * 3, &channels, sizeof(qint32)); // channels
+//    for (int i = 0; i < 32; i++)
+//    {
+//        qDebug() << (int) this->header[i];
+//    }
+    isSend = this->sendData(this->header, sizeof(qint32) * 4);
+    delete [] this->header;
+
+    if (isSend)
+        return this->sendData((char *)(data.data), height * width * channels);
+    else
+        return false;
 }
 
-bool Client::sendData(const QByteArray & data)
+bool Client::sendData(const char *data, const qint32 dataSize)
 {
-    this->sock->write(this->dataSizeToByteArray(data.size()));
-    this->sock->write(data);
+    this->sock->write(this->dataSizeToByteArray(dataSize), sizeof(qint32));
+    this->sock->write(data, dataSize);
     return this->sock->waitForBytesWritten(-1);
 }
 
@@ -69,6 +77,32 @@ QByteArray Client::dataSizeToByteArray(const qint32 dataSize)
     return temp;
 }
 
+QJsonDocument Client::receive()
+{
+    return QJsonDocument::fromJson(receiveData());
+}
+
+QByteArray Client::receiveData()
+{
+    QByteArray totalData;
+    qint32 packetSize = 0;
+    qint32 dataSize = this->byteArrayToDataSize(this->sock->read(4));
+
+    while (totalData.size() < dataSize)
+    {
+        packetSize = (totalData.size() + 1024 < dataSize) ? 1024 : dataSize - totalData.size();
+        totalData += this->sock->read(packetSize);
+    }
+    return totalData;
+}
+
+qint32 Client::byteArrayToDataSize(QByteArray dataSize)
+{
+    qint32 temp;
+    QDataStream ds(&dataSize, QIODevice::ReadWrite);
+    ds >> temp;
+    return temp;
+}
 
 
 
