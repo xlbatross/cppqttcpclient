@@ -2,38 +2,42 @@
 
 DataHeader::DataHeader()
 {
-
+    this->_sendByteArray = NULL;
+    this->_receiveByteArray = NULL;
 }
 
 DataHeader::~DataHeader()
 {
-    delete [] this->_sendCharArray;
+    if (this->_sendByteArray != NULL)
+        delete [] this->_sendByteArray;
+    if (this->_receiveByteArray != NULL)
+        delete [] this->_receiveByteArray;
 }
 
-const char *DataHeader::sendCharArray()
+const char *DataHeader::sendByteArray()
 {
-    return this->_sendCharArray;
+    return this->_sendByteArray;
 }
 
-QByteArray &DataHeader::receiveByteArray()
+char ** DataHeader::receiveByteArray()
 {
-    return this->_receiveByteArray;
+    return &this->_receiveByteArray;
 }
 
-qint32 DataHeader::dataType()
+long DataHeader::dataType()
 {
     return this->_dataType;
 }
 
-const QVector<qint32> &DataHeader::attr()
+const std::vector<long> &DataHeader::attr()
 {
     return this->_attr;
 }
 
-qint32 DataHeader::encode(cv::Mat const & data)
+long DataHeader::encode(cv::Mat const & data)
 {
     /*
-     * header template
+     * send header template
      * datatype : 1(image) (32bite, 4byte, int)
      * attr:
      *     height <32bit, 4byte, int>
@@ -43,20 +47,21 @@ qint32 DataHeader::encode(cv::Mat const & data)
 
     try
     {
-        qint32 dataType = 1; // image
-        qint32 height = data.rows;
-        qint32 width = data.cols;
-        qint32 channels = data.channels();
+        long dataType = Image; // image
+        long height = data.rows;
+        long width = data.cols;
+        long channels = data.channels();
 
-        delete [] this->_sendCharArray;
-        this->_sendCharArray = new char[sizeof(qint32) * 4];
+        if (this->_sendByteArray != NULL)
+            delete [] this->_sendByteArray;
+        this->_sendByteArray = new char[sizeof(long) * 4];
         // 이유는 모르겠지만, memcpy는 littleEndian 형식으로 복사된다.
         // 서버에서 헤더를 디코딩할 때는 각각 영역에 맞는 바이트를 little Endian으로 읽어야 한다.
-        memcpy(this->_sendCharArray + sizeof(qint32) * 0, &dataType, sizeof(qint32)); // datatype
-        memcpy(this->_sendCharArray + sizeof(qint32) * 1, &height, sizeof(qint32)); // height
-        memcpy(this->_sendCharArray + sizeof(qint32) * 2, &width, sizeof(qint32)); // width
-        memcpy(this->_sendCharArray + sizeof(qint32) * 3, &channels, sizeof(qint32)); // channels
-        return sizeof(qint32) * 4;
+        memcpy(this->_sendByteArray + sizeof(long) * 0, &dataType, sizeof(long)); // datatype
+        memcpy(this->_sendByteArray + sizeof(long) * 1, &height, sizeof(long)); // height
+        memcpy(this->_sendByteArray + sizeof(long) * 2, &width, sizeof(long)); // width
+        memcpy(this->_sendByteArray + sizeof(long) * 3, &channels, sizeof(long)); // channels
+        return sizeof(long) * 4;
     }
     catch (const std::bad_alloc &)
     {
@@ -66,6 +71,33 @@ qint32 DataHeader::encode(cv::Mat const & data)
 
 bool DataHeader::decode()
 {
+//    std::cout << "in" << std::endl;
+//    for (int i = 0; i < 4; i++)
+//    {
+//        std::cout << (int)(*(this->_receiveByteArray + i)) << " ";
+//    }
+//    std::cout << std::endl;
+    this->_attr.clear();
+    memcpy(&(this->_dataType), this->_receiveByteArray + sizeof(long) * 0, sizeof(long));
 
+    switch(this->_dataType)
+    {
+    /*
+     * receive header template
+     * datatype : 1(image) (32bite, 4byte, int)
+     * attr:
+     *     height <32bit, 4byte, int>
+     *     width <32bit, 4byte, int>
+     *     channels <32bit, 4byte, int>
+     */
+    case Image :
+        this->_attr.resize(3);
+        memcpy(&_attr[0], this->_receiveByteArray + sizeof(long) * 1, sizeof(long)); // height
+        memcpy(&_attr[1], this->_receiveByteArray + sizeof(long) * 2, sizeof(long)); // width
+        memcpy(&_attr[2], this->_receiveByteArray + sizeof(long) * 3, sizeof(long)); // channels
+        return true;
+        break;
+    }
+    return false;
 }
 

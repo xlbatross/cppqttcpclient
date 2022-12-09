@@ -4,9 +4,10 @@
 #include <QWidget>
 #include <opencv2/opencv.hpp>
 #include <QTimer>
+#include <QDebug>
 #include "opencvimagelabel.h"
-#include "client.h"
-#include "dataheader.h"
+#include "wtcpclient.h"
+#include "receivethread.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWidget; }
@@ -23,8 +24,9 @@ public:
 private:
     Ui::MainWidget *ui;
 
-    DataHeader * dataHeader;
-    Client * client;
+    WTCPClient * client;
+
+    ReceiveThread * receiveThread;
 
     cv::VideoCapture cap;
     cv::Mat img;

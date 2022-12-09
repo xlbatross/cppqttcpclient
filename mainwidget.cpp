@@ -4,23 +4,25 @@
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
-    , dataHeader(new DataHeader)
-    , client(new Client(this->dataHeader))
+    , client(new WTCPClient)
+    , receiveThread(new ReceiveThread(this->client))
 {
     ui->setupUi(this);
 
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
-    if (this->client->connectToHost())
+    if (this->client->connectServer())
     {
         qDebug() << "connected";
 
         connect(this->timer, SIGNAL(timeout()), this, SLOT(readCapture()));
-        connect(this, SIGNAL(setOpenCVImageSignal(cv::Mat)), this->label, SLOT(setOpenCVImage(cv::Mat)));
+//        connect(this, SIGNAL(setOpenCVImageSignal(cv::Mat)), this->label, SLOT(setOpenCVImage(cv::Mat)));
+        connect(this->receiveThread, SIGNAL(viewImageSignal(const char*,long,long,long)), this->label, SLOT(setOpenCVImage(const char*,long,long,long)));
         connect(this, SIGNAL(sendImageSignal(cv::Mat)), this, SLOT(sendImage(cv::Mat)));
 
-        this->timer->start(30);
+        this->timer->start(33);
+        this->receiveThread->start();
     }
     else
     {
@@ -31,6 +33,9 @@ MainWidget::MainWidget(QWidget *parent)
 
 MainWidget::~MainWidget()
 {
+//    delete timer;
+//    delete label;
+//    delete client;
     this->cap.release();
     delete ui;
 }
@@ -41,20 +46,20 @@ void MainWidget::readCapture()
     if (this->cap.isOpened())
     {
         this->cap.read(img);
-        emit setOpenCVImageSignal(img);
+//        emit setOpenCVImageSignal(img);
         emit sendImageSignal(img);
     }
     else
     {
         this->cap.open(0);
-        this->cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
-        this->cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
+        this->cap.set(cv::CAP_PROP_FRAME_WIDTH, 320);
+        this->cap.set(cv::CAP_PROP_FRAME_HEIGHT, 240);
     }
 }
 
 void MainWidget::sendImage(cv::Mat const & image)
 {
-    this->client->send(image);
+    this->client->sendData(image);
 }
 
 

@@ -1,28 +1,32 @@
 #include "receivethread.h"
 
-ReceiveThread::ReceiveThread(Client * client, QObject *parent)
+ReceiveThread::ReceiveThread(WTCPClient * client, QObject *parent)
     : QThread{parent}
     , client(client)
     , isRunning(false)
 {
-
+    this->receiveData = NULL;
 }
 
 void ReceiveThread::run()
 {
-    while (isRunning)
+    while (this->isRunning)
     {
-        this->headerByteArray.clear();
-        this->receiverByteArray.clear();
+        this->receiverHeader = this->client->receiveHeader();
 
-        if (!this->client->receiveData(this->headerByteArray) || !this->client->receiveData(this->receiverByteArray))
+        if (!this->receiverHeader->decode()
+         || !this->client->receiveByteData(&this->receiveData))
         {
-            isRunning = false;
+            this->isRunning = false;
             break;
         }
 
-
-
+        switch(this->receiverHeader->dataType())
+        {
+        case DataHeader::Image:
+            emit viewImageSignal(this->receiveData, this->receiverHeader->attr()[0], this->receiverHeader->attr()[1], this->receiverHeader->attr()[2]);
+            break;
+        }
     }
 }
 

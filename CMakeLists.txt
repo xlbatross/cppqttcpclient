@@ -43,6 +43,15 @@ set(PROJECT_SOURCES
         dataheader.cpp
 )
 
+if(WIN32)
+    set(WINDOWS_SOURCES
+        wtcpclient.h
+        wtcpclient.cpp
+    )
+endif()
+
+
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(test1
         MANUAL_FINALIZATION
@@ -62,6 +71,7 @@ else()
     else()
         add_executable(test1
             ${PROJECT_SOURCES}
+            ${WINDOWS_SOURCES}
         )
     endif()
 endif()
@@ -72,6 +82,9 @@ target_link_libraries(test1
     ${LIBOPENCV}
     ${OpenCV_LIBRARIES}
 )
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME} wsock32 ws2_32)
+endif()
 
 
 set_target_properties(test1 PROPERTIES
