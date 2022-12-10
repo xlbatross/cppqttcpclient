@@ -2,6 +2,7 @@
 #define RECEIVETHREAD_H
 
 #include <QThread>
+#include <QDebug>
 #include "wtcpclient.h"
 #include "dataheader.h"
 

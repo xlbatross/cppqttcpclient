@@ -39,6 +39,8 @@ void ReceiveThread::run()
             break;
         }
 
+        qDebug() << this->receiverHeader->dataCount();
+
         this->initReceiveDatas();
         this->receiveDatas = new char * [this->receiverHeader->dataCount()]();
         for (int i = 0; i < this->receiverHeader->dataCount(); i++)

@@ -52,7 +52,7 @@ long DataHeader::encodeReqRoomList()
     try
     {
         long dataCount = 0;
-        long requestType = reqImage; // image
+        long requestType = reqRoomList; // image
 
         if (this->_sendByteArray != NULL)
             delete [] this->_sendByteArray;

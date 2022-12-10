@@ -20,8 +20,10 @@ MainWidget::MainWidget(QWidget *parent)
         connect(this->receiveThread, SIGNAL(viewImageSignal(const char* const *,long,long,long)), this->label, SLOT(setOpenCVImage(const char* const *,long,long,long)), Qt::BlockingQueuedConnection);
         connect(this, SIGNAL(sendImageSignal(cv::Mat)), this, SLOT(sendImage(cv::Mat)));
 
-        this->timer->start(33);
+
+//        this->timer->start(33);
         this->receiveThread->start();
+        this->client->sendReqRoomList();
     }
     else
     {
