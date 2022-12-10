@@ -27,9 +27,14 @@ bool WTCPClient::connectServer(std::string serverIp, short serverPort)
         return true;
 }
 
-bool WTCPClient::sendData(const cv::Mat & img)
+bool WTCPClient::sendReqRoomList()
 {
-    long headerDataSize = this->dataHeader->encode(img);
+
+}
+
+bool WTCPClient::sendReqImage(const cv::Mat & img)
+{
+    long headerDataSize = this->dataHeader->encodeReqImage(img);
 
     if (!this->sendByteData(this->dataHeader->sendByteArray(), headerDataSize)
      || !this->sendByteData((char *)(img.data), img.total() * img.channels()))
@@ -61,19 +66,17 @@ DataHeader *WTCPClient::receiveHeader()
     return this->dataHeader;
 }
 
-bool WTCPClient::receiveByteData(char **data)
+long WTCPClient::receiveByteData(char **data)
 {
-    long dataSize = 0;
+    long dataSize = -1;
     long packetSize = 0;
     long packet = 0;
     long totalReceiveSize = 0;
     bool isSizeReceive = true;
-    bool isAllOK = true;
 
     if (recv(this->cSock, (char *)(&dataSize), sizeof(long), 0) == SOCKET_ERROR)
     {
         isSizeReceive = false;
-        isAllOK = false;
     }
 
     if (isSizeReceive)
@@ -89,13 +92,13 @@ bool WTCPClient::receiveByteData(char **data)
             packet = recv(this->cSock, *data + totalReceiveSize, packetSize, 0);
             if (packet == SOCKET_ERROR)
             {
-                isAllOK = false;
+                dataSize = -1;
                 break;
             }
             totalReceiveSize += packet;
         }
     }
-    return isAllOK;
+    return dataSize;
 }
 
 

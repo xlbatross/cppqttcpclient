@@ -5,8 +5,8 @@ ReceiveThread::ReceiveThread(WTCPClient * client, QObject *parent)
     , client(client)
     , isRunning(false)
 {
-    this->receiveData = NULL;
-    this->receiveDataSize = 0;
+    this->receiveDatasSize = 0;
+    this->receiveDatas = NULL;
 }
 
 ReceiveThread::~ReceiveThread()
@@ -14,16 +14,16 @@ ReceiveThread::~ReceiveThread()
 
 }
 
-void ReceiveThread::initReceiveData()
+void ReceiveThread::initReceiveDatas()
 {
-    if (this->receiveData != NULL && receiveDataSize != 0)
+    if (this->receiveDatas != NULL && receiveDatasSize != 0)
     {
-        for (int i = 0; i < receiveDataSize; i++)
+        for (int i = 0; i < receiveDatasSize; i++)
         {
-            if (this->receiveData[i] != NULL)
-                delete [] this->receiveData[i];
+            if (this->receiveDatas[i] != NULL)
+                delete [] this->receiveDatas[i];
         }
-        delete [] this->receiveData;
+        delete [] this->receiveDatas;
     }
 }
 
@@ -39,18 +39,18 @@ void ReceiveThread::run()
             break;
         }
 
-        this->initReceiveData();
-        this->receiveData = new char * [this->receiverHeader->dataCount()]();
+        this->initReceiveDatas();
+        this->receiveDatas = new char * [this->receiverHeader->dataCount()]();
         for (int i = 0; i < this->receiverHeader->dataCount(); i++)
         {
-            this->client->receiveByteData(&this->receiveData[i]);
+            this->client->receiveByteData(&this->receiveDatas[i]);
         }
-        this->receiveDataSize = this->receiverHeader->dataCount();
+        this->receiveDatasSize = this->receiverHeader->dataCount();
 
         switch(this->receiverHeader->responseType())
         {
         case DataHeader::resImage:
-            emit viewImageSignal(this->receiveData, this->receiverHeader->attr()[0], this->receiverHeader->attr()[1], this->receiverHeader->attr()[2]);
+            emit viewImageSignal(this->receiveDatas, this->receiverHeader->attr()[0], this->receiverHeader->attr()[1], this->receiverHeader->attr()[2]);
             break;
         }
     }

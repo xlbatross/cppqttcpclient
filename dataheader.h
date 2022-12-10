@@ -8,8 +8,8 @@
 class DataHeader
 {
 public:
-    enum RequestType{reqImage = 1};
-    enum ResponseType{resImage = 1};
+    enum RequestType{reqImage = 1, reqRoomList};
+    enum ResponseType{resImage = 1, resRoomList};
 
     DataHeader();
     ~DataHeader();
@@ -20,7 +20,9 @@ public:
     long dataCount();
     const std::vector<long> & attr();
 
-    long encode(cv::Mat const & data);
+    long encodeReqRoomList();
+    long encodeReqImage(const cv::Mat & data);
+
     bool decode();
 
 private:

@@ -12,7 +12,7 @@ public:
     explicit ReceiveThread(WTCPClient * client, QObject *parent = nullptr);
     ~ReceiveThread();
 
-    void initReceiveData();
+    void initReceiveDatas();
 
     void run() override;
 
@@ -20,8 +20,8 @@ public:
 private:
     WTCPClient * client;
     DataHeader * receiverHeader;
-    char ** receiveData;
-    long receiveDataSize;
+    long receiveDatasSize;
+    char ** receiveDatas;
     bool isRunning;
 
 

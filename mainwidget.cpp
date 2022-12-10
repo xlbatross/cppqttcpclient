@@ -17,7 +17,6 @@ MainWidget::MainWidget(QWidget *parent)
         qDebug() << "connected";
 
         connect(this->timer, SIGNAL(timeout()), this, SLOT(readCapture()));
-//        connect(this, SIGNAL(setOpenCVImageSignal(cv::Mat)), this->label, SLOT(setOpenCVImage(cv::Mat)));
         connect(this->receiveThread, SIGNAL(viewImageSignal(const char* const *,long,long,long)), this->label, SLOT(setOpenCVImage(const char* const *,long,long,long)), Qt::BlockingQueuedConnection);
         connect(this, SIGNAL(sendImageSignal(cv::Mat)), this, SLOT(sendImage(cv::Mat)));
 
@@ -33,9 +32,9 @@ MainWidget::MainWidget(QWidget *parent)
 
 MainWidget::~MainWidget()
 {
-//    delete timer;
-//    delete label;
-//    delete client;
+    delete timer;
+    delete label;
+    delete client;
     this->cap.release();
     delete ui;
 }

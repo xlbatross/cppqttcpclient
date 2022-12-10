@@ -39,7 +39,35 @@ const std::vector<long> &DataHeader::attr()
     return this->_attr;
 }
 
-long DataHeader::encode(cv::Mat const & data)
+long DataHeader::encodeReqRoomList()
+{
+    /*
+     * send header template
+     * datacount : 0 <32bit, 4byte, int>
+     * requestType : 2(reqRoomList) (32bite, 4byte, int)
+     * attr:
+     *     none
+     */
+
+    try
+    {
+        long dataCount = 0;
+        long requestType = reqImage; // image
+
+        if (this->_sendByteArray != NULL)
+            delete [] this->_sendByteArray;
+        this->_sendByteArray = new char[sizeof(long) * 2];
+        memcpy(this->_sendByteArray + sizeof(long) * 0, &dataCount, sizeof(long)); // dataCount
+        memcpy(this->_sendByteArray + sizeof(long) * 1, &requestType, sizeof(long)); // requestType
+        return sizeof(long) * 2;
+    }
+    catch (const std::bad_alloc &)
+    {
+        return -1;
+    }
+}
+
+long DataHeader::encodeReqImage(const cv::Mat &data)
 {
     /*
      * send header template
@@ -103,6 +131,29 @@ bool DataHeader::decode()
         memcpy(&_attr[0], this->_receiveByteArray + sizeof(long) * 2, sizeof(long)); // height
         memcpy(&_attr[1], this->_receiveByteArray + sizeof(long) * 3, sizeof(long)); // width
         memcpy(&_attr[2], this->_receiveByteArray + sizeof(long) * 4, sizeof(long)); // channels
+        return true;
+        break;
+    /*
+     * template
+     * datacount : 24 <32bit, 4byte, int>
+     * responseType : 2(roomlist) (32bite, 4byte, int)
+     * attr:
+     *     first ip length <32bit, 4byte, int>
+     *     first port length <32bit, 4byte, int>
+     *     first roomName length <32bit, 4byte, int>
+     *     second ip length <32bit, 4byte, int>
+     *     second port length <32bit, 4byte, int>
+     *     second roomName length <32bit, 4byte, int>
+     *     ...
+     */
+    case resRoomList:
+        this->_attr.resize(this->_dataCount * 3);
+        for (int i = 0; i < this->_attr.size(); i += 3)
+        {
+            memcpy(&_attr[i + 0], this->_receiveByteArray + sizeof(long) * (2 + i + 0), sizeof(long)); // ip length
+            memcpy(&_attr[i + 1], this->_receiveByteArray + sizeof(long) * (2 + i + 1), sizeof(long)); // port length
+            memcpy(&_attr[i + 2], this->_receiveByteArray + sizeof(long) * (2 + i + 2), sizeof(long)); // name length
+        }
         return true;
         break;
     }
