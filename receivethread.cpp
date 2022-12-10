@@ -1,6 +1,10 @@
 #include "receivethread.h"
 
-ReceiveThread::ReceiveThread(WTCPClient * client, QObject *parent)
+ReceiveThread::ReceiveThread(
+//        WTCPClient * client,
+        LTCPClient * client,
+        QObject *parent
+    )
     : QThread{parent}
     , client(client)
     , isRunning(false)
@@ -39,8 +43,6 @@ void ReceiveThread::run()
             break;
         }
 
-        qDebug() << this->receiverHeader->dataCount();
-
         this->initReceiveDatas();
         this->receiveDatas = new char * [this->receiverHeader->dataCount()]();
         for (int i = 0; i < this->receiverHeader->dataCount(); i++)
@@ -52,7 +54,11 @@ void ReceiveThread::run()
         switch(this->receiverHeader->responseType())
         {
         case DataHeader::resImage:
+            qDebug() << "response Image";
             emit viewImageSignal(this->receiveDatas, this->receiverHeader->attr()[0], this->receiverHeader->attr()[1], this->receiverHeader->attr()[2]);
+            break;
+        case DataHeader::resRoomList:
+            qDebug() << "response Room List";
             break;
         }
     }

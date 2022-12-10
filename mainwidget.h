@@ -6,7 +6,8 @@
 #include <QTimer>
 #include <QDebug>
 #include "opencvimagelabel.h"
-#include "wtcpclient.h"
+//#include "wtcpclient.h"
+#include "ltcpclient.h"
 #include "receivethread.h"
 
 QT_BEGIN_NAMESPACE
@@ -24,7 +25,8 @@ public:
 private:
     Ui::MainWidget *ui;
 
-    WTCPClient * client;
+//    WTCPClient * client;
+    LTCPClient * client;
 
     ReceiveThread * receiveThread;
 

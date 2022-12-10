@@ -2,6 +2,7 @@
 #define OPENCVIMAGELABEL_H
 
 #include <QLabel>
+#include <QDebug>
 #include <opencv2/opencv.hpp>
 
 class OpenCVImageLabel : public QLabel
@@ -17,7 +18,7 @@ private:
 
 private slots:
     void setOpenCVImage(cv::Mat const & img);
-    void setOpenCVImage(const char * const * data, const long height, const long width, const long channels);
+    void setOpenCVImage(const char * const * data, const int height, const int width, const int channels);
 
 };
 

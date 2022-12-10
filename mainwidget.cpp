@@ -4,7 +4,8 @@
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
-    , client(new WTCPClient)
+//    , client(new WTCPClient)
+    , client(new LTCPClient)
     , receiveThread(new ReceiveThread(this->client))
 {
     ui->setupUi(this);
@@ -12,18 +13,18 @@ MainWidget::MainWidget(QWidget *parent)
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
-    if (this->client->connectServer())
+    if (this->client->connectServer("192.168.0.61"))
     {
         qDebug() << "connected";
 
         connect(this->timer, SIGNAL(timeout()), this, SLOT(readCapture()));
-        connect(this->receiveThread, SIGNAL(viewImageSignal(const char* const *,long,long,long)), this->label, SLOT(setOpenCVImage(const char* const *,long,long,long)), Qt::BlockingQueuedConnection);
+        connect(this->receiveThread, SIGNAL(viewImageSignal(const char* const *,int,int,int)), this->label, SLOT(setOpenCVImage(const char* const *,int,int,int)), Qt::BlockingQueuedConnection);
         connect(this, SIGNAL(sendImageSignal(cv::Mat)), this, SLOT(sendImage(cv::Mat)));
 
 
-//        this->timer->start(33);
+        this->timer->start(33);
         this->receiveThread->start();
-        this->client->sendReqRoomList();
+//        this->client->sendReqRoomList();
     }
     else
     {
@@ -47,6 +48,7 @@ void MainWidget::readCapture()
     if (this->cap.isOpened())
     {
         this->cap.read(img);
+        cv::resize(img, img, cv::Size(320, 240));
         emit sendImageSignal(img);
     }
     else

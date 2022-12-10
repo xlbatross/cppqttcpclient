@@ -3,14 +3,19 @@
 
 #include <QThread>
 #include <QDebug>
-#include "wtcpclient.h"
+//#include "wtcpclient.h"
+#include "ltcpclient.h"
 #include "dataheader.h"
 
 class ReceiveThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit ReceiveThread(WTCPClient * client, QObject *parent = nullptr);
+    explicit ReceiveThread(
+//        WTCPClient * client,
+        LTCPClient * client,
+        QObject *parent = nullptr
+    );
     ~ReceiveThread();
 
     void initReceiveDatas();
@@ -19,9 +24,10 @@ public:
 
 
 private:
-    WTCPClient * client;
+//    WTCPClient * client;
+    LTCPClient * client;
     DataHeader * receiverHeader;
-    long receiveDatasSize;
+    int receiveDatasSize;
     char ** receiveDatas;
     bool isRunning;
 
@@ -30,7 +36,7 @@ public slots:
     void start();
 
 signals:
-    void viewImageSignal(const char * const * data, const long height, const long width, const long channels);
+    void viewImageSignal(const char * const * data, const int height, const int width, const int channels);
 };
 
 #endif // RECEIVETHREAD_H

@@ -48,6 +48,11 @@ if(WIN32)
         wtcpclient.h
         wtcpclient.cpp
     )
+elseif(APPLE)
+    set(MAC_SOURCES
+        ltcpclient.h
+        ltcpclient.cpp
+    )
 endif()
 
 
@@ -72,6 +77,7 @@ else()
         add_executable(test1
             ${PROJECT_SOURCES}
             ${WINDOWS_SOURCES}
+            ${MAC_SOURCES}
         )
     endif()
 endif()

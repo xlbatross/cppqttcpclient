@@ -16,21 +16,21 @@ public:
 
     const char * sendByteArray();
     char ** receiveByteArray();
-    long responseType();
-    long dataCount();
-    const std::vector<long> & attr();
+    int responseType();
+    int dataCount();
+    const std::vector<int> & attr();
 
-    long encodeReqRoomList();
-    long encodeReqImage(const cv::Mat & data);
+    int encodeReqRoomList();
+    int encodeReqImage(const cv::Mat & data);
 
     bool decode();
 
 private:
     char * _sendByteArray;
     char * _receiveByteArray;
-    long _responseType;
-    long _dataCount;
-    std::vector<long> _attr;
+    int _responseType;
+    int _dataCount;
+    std::vector<int> _attr;
 };
 
 #endif // DATAHEADER_H

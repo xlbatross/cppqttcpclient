@@ -1,33 +1,30 @@
-#include "wtcpclient.h"
-
-WTCPClient::WTCPClient()
+#include "ltcpclient.h"
+LTCPClient::LTCPClient()
     : dataHeader(new DataHeader)
 {
-    WSAStartup(MAKEWORD(2, 2), &this->wsaData);
     this->cSock = socket(PF_INET, SOCK_STREAM, 0);
 }
 
-WTCPClient::~WTCPClient()
+LTCPClient::~LTCPClient()
 {
     delete dataHeader;
-    closesocket(this->cSock);
-    WSACleanup();
+    close(this->cSock);
 }
 
-bool WTCPClient::connectServer(std::string serverIp, short serverPort)
+bool LTCPClient::connectServer(std::string serverIp, short serverPort)
 {
     memset(&this->servAddr, 0, sizeof(this->servAddr));
     this->servAddr.sin_family = AF_INET;
     this->servAddr.sin_addr.s_addr = inet_addr(serverIp.c_str());
     this->servAddr.sin_port = htons(serverPort);
 
-    if (connect(this->cSock, (SOCKADDR*) &this->servAddr, sizeof(this->servAddr)) == SOCKET_ERROR)
+    if (connect(this->cSock, (struct sockaddr *) &this->servAddr, sizeof(this->servAddr)) == -1)
         return false;
     else
         return true;
 }
 
-bool WTCPClient::sendReqRoomList()
+bool LTCPClient::sendReqRoomList()
 {
     int headerDataSize = this->dataHeader->encodeReqRoomList();
     if (!this->sendByteData(this->dataHeader->sendByteArray(), headerDataSize))
@@ -35,7 +32,7 @@ bool WTCPClient::sendReqRoomList()
     return true;
 }
 
-bool WTCPClient::sendReqImage(const cv::Mat & img)
+bool LTCPClient::sendReqImage(const cv::Mat & img)
 {
     int headerDataSize = this->dataHeader->encodeReqImage(img);
 
@@ -46,7 +43,7 @@ bool WTCPClient::sendReqImage(const cv::Mat & img)
     return true;
 }
 
-bool WTCPClient::sendByteData(const char *data, const int dataSize)
+bool LTCPClient::sendByteData(const char *data, const int dataSize)
 {
 //    for (int i = 0; i < 4; i++)
 //    {
@@ -57,19 +54,20 @@ bool WTCPClient::sendByteData(const char *data, const int dataSize)
     // 다만 송신할 때 big endian으로 송신되지 않는다.
     // 즉 데이터 16 0 0 0이 이 코드 상에서는 4바이트 16으로 읽히지만
     // 파이썬 쪽에서 받을 때 little endian으로 판단하지 않으면 4바이트 268,435,456으로 보인다.
-    if (send(this->cSock, (char *)(&dataSize), sizeof(int), 0) == SOCKET_ERROR
-     || send(this->cSock, data, dataSize, 0) == SOCKET_ERROR)
+    std::cout << dataSize << std::endl;
+    if (write(this->cSock, (char *)(&dataSize), sizeof(int)) == -1
+     || write(this->cSock, data, dataSize) == -1)
         return false;
     return true;
 }
 
-DataHeader *WTCPClient::receiveHeader()
+DataHeader *LTCPClient::receiveHeader()
 {
     this->receiveByteData(this->dataHeader->receiveByteArray());
     return this->dataHeader;
 }
 
-int WTCPClient::receiveByteData(char **data)
+int LTCPClient::receiveByteData(char **data)
 {
     int dataSize = -1;
     int packetSize = 0;
@@ -77,7 +75,7 @@ int WTCPClient::receiveByteData(char **data)
     int totalReceiveSize = 0;
     bool isSizeReceive = true;
 
-    if (recv(this->cSock, (char *)(&dataSize), sizeof(int), 0) == SOCKET_ERROR)
+    if (read(this->cSock, (char *)(&dataSize), sizeof(int)) == -1)
     {
         isSizeReceive = false;
     }
@@ -92,8 +90,8 @@ int WTCPClient::receiveByteData(char **data)
         while (totalReceiveSize < dataSize)
         {
             packetSize = (totalReceiveSize + 1024 < dataSize) ? 1024 : dataSize - totalReceiveSize;
-            packet = recv(this->cSock, *data + totalReceiveSize, packetSize, 0);
-            if (packet == SOCKET_ERROR)
+            packet = read(this->cSock, *data + totalReceiveSize, packetSize);
+            if (packet == -1)
             {
                 dataSize = -1;
                 break;
