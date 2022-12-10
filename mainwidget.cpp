@@ -57,7 +57,7 @@ void MainWidget::readCapture()
 
 void MainWidget::sendImage(cv::Mat const & image)
 {
-    this->client->sendData(image);
+    this->client->sendReqImage(image);
 }
 
 

@@ -26,7 +26,7 @@ bool Client::disconnectToHost()
 
 bool Client::send(cv::Mat const & data)
 {
-    qint32 headerSize = this->dataHeader->encode(data);
+    qint32 headerSize = this->dataHeader->encodeReqImage(data);
     bool isSend = this->sendData(this->dataHeader->sendByteArray(), headerSize);
 
     if (isSend)
