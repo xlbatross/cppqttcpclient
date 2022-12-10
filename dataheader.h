@@ -8,14 +8,16 @@
 class DataHeader
 {
 public:
-    enum Type{Image = 1};
+    enum RequestType{reqImage = 1};
+    enum ResponseType{resImage = 1};
 
     DataHeader();
     ~DataHeader();
 
     const char * sendByteArray();
     char ** receiveByteArray();
-    long dataType();
+    long responseType();
+    long dataCount();
     const std::vector<long> & attr();
 
     long encode(cv::Mat const & data);
@@ -24,7 +26,8 @@ public:
 private:
     char * _sendByteArray;
     char * _receiveByteArray;
-    long _dataType;
+    long _responseType;
+    long _dataCount;
     std::vector<long> _attr;
 };
 

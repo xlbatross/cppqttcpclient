@@ -18,7 +18,7 @@ MainWidget::MainWidget(QWidget *parent)
 
         connect(this->timer, SIGNAL(timeout()), this, SLOT(readCapture()));
 //        connect(this, SIGNAL(setOpenCVImageSignal(cv::Mat)), this->label, SLOT(setOpenCVImage(cv::Mat)));
-        connect(this->receiveThread, SIGNAL(viewImageSignal(const char*,long,long,long)), this->label, SLOT(setOpenCVImage(const char*,long,long,long)));
+        connect(this->receiveThread, SIGNAL(viewImageSignal(const char* const *,long,long,long)), this->label, SLOT(setOpenCVImage(const char* const *,long,long,long)), Qt::BlockingQueuedConnection);
         connect(this, SIGNAL(sendImageSignal(cv::Mat)), this, SLOT(sendImage(cv::Mat)));
 
         this->timer->start(33);
@@ -46,7 +46,6 @@ void MainWidget::readCapture()
     if (this->cap.isOpened())
     {
         this->cap.read(img);
-//        emit setOpenCVImageSignal(img);
         emit sendImageSignal(img);
     }
     else

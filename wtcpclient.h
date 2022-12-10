@@ -2,8 +2,6 @@
 #define __WTCPCLIENT_H__
 
 #include <iostream>
-#include <stdio.h>
-#include <sstream>
 #include <string>
 #include <winsock2.h>
 #include <opencv2/opencv.hpp>

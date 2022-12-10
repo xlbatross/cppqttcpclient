@@ -63,7 +63,6 @@ DataHeader *WTCPClient::receiveHeader()
 
 bool WTCPClient::receiveByteData(char **data)
 {
-    char * dataSizeByteArray = new char[sizeof(long)];
     long dataSize = 0;
     long packetSize = 0;
     long packet = 0;
@@ -71,7 +70,7 @@ bool WTCPClient::receiveByteData(char **data)
     bool isSizeReceive = true;
     bool isAllOK = true;
 
-    if (recv(this->cSock, dataSizeByteArray, sizeof(long), 0) == SOCKET_ERROR)
+    if (recv(this->cSock, (char *)(&dataSize), sizeof(long), 0) == SOCKET_ERROR)
     {
         isSizeReceive = false;
         isAllOK = false;
@@ -79,12 +78,8 @@ bool WTCPClient::receiveByteData(char **data)
 
     if (isSizeReceive)
     {
-        dataSize = *((long *)(dataSizeByteArray));
-
         if (*data != NULL)
-        {
             delete [] *data;
-        }
 
         *data = new char[dataSize];
 
@@ -100,7 +95,6 @@ bool WTCPClient::receiveByteData(char **data)
             totalReceiveSize += packet;
         }
     }
-    delete [] dataSizeByteArray;
     return isAllOK;
 }
 

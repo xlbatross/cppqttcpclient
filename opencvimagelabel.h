@@ -17,7 +17,7 @@ private:
 
 private slots:
     void setOpenCVImage(cv::Mat const & img);
-    void setOpenCVImage(const char * data, const long height, const long width, const long channels);
+    void setOpenCVImage(const char * const * data, const long height, const long width, const long channels);
 
 };
 

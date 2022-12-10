@@ -24,9 +24,14 @@ char ** DataHeader::receiveByteArray()
     return &this->_receiveByteArray;
 }
 
-long DataHeader::dataType()
+long DataHeader::responseType()
 {
-    return this->_dataType;
+    return this->_responseType;
+}
+
+long DataHeader::dataCount()
+{
+    return this->_dataCount;
 }
 
 const std::vector<long> &DataHeader::attr()
@@ -38,7 +43,8 @@ long DataHeader::encode(cv::Mat const & data)
 {
     /*
      * send header template
-     * datatype : 1(image) (32bite, 4byte, int)
+     * datacount : 1 <32bit, 4byte, int>
+     * requestType : 1(image) (32bite, 4byte, int)
      * attr:
      *     height <32bit, 4byte, int>
      *     width <32bit, 4byte, int>
@@ -47,21 +53,21 @@ long DataHeader::encode(cv::Mat const & data)
 
     try
     {
-        long dataType = Image; // image
+        long dataCount = 1;
+        long requestType = reqImage; // image
         long height = data.rows;
         long width = data.cols;
         long channels = data.channels();
 
         if (this->_sendByteArray != NULL)
             delete [] this->_sendByteArray;
-        this->_sendByteArray = new char[sizeof(long) * 4];
-        // 이유는 모르겠지만, memcpy는 littleEndian 형식으로 복사된다.
-        // 서버에서 헤더를 디코딩할 때는 각각 영역에 맞는 바이트를 little Endian으로 읽어야 한다.
-        memcpy(this->_sendByteArray + sizeof(long) * 0, &dataType, sizeof(long)); // datatype
-        memcpy(this->_sendByteArray + sizeof(long) * 1, &height, sizeof(long)); // height
-        memcpy(this->_sendByteArray + sizeof(long) * 2, &width, sizeof(long)); // width
-        memcpy(this->_sendByteArray + sizeof(long) * 3, &channels, sizeof(long)); // channels
-        return sizeof(long) * 4;
+        this->_sendByteArray = new char[sizeof(long) * 5];
+        memcpy(this->_sendByteArray + sizeof(long) * 0, &dataCount, sizeof(long)); // dataCount
+        memcpy(this->_sendByteArray + sizeof(long) * 1, &requestType, sizeof(long)); // requestType
+        memcpy(this->_sendByteArray + sizeof(long) * 2, &height, sizeof(long)); // height
+        memcpy(this->_sendByteArray + sizeof(long) * 3, &width, sizeof(long)); // width
+        memcpy(this->_sendByteArray + sizeof(long) * 4, &channels, sizeof(long)); // channels
+        return sizeof(long) * 5;
     }
     catch (const std::bad_alloc &)
     {
@@ -78,23 +84,25 @@ bool DataHeader::decode()
 //    }
 //    std::cout << std::endl;
     this->_attr.clear();
-    memcpy(&(this->_dataType), this->_receiveByteArray + sizeof(long) * 0, sizeof(long));
+    memcpy(&(this->_dataCount), this->_receiveByteArray + sizeof(long) * 0, sizeof(long));
+    memcpy(&(this->_responseType), this->_receiveByteArray + sizeof(long) * 1, sizeof(long));
 
-    switch(this->_dataType)
+    switch(this->_responseType)
     {
     /*
      * receive header template
-     * datatype : 1(image) (32bite, 4byte, int)
+     * datacount : 1 <32bit, 4byte, int>
+     * responseType : 1(image) (32bite, 4byte, int)
      * attr:
      *     height <32bit, 4byte, int>
      *     width <32bit, 4byte, int>
      *     channels <32bit, 4byte, int>
      */
-    case Image :
+    case resImage :
         this->_attr.resize(3);
-        memcpy(&_attr[0], this->_receiveByteArray + sizeof(long) * 1, sizeof(long)); // height
-        memcpy(&_attr[1], this->_receiveByteArray + sizeof(long) * 2, sizeof(long)); // width
-        memcpy(&_attr[2], this->_receiveByteArray + sizeof(long) * 3, sizeof(long)); // channels
+        memcpy(&_attr[0], this->_receiveByteArray + sizeof(long) * 2, sizeof(long)); // height
+        memcpy(&_attr[1], this->_receiveByteArray + sizeof(long) * 3, sizeof(long)); // width
+        memcpy(&_attr[2], this->_receiveByteArray + sizeof(long) * 4, sizeof(long)); // channels
         return true;
         break;
     }
