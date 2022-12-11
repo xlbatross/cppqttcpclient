@@ -1,7 +1,5 @@
 #include "wtcpclient.h"
-
 WTCPClient::WTCPClient()
-    : dataHeader(new DataHeader)
 {
     WSAStartup(MAKEWORD(2, 2), &this->wsaData);
     this->cSock = socket(PF_INET, SOCK_STREAM, 0);
@@ -9,7 +7,6 @@ WTCPClient::WTCPClient()
 
 WTCPClient::~WTCPClient()
 {
-    delete dataHeader;
     closesocket(this->cSock);
     WSACleanup();
 }
@@ -27,22 +24,41 @@ bool WTCPClient::connectServer(std::string serverIp, short serverPort)
         return true;
 }
 
+//bool WTCPClient::sendReqImage(const cv::Mat & img)
+//{
+//    int headerDataSize = this->dataHeader->encodeReqImage(img);
+
+//    if (!this->sendByteData(this->dataHeader->sendByteArray(), headerDataSize)
+//     || !this->sendByteData((char *)(img.data), img.total() * img.channels()))
+//        return false;
+
+//    return true;
+//}
+
 bool WTCPClient::sendReqRoomList()
 {
-    int headerDataSize = this->dataHeader->encodeReqRoomList();
-    if (!this->sendByteData(this->dataHeader->sendByteArray(), headerDataSize))
-        return false;
-    return true;
+    ReqRoomList reqRoomList;
+    return this->sendRequest(&reqRoomList);
 }
 
-bool WTCPClient::sendReqImage(const cv::Mat & img)
+bool WTCPClient::sendReqMakeRoom(const std::string &roomName)
 {
-    int headerDataSize = this->dataHeader->encodeReqImage(img);
+    ReqMakeRoom reqMakeRoom(roomName);
+    return this->sendRequest(&reqMakeRoom);
+}
 
-    if (!this->sendByteData(this->dataHeader->sendByteArray(), headerDataSize)
-     || !this->sendByteData((char *)(img.data), img.total() * img.channels()))
+bool WTCPClient::sendRequest(Request * request)
+{
+    if (!this->sendByteData(request->headerBytes(), request->headerSize()))
         return false;
-
+    for (int i = 0; i < request->dataLengthList().size(); i++)
+    {
+        std::cout << i << std::endl;
+        if (!this->sendByteData(request->dataBytesList()[i], request->dataLengthList()[i]))
+        {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -63,11 +79,58 @@ bool WTCPClient::sendByteData(const char *data, const int dataSize)
     return true;
 }
 
-DataHeader *WTCPClient::receiveHeader()
+//DataHeader *WTCPClient::receive(char *** data)
+//{
+//    // data initilize
+//    if (*data != NULL && this->dataHeader->dataCount() != 0)
+//    {
+//        for (int i = 0; i < this->dataHeader->dataCount(); i++)
+//        {
+//            if ((*data)[i] != NULL)
+//                delete [] (*data)[i];
+//        }
+//        delete [] (*data);
+//    }
+
+//    // receive header data and decode
+//    if (this->receiveByteData(this->dataHeader->receiveByteArray()) == -1
+//    || !this->dataHeader->decode())
+//        return NULL;
+
+//    // receive real data
+//    *data = new char * [this->dataHeader->dataCount()]();
+//    for (int i = 0; i < this->dataHeader->dataCount(); i++)
+//    {
+//        if (this->receiveByteData(&((*data)[i])) == -1)
+//            return NULL;
+//    }
+
+//    return this->dataHeader;
+//}
+
+int WTCPClient::receive(char **headerBytes, char ***dataBytesList, std::vector<int> & dataLengthList)
 {
-    this->receiveByteData(this->dataHeader->receiveByteArray());
-    return this->dataHeader;
+    int dataCount = 0;
+    int headSize = this->receiveByteData(headerBytes);
+    // receive header data
+    if (headSize == -1)
+        return -1;
+
+    memcpy(&dataCount, *headerBytes, sizeof(int));
+    dataLengthList.resize(dataCount);
+
+    // receive real data
+    *dataBytesList = new char * [dataCount]();
+    for (int i = 0; i < dataCount; i++)
+    {
+        dataLengthList[i] = this->receiveByteData(&((*dataBytesList)[i]));
+        if (dataLengthList[i] == -1)
+            return -1;
+    }
+
+    return headSize;
 }
+
 
 int WTCPClient::receiveByteData(char **data)
 {
@@ -76,30 +139,21 @@ int WTCPClient::receiveByteData(char **data)
     int packet = 0;
     int totalReceiveSize = 0;
     bool isSizeReceive = true;
-
     if (recv(this->cSock, (char *)(&dataSize), sizeof(int), 0) == SOCKET_ERROR)
+        return -1;
+
+    if (*data != NULL)
+        delete [] *data;
+
+    *data = new char[dataSize];
+
+    while (totalReceiveSize < dataSize)
     {
-        isSizeReceive = false;
-    }
-
-    if (isSizeReceive)
-    {
-        if (*data != NULL)
-            delete [] *data;
-
-        *data = new char[dataSize];
-
-        while (totalReceiveSize < dataSize)
-        {
-            packetSize = (totalReceiveSize + 1024 < dataSize) ? 1024 : dataSize - totalReceiveSize;
-            packet = recv(this->cSock, *data + totalReceiveSize, packetSize, 0);
-            if (packet == SOCKET_ERROR)
-            {
-                dataSize = -1;
-                break;
-            }
-            totalReceiveSize += packet;
-        }
+        packetSize = (totalReceiveSize + 1024 < dataSize) ? 1024 : dataSize - totalReceiveSize;
+        packet = recv(this->cSock, (*data) + totalReceiveSize, packetSize, 0);
+        if (packet == SOCKET_ERROR)
+            return -1;
+        totalReceiveSize += packet;
     }
     return dataSize;
 }

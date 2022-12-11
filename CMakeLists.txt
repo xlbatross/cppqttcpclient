@@ -35,12 +35,12 @@ set(PROJECT_SOURCES
         mainwidget.ui
         opencvimagelabel.h
         opencvimagelabel.cpp
-        client.h
-        client.cpp
         receivethread.h
         receivethread.cpp
-        dataheader.h
-        dataheader.cpp
+        reqheader.h
+        reqheader.cpp
+        resheader.h
+        resheader.cpp
 )
 
 if(WIN32)

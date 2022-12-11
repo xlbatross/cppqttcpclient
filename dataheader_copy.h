@@ -1,5 +1,5 @@
-#ifndef DATAHEADER_H
-#define DATAHEADER_H
+#ifndef DATAHEADER_COPY_H
+#define DATAHEADER_COPY_H
 
 #include <iostream>
 #include <vector>
@@ -8,8 +8,8 @@
 class DataHeader
 {
 public:
-    enum RequestType{reqImage = 1, reqRoomList};
-    enum ResponseType{resImage = 1, resRoomList};
+    enum RequestType{reqImage = 1, reqRoomList, reqMakeRoom, reqEnterRoom};
+    enum ResponseType{resImage = 1, resRoomList, resMakeRoom, resEnterRoom};
 
     DataHeader();
     ~DataHeader();
@@ -21,8 +21,10 @@ public:
     int attrSize();
     const std::vector<int> & attr();
 
-    int encodeReqRoomList();
     int encodeReqImage(const cv::Mat & data);
+    int encodeReqRoomList();
+    int encodeReqMakeRoom(std::string roomName);
+    int encodeReqEnterRoom(std::string ip, int port);
 
     bool decode();
 
@@ -35,4 +37,4 @@ private:
     std::vector<int> _attr;
 };
 
-#endif // DATAHEADER_H
+#endif // DATAHEADER_COPY_H

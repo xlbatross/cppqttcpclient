@@ -3,40 +3,50 @@
 
 #include <QThread>
 #include <QDebug>
-//#include "wtcpclient.h"
-#include "ltcpclient.h"
-#include "dataheader.h"
+#include "wtcpclient.h"
+//#include "ltcpclient.h"
+#include "resheader.h"
 
 class ReceiveThread : public QThread
 {
     Q_OBJECT
 public:
     explicit ReceiveThread(
-//        WTCPClient * client,
-        LTCPClient * client,
+        WTCPClient * client,
+//        LTCPClient * client,
         QObject *parent = nullptr
     );
     ~ReceiveThread();
 
-    void initReceiveDatas();
+    void initHeaderBytes();
+    void initDataBytesList();
 
     void run() override;
 
 
 private:
-//    WTCPClient * client;
-    LTCPClient * client;
-    DataHeader * receiverHeader;
-    int receiveDatasSize;
-    char ** receiveDatas;
     bool isRunning;
 
+    WTCPClient * client;
+//    LTCPClient * client;
+
+    char * headerBytes;
+    char ** dataBytesList;
+    int headSize;
+    std::vector<int> dataLengthList;
+    int responseType;
+
+    ResRoomList * resRoomList;
+    ResMakeRoom * resMakeRoom;
 
 public slots:
     void start();
 
 signals:
-    void viewImageSignal(const char * const * data, const int height, const int width, const int channels);
+    void disconnectServerSignal();
+//    void viewImageSignal(DataHeader * receiveHeader, const char * const * data);
+    void resRoomListSignal(ResRoomList *);
+    void resMakeRoomSignal(ResMakeRoom *);
 };
 
 #endif // RECEIVETHREAD_H

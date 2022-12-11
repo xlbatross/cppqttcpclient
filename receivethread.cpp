@@ -1,33 +1,51 @@
 #include "receivethread.h"
+#include "resheader.h"
+
 
 ReceiveThread::ReceiveThread(
-//        WTCPClient * client,
-        LTCPClient * client,
+        WTCPClient * client,
+//        LTCPClient * client,
         QObject *parent
     )
     : QThread{parent}
     , client(client)
     , isRunning(false)
+    , headerBytes(NULL)
+    , dataBytesList(NULL)
+    , headSize(0)
+    , responseType(0)
+    , resRoomList(NULL)
 {
-    this->receiveDatasSize = 0;
-    this->receiveDatas = NULL;
+    this->dataLengthList.resize(0);
 }
 
 ReceiveThread::~ReceiveThread()
 {
-
+    initHeaderBytes();
+    initDataBytesList();
 }
 
-void ReceiveThread::initReceiveDatas()
+void ReceiveThread::initHeaderBytes()
 {
-    if (this->receiveDatas != NULL && receiveDatasSize != 0)
+    if (this->headerBytes != NULL)
     {
-        for (int i = 0; i < receiveDatasSize; i++)
+        delete [] this->headerBytes;
+        this->headerBytes = NULL;
+    }
+}
+
+void ReceiveThread::initDataBytesList()
+{
+    if (this->dataBytesList != NULL && this->dataLengthList.size() != 0)
+    {
+        for (int i = 0; i < this->dataLengthList.size(); i++)
         {
-            if (this->receiveDatas[i] != NULL)
-                delete [] this->receiveDatas[i];
+            if (this->dataBytesList[i] != NULL)
+                delete [] this->dataBytesList[i];
         }
-        delete [] this->receiveDatas;
+        delete [] this->dataBytesList;
+        this->dataBytesList = NULL;
+        this->dataLengthList.resize(0);
     }
 }
 
@@ -35,30 +53,40 @@ void ReceiveThread::run()
 {
     while (this->isRunning)
     {
-        this->receiverHeader = this->client->receiveHeader();
+        initHeaderBytes();
+        initDataBytesList();
 
-        if (!this->receiverHeader->decode())
+        this->headSize = this->client->receive(&this->headerBytes, &this->dataBytesList, dataLengthList);
+        if (this->headSize == -1)
         {
             this->isRunning = false;
+            emit disconnectServerSignal();
             break;
         }
 
-        this->initReceiveDatas();
-        this->receiveDatas = new char * [this->receiverHeader->dataCount()]();
-        for (int i = 0; i < this->receiverHeader->dataCount(); i++)
-        {
-            this->client->receiveByteData(&this->receiveDatas[i]);
-        }
-        this->receiveDatasSize = this->receiverHeader->dataCount();
+        memcpy(&this->responseType, this->headerBytes + sizeof(int) * 1, sizeof(int));
 
-        switch(this->receiverHeader->responseType())
+        switch(this->responseType)
         {
-        case DataHeader::resImage:
+        case Response::Image:
             qDebug() << "response Image";
-            emit viewImageSignal(this->receiveDatas, this->receiverHeader->attr()[0], this->receiverHeader->attr()[1], this->receiverHeader->attr()[2]);
+//            emit viewImageSignal(this->receiveHeader, this->receiveDataList);
             break;
-        case DataHeader::resRoomList:
+        case Response::RoomList:
             qDebug() << "response Room List";
+            if (resRoomList != NULL)
+                delete resRoomList;
+            resRoomList = new ResRoomList(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
+            emit resRoomListSignal(resRoomList);
+//            emit viewRoomListSignal(this->receiveHeader, this->receiveDataList);
+            break;
+        case Response::MakeRoom:
+            qDebug() << "response Make Room";
+            if (resMakeRoom != NULL)
+                delete resMakeRoom;
+            resMakeRoom = new ResMakeRoom(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
+            emit resMakeRoomSignal(resMakeRoom);
+//            emit ResMakeRoomSignal(this->receiveHeader, this->receiveDataList);
             break;
         }
     }
