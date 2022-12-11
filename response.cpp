@@ -1,4 +1,4 @@
-#include "resheader.h"
+#include "response.h"
 
 Response::Response(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList)
     : dataLengthList(dataLengthList)
@@ -47,24 +47,44 @@ ResRoomList::ResRoomList(const char *headerBytes, const char * const *dataBytesL
     {
         memoryLoc = 0;
 
-        this->ipList.push_back(std::string(dataBytesList[i] + memoryLoc, this->attrList[this->attrSize * i + 0]));
+        this->_ipList.push_back(std::string(dataBytesList[i] + memoryLoc, this->attrList[this->attrSize * i + 0]));
         memoryLoc += this->attrList[this->attrSize * i + 0];
 
         memcpy(&port, dataBytesList[i] + memoryLoc, this->attrList[this->attrSize * i + 1]);
-        this->portList.push_back(port);
+        this->_portList.push_back(port);
         memoryLoc += this->attrList[this->attrSize * i + 1];
 
-        this->roomNameList.push_back(std::string(dataBytesList[i] + memoryLoc, this->attrList[this->attrSize * i + 2]));
+        this->_roomNameList.push_back(std::string(dataBytesList[i] + memoryLoc, this->attrList[this->attrSize * i + 2]));
         memoryLoc += this->attrList[this->attrSize * i + 2];
 
         memcpy(&roomMemberCount, dataBytesList[i] + memoryLoc, this->attrList[this->attrSize * i + 3]);
-        this->roomMemberCountList.push_back(roomMemberCount);
+        this->_roomMemberCountList.push_back(roomMemberCount);
 
-        std::cout << this->ipList[i] << std::endl;
-        std::cout << this->portList[i] << std::endl;
-        std::cout << this->roomNameList[i] << std::endl;
-        std::cout << this->roomMemberCountList[i] << std::endl;
+//        std::cout << this->_ipList[i] << std::endl;
+//        std::cout << this->_portList[i] << std::endl;
+//        std::cout << this->_roomNameList[i] << std::endl;
+//        std::cout << this->_roomMemberCountList[i] << std::endl;
     }
+}
+
+const std::vector<std::string> &ResRoomList::ipList()
+{
+    return this->_ipList;
+}
+
+const std::vector<int> &ResRoomList::portList()
+{
+    return this->_portList;
+}
+
+const std::vector<std::string> &ResRoomList::roomNameList()
+{
+    return this->_roomNameList;
+}
+
+const std::vector<int> &ResRoomList::roomMemberCountList()
+{
+    return this->_roomMemberCountList;
 }
 
 ResMakeRoom::ResMakeRoom(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)

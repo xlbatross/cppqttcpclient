@@ -4,8 +4,8 @@
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
-    , client(new WTCPClient)
-//    , client(new LTCPClient)
+//    , client(new WTCPClient)
+    , client(new LTCPClient)
     , receiveThread(new ReceiveThread(this->client))
 {
     ui->setupUi(this);
@@ -13,7 +13,7 @@ MainWidget::MainWidget(QWidget *parent)
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
-    if (this->client->connectServer())
+    if (this->client->connectServer("192.168.0.61"))
     {
         qDebug() << "connected";
 
@@ -78,36 +78,21 @@ void MainWidget::sendImage(cv::Mat const & image)
 void MainWidget::responseRoomList(ResRoomList * resRoomList)
 {
     ui->listWidgetRoomList->clear();
-//    if (resRoomList-> == 0)
-//    {
-//        ui->listWidgetRoomList->addItem("방이 없습니다.");
-//    }
-//    else
-//    {
-//        int memoryLoc = 0;
-//        for (int i = 0; i < receiveHeader->dataCount(); i++)
-//        {
-//            QString ip;
-//            int port;
-//            QString roomName;
-//            int roomMemberCount;
-//            memoryLoc = 0;
-//            ip = QString::fromUtf8(receiveDataList[i], receiveHeader->attr()[4 * i]);
-//            memoryLoc += receiveHeader->attr()[4 * i];
-//            memcpy(&port, receiveDataList[i] + memoryLoc, receiveHeader->attr()[4 * i + 1]);
-//            memoryLoc += receiveHeader->attr()[4 * i + 1];
-//            roomName = QString::fromUtf8(receiveDataList[i] + memoryLoc, receiveHeader->attr()[4 * i + 2]);
-//            memoryLoc += receiveHeader->attr()[4 * i + 2];
-//            memcpy(&roomMemberCount, receiveDataList[i] + memoryLoc, receiveHeader->attr()[4 * i + 3]);
-//            memoryLoc += receiveHeader->attr()[4 * i + 3];
-//            qDebug() << ip;
-//            std::cout << port << std::endl;
-//            ui->listWidgetRoomList->addItem(roomName + " (" + QString::number(roomMemberCount) + "/4)");
-//            std::cout << roomMemberCount << std::endl;
-//            std::cout << std::endl;
-
-//        }
-//    }
+    if (resRoomList->roomMemberCountList().size() == 0)
+    {
+        ui->listWidgetRoomList->addItem("방이 없습니다.");
+    }
+    else
+    {
+        for (int i = 0; i < resRoomList->ipList().size(); i++)
+        {
+            ui->listWidgetRoomList->addItem(
+                QString::fromUtf8(resRoomList->roomNameList().at(i).c_str(), resRoomList->roomNameList().at(i).size())
+              + " " + QString::fromUtf8(resRoomList->ipList().at(i).c_str(), resRoomList->ipList().at(i).size())
+              + " " + QString::number(resRoomList->portList()[i])
+            );
+        }
+    }
 }
 
 void MainWidget::viewMakeRoomMessageBox()

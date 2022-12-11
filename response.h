@@ -26,18 +26,22 @@ class ResRoomList : public Response
 public:
     ResRoomList(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
 
+    const std::vector<std::string> & ipList();
+    const std::vector<int> & portList();
+    const std::vector<std::string> & roomNameList();
+    const std::vector<int> & roomMemberCountList();
+
 private:
-    std::vector<std::string> ipList;
-    std::vector<int> portList;
-    std::vector<std::string> roomNameList;
-    std::vector<int> roomMemberCountList;
+    std::vector<std::string> _ipList;
+    std::vector<int> _portList;
+    std::vector<std::string> _roomNameList;
+    std::vector<int> _roomMemberCountList;
 };
 
 class ResMakeRoom : public Response
 {
 public:
     ResMakeRoom(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
-
     bool isMake();
 
 private:

@@ -1,10 +1,10 @@
 #include "receivethread.h"
-#include "resheader.h"
+#include "response.h"
 
 
 ReceiveThread::ReceiveThread(
-        WTCPClient * client,
-//        LTCPClient * client,
+//        WTCPClient * client,
+        LTCPClient * client,
         QObject *parent
     )
     : QThread{parent}

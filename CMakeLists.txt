@@ -37,10 +37,10 @@ set(PROJECT_SOURCES
         opencvimagelabel.cpp
         receivethread.h
         receivethread.cpp
-        reqheader.h
-        reqheader.cpp
-        resheader.h
-        resheader.cpp
+        request.h
+        request.cpp
+        response.h
+        response.cpp
 )
 
 if(WIN32)

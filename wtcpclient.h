@@ -5,7 +5,7 @@
 #include <string>
 #include <winsock2.h>
 #include <opencv2/opencv.hpp>
-#include "reqheader.h"
+#include "request.h"
 
 class WTCPClient
 {

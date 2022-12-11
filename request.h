@@ -1,5 +1,5 @@
-#ifndef REQHEADER_H
-#define REQHEADER_H
+#ifndef REQUEST_H
+#define REQUEST_H
 
 #include <iostream>
 #include <vector>
@@ -40,4 +40,4 @@ public:
 };
 
 
-#endif // REQHEADER_H
+#endif // REQUEST_H

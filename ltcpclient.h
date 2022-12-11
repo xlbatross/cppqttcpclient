@@ -8,14 +8,13 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <opencv2/opencv.hpp>
-#include "dataheader.h"
+#include "request.h"
 
 class LTCPClient
 {
 private:
     struct sockaddr_in servAddr;
     int cSock;
-    DataHeader * dataHeader;
 
 public:
     LTCPClient();
