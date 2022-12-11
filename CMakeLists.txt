@@ -88,6 +88,7 @@ target_link_libraries(test1
     ${LIBOPENCV}
     ${OpenCV_LIBRARIES}
 )
+
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} wsock32 ws2_32)
 endif()

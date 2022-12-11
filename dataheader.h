@@ -16,8 +16,9 @@ public:
 
     const char * sendByteArray();
     char ** receiveByteArray();
-    int responseType();
     int dataCount();
+    int responseType();
+    int attrSize();
     const std::vector<int> & attr();
 
     int encodeReqRoomList();
@@ -28,8 +29,9 @@ public:
 private:
     char * _sendByteArray;
     char * _receiveByteArray;
-    int _responseType;
     int _dataCount;
+    int _responseType;
+    int _attrSize;
     std::vector<int> _attr;
 };
 
