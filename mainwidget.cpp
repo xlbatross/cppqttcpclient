@@ -22,6 +22,8 @@ MainWidget::MainWidget(QWidget *parent)
         connect(this->receiveThread, SIGNAL(disconnectServerSignal()), this, SLOT(disconnectServer()));
         connect(this->receiveThread, SIGNAL(resRoomListSignal(ResRoomList*)), this, SLOT(responseRoomList(ResRoomList*)));
         connect(this->receiveThread, SIGNAL(resMakeRoomSignal(ResMakeRoom *)), this, SLOT(responseMakeRoom(ResMakeRoom *)));
+        connect(this->receiveThread, SIGNAL(resEnterRoomSignal(ResEnterRoom*)), this, SLOT(responseEnterRoom(ResEnterRoom*)));
+        connect(this->receiveThread, SIGNAL(resJoinRoomSignal(ResJoinRoom*)), this, SLOT(responseJoinRoom(ResJoinRoom*)));
         connect(ui->btn_makeRoom, SIGNAL(clicked(bool)), this, SLOT(viewMakeRoomMessageBox()));
         connect(ui->lw_roomList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(enterRoom(QListWidgetItem*)));
 
@@ -60,7 +62,7 @@ void MainWidget::readCapture()
     {
         this->cap.read(img);
         cv::resize(img, img, cv::Size(320, 240));
-        emit sendImageSignal(img);
+//      this->client->sendReqImage(image);
     }
     else
     {
@@ -68,11 +70,6 @@ void MainWidget::readCapture()
         this->cap.set(cv::CAP_PROP_FRAME_WIDTH, 320);
         this->cap.set(cv::CAP_PROP_FRAME_HEIGHT, 240);
     }
-}
-
-void MainWidget::sendImage(cv::Mat const & image)
-{
-//    this->client->sendReqImage(image);
 }
 
 void MainWidget::responseRoomList(ResRoomList * resRoomList)
@@ -83,7 +80,6 @@ void MainWidget::responseRoomList(ResRoomList * resRoomList)
     roomMemberCountList = resRoomList->roomMemberCountList();
 
     ui->lw_roomList->clear();
-//    if (ipList.size() == 0)
     if (ipList.size() == 0)
     {
         ui->lw_roomList->addItem("방이 없습니다.");
@@ -91,7 +87,6 @@ void MainWidget::responseRoomList(ResRoomList * resRoomList)
     else
     {
         for (int i = 0; i < ipList.size(); i++)
-//        for (int i = 0; i < resRoomList->ipList().size(); i++)
         {
             ui->lw_roomList->addItem(
                 QString::fromUtf8(roomNameList.at(i).c_str(), roomNameList.at(i).size())
@@ -128,8 +123,10 @@ void MainWidget::responseMakeRoom(ResMakeRoom * resMakeRoom)
     msgBox.exec();
 
     if (resMakeRoom->isMake())
+        ui->stackedWidget->setCurrentIndex(4);
+//        this->client->sendReqRoomList();
+    else
         this->client->sendReqRoomList();
-//        ui->stackedWidget->setCurrentIndex(1);
 }
 
 void MainWidget::enterRoom(QListWidgetItem * item)
@@ -139,6 +136,24 @@ void MainWidget::enterRoom(QListWidgetItem * item)
         int row = ui->lw_roomList->row(item);
         this->client->sendReqEnterRoom(this->ipList[row], this->portList[row]);
     }
+}
+
+void MainWidget::responseEnterRoom(ResEnterRoom * resEnterRoom)
+{
+    if (resEnterRoom->isEnter())
+        ui->stackedWidget->setCurrentIndex(3);
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText("방에 참가하지 못했습니다.");
+        msgBox.exec();
+        this->client->sendReqRoomList();
+    }
+}
+
+void MainWidget::responseJoinRoom(ResJoinRoom * resJoinRoom)
+{
+
 }
 
 

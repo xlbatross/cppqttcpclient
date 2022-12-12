@@ -14,8 +14,11 @@ ReceiveThread::ReceiveThread(
     , dataBytesList(NULL)
     , headSize(0)
     , responseType(0)
+    , resImage(NULL)
     , resRoomList(NULL)
     , resMakeRoom(NULL)
+    , resEnterRoom(NULL)
+    , resJoinRoom(NULL)
 {
     this->dataLengthList.resize(0);
 }
@@ -69,9 +72,12 @@ void ReceiveThread::run()
 
         switch(this->responseType)
         {
-        case Response::sendImage:
+        case Response::Image:
             qDebug() << "response Image";
-//            emit viewImageSignal(this->receiveHeader, this->receiveDataList);
+            if (resImage != NULL)
+                delete resImage;
+            resImage = new ResImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
+            emit resImageSignal(resImage);
             break;
         case Response::RoomList:
             qDebug() << "response Room List";
@@ -86,6 +92,20 @@ void ReceiveThread::run()
                 delete resMakeRoom;
             resMakeRoom = new ResMakeRoom(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resMakeRoomSignal(resMakeRoom);
+            break;
+        case Response::EnterRoom:
+            qDebug() << "response Make Room";
+            if (resEnterRoom != NULL)
+                delete resEnterRoom;
+            resEnterRoom = new ResEnterRoom(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
+            emit resEnterRoomSignal(resEnterRoom);
+            break;
+        case Response::JoinRoom:
+            qDebug() << "response Join Room";
+            if (resJoinRoom != NULL)
+                delete resJoinRoom;
+            resJoinRoom = new ResJoinRoom(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
+            emit resJoinRoomSignal(resJoinRoom);
             break;
         }
     }

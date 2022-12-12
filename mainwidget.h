@@ -48,11 +48,12 @@ private:
 private slots:
     void disconnectServer();
     void readCapture();
-    void sendImage(cv::Mat const &);
     void responseRoomList(ResRoomList *);
     void viewMakeRoomMessageBox();
     void responseMakeRoom(ResMakeRoom *);
     void enterRoom(QListWidgetItem *);
+    void responseEnterRoom(ResEnterRoom *);
+    void responseJoinRoom(ResJoinRoom *);
 
 signals:
     void setOpenCVImageSignal(cv::Mat);

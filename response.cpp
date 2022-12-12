@@ -36,12 +36,38 @@ void Response::initDataBytesList()
     }
 }
 
+ResImage::ResImage(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
+    : Response(headerBytes, dataBytesList, headSize, dataLengthList)
+{
+    /*
+     * resImage header example
+     * receiveCount : 2 <32bit, 4byte, int>
+     * responseType : 1(resRoomList) (32bite, 4byte, int)
+     * dataSize : 2
+     * dataType:
+     *     2 : OpenCVImage
+     *     1 : int
+     */
+    this->_img = cv::Mat(240, 320, CV_8UC3, (unsigned char *)(dataBytesList[0]));
+    memcpy(&_number, dataBytesList[1], sizeof(int));
+}
+
+const cv::Mat &ResImage::img()
+{
+    return this->_img;
+}
+
+const int ResImage::number()
+{
+    return this->_number;
+}
+
 ResRoomList::ResRoomList(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
     : Response(headerBytes, dataBytesList, headSize, dataLengthList)
 {
     /*
      * resRoomList header example
-     * datacount : 24 <32bit, 4byte, int>
+     * receiveCount : 24 <32bit, 4byte, int>
      * responseType : 2(resRoomList) (32bite, 4byte, int)
      * dataSize : 4
      * dataType:
@@ -50,7 +76,6 @@ ResRoomList::ResRoomList(const char *headerBytes, const char * const *dataBytesL
      *     0 : string
      *     1 : int
      */
-    int memoryLoc = 0;
     int port = 0;
     int roomMemberCount = 0;
     for (int i = 0; i < this->dataLengthList.size(); i++)
@@ -108,10 +133,10 @@ ResMakeRoom::ResMakeRoom(const char *headerBytes, const char * const *dataBytesL
      * responseType : 3(resMakeRoom) (32bite, 4byte, int)
      * dataSize : 1
      * dataType:
-     *     0 : string <32bit, 4byte, int>
+     *     1 : Int <32bit, 4byte, int>
      */
-    char c;
-    memcpy(&c, this->dataBytesList[0], sizeof(char));
+    int c;
+    memcpy(&c, this->dataBytesList[0], sizeof(int));
 
     this->_isMake = (c == 1);
 }
@@ -120,3 +145,55 @@ bool ResMakeRoom::isMake()
 {
     return this->_isMake;
 }
+
+ResEnterRoom::ResEnterRoom(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
+    : Response(headerBytes, dataBytesList, headSize, dataLengthList)
+{
+    /*
+     * resEnterRoom header example
+     * receiveCount : 1 <32bit, 4byte, int>
+     * responseType : 4(ResEnterRoom) (32bite, 4byte, int)
+     * dataSize : 1
+     * dataType:
+     *     1 : Int <32bit, 4byte, int>
+     */
+    int c;
+    memcpy(&c, this->dataBytesList[0], sizeof(int));
+
+    this->_isEnter = (c == 1);
+}
+
+bool ResEnterRoom::isEnter()
+{
+    return this->_isEnter;
+}
+
+ResJoinRoom::ResJoinRoom(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
+    : Response(headerBytes, dataBytesList, headSize, dataLengthList)
+{
+    /*
+     * resJoinRoom header example
+     * receiveCount : 2 <32bit, 4byte, int>
+     * responseType : 5(ResJoinRoom) (32bite, 4byte, int)
+     * dataSize : 2
+     * dataType:
+     *     0 : string <32bit, 4byte, int>
+     *     1 : int <32bit, 4byte, int>
+     */
+    int c;
+    this->_name = std::string(this->dataBytesList[0], this->dataLengthList[0]);
+    memcpy(&c, this->dataBytesList[1], sizeof(int));
+    this->_isProfessor = (c == 1);
+}
+
+const std::string &ResJoinRoom::name()
+{
+    return this->_name;
+}
+
+const bool ResJoinRoom::isProfessor()
+{
+    return this->_isProfessor;
+}
+
+

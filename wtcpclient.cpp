@@ -24,16 +24,11 @@ bool WTCPClient::connectServer(std::string serverIp, short serverPort)
         return true;
 }
 
-//bool WTCPClient::sendReqImage(const cv::Mat & img)
-//{
-//    int headerDataSize = this->dataHeader->encodeReqImage(img);
-
-//    if (!this->sendByteData(this->dataHeader->sendByteArray(), headerDataSize)
-//     || !this->sendByteData((char *)(img.data), img.total() * img.channels()))
-//        return false;
-
-//    return true;
-//}
+bool WTCPClient::sendReqImage(const cv::Mat & img)
+{
+    ReqImage reqImage(img);
+    return this->sendRequest(&reqImage);
+}
 
 bool WTCPClient::sendReqRoomList()
 {

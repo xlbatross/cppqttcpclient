@@ -3,12 +3,13 @@
 
 #include <iostream>
 #include <vector>
+#include <opencv2/opencv.hpp>
 
 class Response
 {
 public:
-    enum Type{sendImage = 1, RoomList, MakeRoom};
-    enum Data{String = 0, Int, Image};
+    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom };
+    enum Data{String = 0, Int, OpenCVImage};
     Response(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
     ~Response();
 
@@ -20,6 +21,19 @@ protected:
 
     int dataSize;
     std::vector<int> dataTypeList;
+};
+
+class ResImage : public Response
+{
+public:
+    ResImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+
+    const cv::Mat & img();
+    const int number();
+
+private:
+    cv::Mat _img;
+    int _number;
 };
 
 class ResRoomList : public Response
@@ -48,5 +62,28 @@ public:
 private:
     bool _isMake;
 };
+
+class ResEnterRoom : public Response
+{
+public:
+    ResEnterRoom(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+    bool isEnter();
+
+private:
+    bool _isEnter;
+};
+
+class ResJoinRoom : public Response
+{
+public:
+    ResJoinRoom(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+    const std::string & name();
+    const int isProfessor();
+
+private:
+    std::string _name;
+    int _isProfessor;
+};
+
 
 #endif // RESPONSE_H

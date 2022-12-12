@@ -8,8 +8,8 @@
 class Request
 {
 public:
-    enum Type{sendImage = 1, RoomList, MakeRoom, EnterRoom};
-    enum Data{String = 0, Int, Image};
+    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom};
+    enum Data{String = 0, Int, OpenCVImage};
     Request();
     ~Request();
 
@@ -26,6 +26,12 @@ protected:
     char ** _dataBytesList;
     int _headerSize;
     std::vector<int> _dataLengthList;
+};
+
+class ReqImage : public Request
+{
+public:
+    ReqImage(const cv::Mat & img);
 };
 
 class ReqRoomList : public Request
