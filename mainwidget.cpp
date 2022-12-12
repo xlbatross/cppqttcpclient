@@ -13,7 +13,7 @@ MainWidget::MainWidget(QWidget *parent)
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
-    if (this->client->connectServer("192.168.0.61"))
+    if (this->client->connectServer())
     {
         qDebug() << "connected";
 //        connect(this->timer, SIGNAL(timeout()), this, SLOT(readCapture()));
@@ -29,6 +29,7 @@ MainWidget::MainWidget(QWidget *parent)
         connect(ui->lw_roomList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(enterRoom(QListWidgetItem*)));
         connect(ui->btn_backFromStudent, SIGNAL(clicked(bool)), this, SLOT(backClicked()));
         connect(ui->btn_endLecture, SIGNAL(clicked(bool)), this, SLOT(backClicked()));
+        connect(ui->btn_refreshList, SIGNAL(clicked(bool)), this, SLOT(refeashRoomList()));
         this->receiveThread->start();
 //        this->timer->start(33);
         this->client->sendReqRoomList();
@@ -89,8 +90,13 @@ void MainWidget::backClicked()
 {
     ui->stackedWidget->setCurrentIndex(2);
     this->client->sendReqLeaveRoom();
+    this->client->sendReqRoomList();
 }
 
+void MainWidget::refeashRoomList()
+{
+    this->client->sendReqRoomList();
+}
 
 void MainWidget::disconnectServer()
 {
@@ -181,6 +187,7 @@ void MainWidget::responseDisjoinRoom(ResDisjoinRoom * resDisjoinRoom)
     if (resDisjoinRoom->isProfessorOut())
     {
         ui->stackedWidget->setCurrentIndex(2);
+        this->client->sendReqRoomList();
         QMessageBox msgBox;
         msgBox.setText("강의가 종료되었습니다.");
         msgBox.exec();

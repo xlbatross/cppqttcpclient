@@ -51,6 +51,7 @@ private slots:
     void viewMakeRoomMessageBox();
     void enterRoom(QListWidgetItem *);
     void backClicked();
+    void refeashRoomList();
 
     void disconnectServer();
     void responseRoomList(ResRoomList *);
