@@ -16,18 +16,18 @@ MainWidget::MainWidget(QWidget *parent)
     if (this->client->connectServer())
     {
         qDebug() << "connected";
-
 //        connect(this->timer, SIGNAL(timeout()), this, SLOT(readCapture()));
 //        connect(this->receiveThread, SIGNAL(viewImageSignal(DataHeader*,const char*const*)), this->label, SLOT(setOpenCVImage()), Qt::BlockingQueuedConnection);
 //        connect(this, SIGNAL(sendImageSignal(cv::Mat)), this, SLOT(sendImage(cv::Mat)));
         connect(this->receiveThread, SIGNAL(disconnectServerSignal()), this, SLOT(disconnectServer()));
         connect(this->receiveThread, SIGNAL(resRoomListSignal(ResRoomList*)), this, SLOT(responseRoomList(ResRoomList*)));
         connect(this->receiveThread, SIGNAL(resMakeRoomSignal(ResMakeRoom *)), this, SLOT(responseMakeRoom(ResMakeRoom *)));
-//        this->timer->start(33);
-        this->receiveThread->start();
-        this->client->sendReqRoomList();
-
         connect(ui->btn_makeRoom, SIGNAL(clicked(bool)), this, SLOT(viewMakeRoomMessageBox()));
+        connect(ui->lw_roomList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(enterRoom(QListWidgetItem*)));
+
+        this->receiveThread->start();
+//        this->timer->start(33);
+        this->client->sendReqRoomList();
     }
     else
     {
@@ -131,6 +131,16 @@ void MainWidget::responseMakeRoom(ResMakeRoom * resMakeRoom)
         this->client->sendReqRoomList();
 //        ui->stackedWidget->setCurrentIndex(1);
 }
+
+void MainWidget::enterRoom(QListWidgetItem * item)
+{
+    if (this->ipList.size() > 0)
+    {
+        int row = ui->lw_roomList->row(item);
+        this->client->sendReqEnterRoom(this->ipList[row], this->portList[row]);
+    }
+}
+
 
 
 

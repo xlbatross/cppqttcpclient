@@ -22,12 +22,13 @@ public:
 //    bool sendReqImage(const cv::Mat & img);
     bool sendReqRoomList();
     bool sendReqMakeRoom(const std::string & roomName);
+    bool sendReqEnterRoom(const std::string & ip, const int port);
 
     bool sendRequest(Request * request);
-    bool sendByteData(const char * data, const int dataSize);
+    bool sendByteData(const char * data, const int dataSize);//실질적으로 데이터를 보내는 것
 
     int receive(char ** headerBytes, char *** dataBytesList, std::vector<int> & dataLengthList);
-    int receiveByteData(char ** data);
+    int receiveByteData(char ** data);//실질적으로 데이터를 받는 것
 };
 #endif /* __WTCPCLIENT_H__ */
 

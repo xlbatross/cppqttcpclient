@@ -47,6 +47,12 @@ bool WTCPClient::sendReqMakeRoom(const std::string &roomName)
     return this->sendRequest(&reqMakeRoom);
 }
 
+bool WTCPClient::sendReqEnterRoom(const std::string &ip, const int port)
+{
+    ReqEnterRoom reqEnterRoom(ip, port);
+    return this->sendRequest(&reqEnterRoom);
+}
+
 bool WTCPClient::sendRequest(Request * request)
 {
     if (!this->sendByteData(request->headerBytes(), request->headerSize()))
@@ -108,6 +114,7 @@ bool WTCPClient::sendByteData(const char *data, const int dataSize)
 //    return this->dataHeader;
 //}
 
+//헤더데이터를 받고 실제데이터를 받는다
 int WTCPClient::receive(char **headerBytes, char ***dataBytesList, std::vector<int> & dataLengthList)
 {
     int dataCount = 0;
@@ -115,6 +122,7 @@ int WTCPClient::receive(char **headerBytes, char ***dataBytesList, std::vector<i
     // receive header data
     if (headSize == -1)
         return -1;
+
 
     memcpy(&dataCount, *headerBytes, sizeof(int));
     dataLengthList.resize(dataCount);

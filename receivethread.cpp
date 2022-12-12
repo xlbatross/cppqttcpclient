@@ -69,7 +69,7 @@ void ReceiveThread::run()
 
         switch(this->responseType)
         {
-        case Response::Image:
+        case Response::sendImage:
             qDebug() << "response Image";
 //            emit viewImageSignal(this->receiveHeader, this->receiveDataList);
             break;

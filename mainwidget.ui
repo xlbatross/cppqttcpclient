@@ -162,7 +162,7 @@
      <property name="geometry">
       <rect>
        <x>340</x>
-       <y>310</y>
+       <y>340</y>
        <width>75</width>
        <height>23</height>
       </rect>
@@ -227,7 +227,7 @@
      <property name="geometry">
       <rect>
        <x>440</x>
-       <y>320</y>
+       <y>340</y>
        <width>121</width>
        <height>16</height>
       </rect>
@@ -240,7 +240,7 @@
      <property name="geometry">
       <rect>
        <x>390</x>
-       <y>370</y>
+       <y>390</y>
        <width>75</width>
        <height>23</height>
       </rect>
@@ -260,6 +260,45 @@
      </property>
      <property name="placeholderText">
       <string>이름을 입력해주세요</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>300</y>
+       <width>62</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>구분'</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radio_stuType">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>300</y>
+       <width>109</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>학생</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radio_proType">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>300</y>
+       <width>109</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>교수</string>
      </property>
     </widget>
    </widget>

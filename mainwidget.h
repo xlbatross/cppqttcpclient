@@ -2,6 +2,7 @@
 #define MAINWIDGET_H
 
 #include <QWidget>
+#include <QListWidgetItem>
 #include <opencv2/opencv.hpp>
 #include <QTimer>
 #include <QDebug>
@@ -51,6 +52,7 @@ private slots:
     void responseRoomList(ResRoomList *);
     void viewMakeRoomMessageBox();
     void responseMakeRoom(ResMakeRoom *);
+    void enterRoom(QListWidgetItem *);
 
 signals:
     void setOpenCVImageSignal(cv::Mat);

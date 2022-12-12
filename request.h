@@ -8,7 +8,8 @@
 class Request
 {
 public:
-    enum Type{Image = 1, RoomList, MakeRoom};
+    enum Type{sendImage = 1, RoomList, MakeRoom, EnterRoom};
+    enum Data{String = 0, Int, Image};
     Request();
     ~Request();
 
@@ -37,6 +38,12 @@ class ReqMakeRoom : public Request
 {
 public:
     ReqMakeRoom(std::string roomName);
+};
+
+class ReqEnterRoom : public Request
+{
+public:
+    ReqEnterRoom(std::string ip, int port);
 };
 
 

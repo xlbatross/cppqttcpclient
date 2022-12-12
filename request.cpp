@@ -197,32 +197,6 @@
 //     *     channels <32bit, 4byte, int>
 //     */
 
-//    /*
-//     * resRoomList header example
-//     * datacount : 24 <32bit, 4byte, int>
-//     * responseType : 2(resRoomList) (32bite, 4byte, int)
-//     * attr by one element size : 4
-//     * attr:
-//     *     first ip length <32bit, 4byte, int>
-//     *     first port length <32bit, 4byte, int>
-//     *     first roomName length <32bit, 4byte, int>
-//     *     first room member count length <32bit, 4byte, int>
-//     *     second ip length <32bit, 4byte, int>
-//     *     second port length <32bit, 4byte, int>
-//     *     second roomName length <32bit, 4byte, int>
-//     *     second room member count length <32bit, 4byte, int>
-//     *     ...
-//     */
-
-//    /*
-//     * resMakeRoom header example
-//     * datacount : 1 <32bit, 4byte, int>
-//     * responseType : 3(resMakeRoom) (32bite, 4byte, int)
-//     * attr by one element size : 1
-//     * attr:
-//     *     data length <32bit, 4byte, int>
-//     */
-
 //    this->_attr.clear();
 //    memcpy(&(this->_dataCount), this->_receiveByteArray + sizeof(int) * 0, sizeof(int));
 //    memcpy(&(this->_responseType), this->_receiveByteArray + sizeof(int) * 1, sizeof(int));
@@ -309,22 +283,22 @@ ReqRoomList::ReqRoomList()
 {
     /*
      * reqRoomList header
-     * datacount : 0 <32bit, 4byte, int>
+     * receiveCount : 0 <32bit, 4byte, int>
      * requestType : 2(RoomList) (32bite, 4byte, int)
-     * attr by one element size : 0 <32bit, 4byte, int>
-     * attr:
+     * dataSize : 0 <32bit, 4byte, int>
+     * dataType:
      *     none
      */
 
     this->_headerSize = sizeof(int) * 3;
-    int dataCount = 0;
+    int receiveCount = 0;
     int requestType = Request::RoomList;
-    int attrSize = 0;
+    int dataSize = 0;
 
     this->_headerBytes = new char[this->_headerSize];
-    memcpy(this->_headerBytes + sizeof(int) * 0, &dataCount, sizeof(int)); // dataCount
+    memcpy(this->_headerBytes + sizeof(int) * 0, &receiveCount, sizeof(int)); // dataCount
     memcpy(this->_headerBytes + sizeof(int) * 1, &requestType, sizeof(int)); // requestType
-    memcpy(this->_headerBytes + sizeof(int) * 2, &attrSize, sizeof(int)); // attrSize;
+    memcpy(this->_headerBytes + sizeof(int) * 2, &dataSize, sizeof(int)); // attrSize;
 }
 
 ReqMakeRoom::ReqMakeRoom(std::string roomName)
@@ -332,28 +306,67 @@ ReqMakeRoom::ReqMakeRoom(std::string roomName)
 {
     /*
      * reqMakeRoom header
-     * datacount : 1 <32bit, 4byte, int>
+     * receiveCount : 1 <32bit, 4byte, int>
      * requestType : 3(reqMakeRoom) (32bite, 4byte, int)
-     * attr by one element size : 1 <32bit, 4byte, int>
-     * attr:
-     *    roomName length <32bit, 4byte, int>
+     * dataSize : 1 <32bit, 4byte, int>
+     * dataType :
+     *      0(string) <32bit, 4byte, int>
      */
 
     this->_headerSize = sizeof(int) * 4;
-    int dataCount = 1;
+    int receiveCount = 1;
     int requestType = Request::MakeRoom;
-    int attrSize = 1;
-    int roomNameLength = roomName.size();
+    int dataSize = 1;
+    int firstDataType = Request::String;
 
     this->_headerBytes = new char[this->_headerSize];
-    memcpy(this->_headerBytes + sizeof(int) * 0, &dataCount, sizeof(int)); // dataCount
+    memcpy(this->_headerBytes + sizeof(int) * 0, &receiveCount, sizeof(int)); // dataCount
     memcpy(this->_headerBytes + sizeof(int) * 1, &requestType, sizeof(int)); // requestType
-    memcpy(this->_headerBytes + sizeof(int) * 2, &attrSize, sizeof(int)); // attrSize;
-    memcpy(this->_headerBytes + sizeof(int) * 3, &roomNameLength, sizeof(int));
+    memcpy(this->_headerBytes + sizeof(int) * 2, &dataSize, sizeof(int)); // attrSize;
+    memcpy(this->_headerBytes + sizeof(int) * 3, &firstDataType, sizeof(int));
 
     this->_dataLengthList.resize(1);
     this->_dataBytesList = new char * [1]();
-    this->_dataBytesList[0] = new char[roomNameLength];
-    memcpy(this->_dataBytesList[0], roomName.c_str(), roomNameLength);
-    this->_dataLengthList[0] = roomNameLength;
+    this->_dataBytesList[0] = new char[roomName.size()];
+    memcpy(this->_dataBytesList[0], roomName.c_str(), roomName.size());
+    this->_dataLengthList[0] = roomName.size();
+}
+
+ReqEnterRoom::ReqEnterRoom(std::string ip, int port)
+    : Request()
+{
+    /*
+     * reqEnterRoom header
+     * receiveCount : 2 <32bit, 4byte, int>
+     * requestType : 4(reqEnterRoom) (32bite, 4byte, int)
+     * dataSize : 2 <32bit, 4byte, int>
+     * dataType:
+     *    0 : string <32bit, 4byte, int>
+     *    1 : int <32bit, 4byte, int>
+     */
+
+    this->_headerSize = sizeof(int) * 5;
+    int receiveCount = 2;
+    int requestType = Request::EnterRoom;
+    int dataSize = 2;
+    int firstDataType = Request::String;
+    int secondDataType = Request::Int;
+
+    this->_headerBytes = new char[this->_headerSize];
+    memcpy(this->_headerBytes + sizeof(int) * 0, &receiveCount, sizeof(int)); // dataCount
+    memcpy(this->_headerBytes + sizeof(int) * 1, &requestType, sizeof(int)); // requestType
+    memcpy(this->_headerBytes + sizeof(int) * 2, &dataSize, sizeof(int)); // attrSize;
+    memcpy(this->_headerBytes + sizeof(int) * 3, &firstDataType, sizeof(int));
+    memcpy(this->_headerBytes + sizeof(int) * 4, &secondDataType, sizeof(int));
+
+    this->_dataLengthList.resize(receiveCount);
+    this->_dataBytesList = new char * [receiveCount]();
+
+    this->_dataBytesList[0] = new char[ip.size()];
+    memcpy(this->_dataBytesList[0], ip.c_str(), ip.size());
+    this->_dataLengthList[0] = ip.size();
+
+    this->_dataBytesList[1] = new char[sizeof(int)];
+    memcpy(this->_dataBytesList[1], (char *)(&port), sizeof(int));
+    this->_dataLengthList[1] = sizeof(int);
 }

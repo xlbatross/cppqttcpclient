@@ -7,7 +7,8 @@
 class Response
 {
 public:
-    enum Type{Image = 1, RoomList, MakeRoom};
+    enum Type{sendImage = 1, RoomList, MakeRoom};
+    enum Data{String = 0, Int, Image};
     Response(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
     ~Response();
 
@@ -17,8 +18,8 @@ protected:
     char ** dataBytesList;
     std::vector<int> dataLengthList;
 
-    int attrSize;
-    std::vector<int> attrList;
+    int dataSize;
+    std::vector<int> dataTypeList;
 };
 
 class ResRoomList : public Response
