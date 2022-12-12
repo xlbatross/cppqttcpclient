@@ -8,7 +8,7 @@
 class Response
 {
 public:
-    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom };
+    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom};
     enum Data{String = 0, Int, OpenCVImage};
     Response(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
     ~Response();
@@ -78,11 +78,21 @@ class ResJoinRoom : public Response
 public:
     ResJoinRoom(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
     const std::string & name();
-    const bool isProfessor();
 
 private:
     std::string _name;
-    bool _isProfessor;
+};
+
+class ResDisjoinRoom : public Response
+{
+public:
+    ResDisjoinRoom(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+    const std::string & name();
+    const bool isProfessorOut();
+
+private:
+    std::string _name;
+    bool _isProfessorOut;
 };
 
 

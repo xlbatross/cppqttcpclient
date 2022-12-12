@@ -22,18 +22,6 @@ bool LTCPClient::connectServer(std::string serverIp, short serverPort)
         return true;
 }
 
-
-// bool LTCPClient::sendReqImage(const cv::Mat & img)
-// {
-//     int headerDataSize = this->dataHeader->encodeReqImage(img);
-
-//     if (!this->sendByteData(this->dataHeader->sendByteArray(), headerDataSize)
-//      || !this->sendByteData((char *)(img.data), img.total() * img.channels()))
-//         return false;
-
-//     return true;
-// }
-
 bool LTCPClient::sendReqImage(const cv::Mat & img)
 {
     ReqImage reqImage(img);
@@ -56,6 +44,12 @@ bool LTCPClient::sendReqEnterRoom(const std::string &ip, const int port)
 {
     ReqEnterRoom reqEnterRoom(ip, port);
     return this->sendRequest(&reqEnterRoom);
+}
+
+bool LTCPClient::sendReqLeaveRoom()
+{
+    ReqLeaveRoom reqLeaveRoom;
+    return this->sendRequest(&reqLeaveRoom);
 }
 
 bool LTCPClient::sendRequest(Request * request)

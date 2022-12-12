@@ -19,6 +19,7 @@ ReceiveThread::ReceiveThread(
     , resMakeRoom(NULL)
     , resEnterRoom(NULL)
     , resJoinRoom(NULL)
+    , resDisjoinRoom(NULL)
 {
     this->dataLengthList.resize(0);
 }
@@ -106,6 +107,13 @@ void ReceiveThread::run()
                 delete resJoinRoom;
             resJoinRoom = new ResJoinRoom(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resJoinRoomSignal(resJoinRoom);
+            break;
+        case Response::DisjoinRoom:
+            qDebug() << "response disjoin Room";
+            if (resDisjoinRoom != NULL)
+                delete resDisjoinRoom;
+            resDisjoinRoom = new ResDisjoinRoom(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
+            emit resDisjoinRoomSignal(resDisjoinRoom);
             break;
         }
     }

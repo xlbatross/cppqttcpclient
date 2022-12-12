@@ -13,7 +13,7 @@ MainWidget::MainWidget(QWidget *parent)
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
-    if (this->client->connectServer())
+    if (this->client->connectServer("192.168.0.61"))
     {
         qDebug() << "connected";
 //        connect(this->timer, SIGNAL(timeout()), this, SLOT(readCapture()));
@@ -21,12 +21,14 @@ MainWidget::MainWidget(QWidget *parent)
 //        connect(this, SIGNAL(sendImageSignal(cv::Mat)), this, SLOT(sendImage(cv::Mat)));
         connect(this->receiveThread, SIGNAL(disconnectServerSignal()), this, SLOT(disconnectServer()));
         connect(this->receiveThread, SIGNAL(resRoomListSignal(ResRoomList*)), this, SLOT(responseRoomList(ResRoomList*)));
-        connect(this->receiveThread, SIGNAL(resMakeRoomSignal(ResMakeRoom *)), this, SLOT(responseMakeRoom(ResMakeRoom *)));
+        connect(this->receiveThread, SIGNAL(resMakeRoomSignal(ResMakeRoom*)), this, SLOT(responseMakeRoom(ResMakeRoom*)));
         connect(this->receiveThread, SIGNAL(resEnterRoomSignal(ResEnterRoom*)), this, SLOT(responseEnterRoom(ResEnterRoom*)));
         connect(this->receiveThread, SIGNAL(resJoinRoomSignal(ResJoinRoom*)), this, SLOT(responseJoinRoom(ResJoinRoom*)));
+        connect(this->receiveThread, SIGNAL(resDisjoinRoomSignal(ResDisjoinRoom*)), this, SLOT(responseDisjoinRoom(ResDisjoinRoom*)));
         connect(ui->btn_makeRoom, SIGNAL(clicked(bool)), this, SLOT(viewMakeRoomMessageBox()));
         connect(ui->lw_roomList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(enterRoom(QListWidgetItem*)));
-
+        connect(ui->btn_backFromStudent, SIGNAL(clicked(bool)), this, SLOT(backClicked()));
+        connect(ui->btn_endLecture, SIGNAL(clicked(bool)), this, SLOT(backClicked()));
         this->receiveThread->start();
 //        this->timer->start(33);
         this->client->sendReqRoomList();
@@ -47,15 +49,6 @@ MainWidget::~MainWidget()
 }
 
 // slots
-void MainWidget::disconnectServer()
-{
-    QMessageBox msgBox;
-    msgBox.setText("서버와의 접속을 유지할 수 없습니다.");
-    msgBox.exec();
-    this->deleteLater();
-}
-
-
 void MainWidget::readCapture()
 {
     if (this->cap.isOpened())
@@ -70,6 +63,41 @@ void MainWidget::readCapture()
         this->cap.set(cv::CAP_PROP_FRAME_WIDTH, 320);
         this->cap.set(cv::CAP_PROP_FRAME_HEIGHT, 240);
     }
+}
+
+void MainWidget::viewMakeRoomMessageBox()
+{
+    QMessageBox msgBox;
+    int ret;
+    msgBox.setText("방을 만드시겠습니까?");
+    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    ret = msgBox.exec();
+    if (ret == QMessageBox::Ok)
+        this->client->sendReqMakeRoom("안녕하세요?");
+}
+
+void MainWidget::enterRoom(QListWidgetItem * item)
+{
+    if (this->ipList.size() > 0)
+    {
+        int row = ui->lw_roomList->row(item);
+        this->client->sendReqEnterRoom(this->ipList[row], this->portList[row]);
+    }
+}
+
+void MainWidget::backClicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+    this->client->sendReqLeaveRoom();
+}
+
+
+void MainWidget::disconnectServer()
+{
+    QMessageBox msgBox;
+    msgBox.setText("서버와의 접속을 유지할 수 없습니다.");
+    msgBox.exec();
+    this->deleteLater();
 }
 
 void MainWidget::responseRoomList(ResRoomList * resRoomList)
@@ -102,17 +130,6 @@ void MainWidget::responseRoomList(ResRoomList * resRoomList)
     }
 }
 
-void MainWidget::viewMakeRoomMessageBox()
-{
-    QMessageBox msgBox;
-    int ret;
-    msgBox.setText("방을 만드시겠습니까?");
-    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-    ret = msgBox.exec();
-    if (ret == QMessageBox::Ok)
-        this->client->sendReqMakeRoom("안녕하세요?");
-}
-
 void MainWidget::responseMakeRoom(ResMakeRoom * resMakeRoom)
 {
     if (resMakeRoom->isMake())
@@ -126,15 +143,6 @@ void MainWidget::responseMakeRoom(ResMakeRoom * resMakeRoom)
         msgBox.setText("방을 생성하지 못하였습니다.");
         msgBox.exec();
         this->client->sendReqRoomList();
-    }
-}
-
-void MainWidget::enterRoom(QListWidgetItem * item)
-{
-    if (this->ipList.size() > 0)
-    {
-        int row = ui->lw_roomList->row(item);
-        this->client->sendReqEnterRoom(this->ipList[row], this->portList[row]);
     }
 }
 
@@ -157,13 +165,33 @@ void MainWidget::responseEnterRoom(ResEnterRoom * resEnterRoom)
 void MainWidget::responseJoinRoom(ResJoinRoom * resJoinRoom)
 {
     QString appear = QString::fromUtf8(resJoinRoom->name().c_str(), resJoinRoom->name().size()) + "님이 등장하셨습니다.";
-    if (resJoinRoom->isProfessor())
+    if (ui->stackedWidget->currentIndex() == 4)
     {
         ui->tb_chatPro->append(appear);
     }
-    else
+    else if (ui->stackedWidget->currentIndex() == 3)
     {
         ui->tb_chatStu->append(appear);
+    }
+}
+
+void MainWidget::responseDisjoinRoom(ResDisjoinRoom * resDisjoinRoom)
+{
+    QString disappear = QString::fromUtf8(resDisjoinRoom->name().c_str(), resDisjoinRoom->name().size()) + "님이 퇴장하셨습니다.";
+    if (resDisjoinRoom->isProfessorOut())
+    {
+        ui->stackedWidget->setCurrentIndex(2);
+        QMessageBox msgBox;
+        msgBox.setText("강의가 종료되었습니다.");
+        msgBox.exec();
+    }
+    else if (ui->stackedWidget->currentIndex() == 4)
+    {
+        ui->tb_chatPro->append(disappear);
+    }
+    else if (ui->stackedWidget->currentIndex() == 3)
+    {
+        ui->tb_chatStu->append(disappear);
     }
 }
 

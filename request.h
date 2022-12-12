@@ -8,7 +8,7 @@
 class Request
 {
 public:
-    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom};
+    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, LeaveRoom};
     enum Data{String = 0, Int, OpenCVImage};
     Request();
     ~Request();
@@ -50,6 +50,12 @@ class ReqEnterRoom : public Request
 {
 public:
     ReqEnterRoom(std::string ip, int port);
+};
+
+class ReqLeaveRoom : public Request
+{
+public:
+    ReqLeaveRoom();
 };
 
 

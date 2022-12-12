@@ -41,6 +41,7 @@ private:
     ResMakeRoom * resMakeRoom;
     ResEnterRoom * resEnterRoom;
     ResJoinRoom * resJoinRoom;
+    ResDisjoinRoom * resDisjoinRoom;
 
 public slots:
     void start();
@@ -52,6 +53,7 @@ signals:
     void resMakeRoomSignal(ResMakeRoom *);
     void resEnterRoomSignal(ResEnterRoom *);
     void resJoinRoomSignal(ResJoinRoom *);
+    void resDisjoinRoomSignal(ResDisjoinRoom *);
 };
 
 #endif // RECEIVETHREAD_H

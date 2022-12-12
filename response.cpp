@@ -173,8 +173,27 @@ ResJoinRoom::ResJoinRoom(const char *headerBytes, const char * const *dataBytesL
 {
     /*
      * resJoinRoom header example
-     * receiveCount : 2 <32bit, 4byte, int>
+     * receiveCount : 1 <32bit, 4byte, int>
      * responseType : 5(ResJoinRoom) (32bite, 4byte, int)
+     * dataSize : 1
+     * dataType:
+     *     0 : string <32bit, 4byte, int>
+     */
+    this->_name = std::string(this->dataBytesList[0], this->dataLengthList[0]);
+}
+
+const std::string &ResJoinRoom::name()
+{
+    return this->_name;
+}
+
+ResDisjoinRoom::ResDisjoinRoom(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
+    : Response(headerBytes, dataBytesList, headSize, dataLengthList)
+{
+    /*
+     * resDisJoinRoom header example
+     * receiveCount : 2 <32bit, 4byte, int>
+     * responseType : 6(DisJoinRoom) (32bite, 4byte, int)
      * dataSize : 2
      * dataType:
      *     0 : string <32bit, 4byte, int>
@@ -183,17 +202,17 @@ ResJoinRoom::ResJoinRoom(const char *headerBytes, const char * const *dataBytesL
     int c;
     this->_name = std::string(this->dataBytesList[0], this->dataLengthList[0]);
     memcpy(&c, this->dataBytesList[1], sizeof(int));
-    this->_isProfessor = (c == 1);
+    this->_isProfessorOut = (c == 1);
 }
 
-const std::string &ResJoinRoom::name()
+const std::string &ResDisjoinRoom::name()
 {
     return this->_name;
 }
 
-const bool ResJoinRoom::isProfessor()
+const bool ResDisjoinRoom::isProfessorOut()
 {
-    return this->_isProfessor;
+    return this->_isProfessorOut;
 }
 
 

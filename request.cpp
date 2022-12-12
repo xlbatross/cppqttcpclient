@@ -181,3 +181,26 @@ ReqEnterRoom::ReqEnterRoom(std::string ip, int port)
     memcpy(this->_dataBytesList[1], (char *)(&port), sizeof(int));
     this->_dataLengthList[1] = sizeof(int);
 }
+
+ReqLeaveRoom::ReqLeaveRoom()
+    : Request()
+{
+    /*
+     * reqLeaveRoom header
+     * receiveCount : 0 <32bit, 4byte, int>
+     * requestType : 5(LeaveRoom) (32bite, 4byte, int)
+     * dataSize : 0 <32bit, 4byte, int>
+     * dataType:
+     *     none
+     */
+
+    this->_headerSize = sizeof(int) * 3;
+    int receiveCount = 0;
+    int requestType = Request::LeaveRoom;
+    int dataSize = 0;
+
+    this->_headerBytes = new char[this->_headerSize];
+    memcpy(this->_headerBytes + sizeof(int) * 0, &receiveCount, sizeof(int)); // dataCount
+    memcpy(this->_headerBytes + sizeof(int) * 1, &requestType, sizeof(int)); // requestType
+    memcpy(this->_headerBytes + sizeof(int) * 2, &dataSize, sizeof(int)); // attrSize;
+}
