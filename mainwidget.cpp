@@ -4,8 +4,8 @@
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
-//    , client(new WTCPClient)
-    , client(new LTCPClient)
+    , client(new WTCPClient)
+//    , client(new LTCPClient)
     , receiveThread(new ReceiveThread(this->client))
 {
     ui->setupUi(this);
@@ -13,7 +13,7 @@ MainWidget::MainWidget(QWidget *parent)
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
-    if (this->client->connectServer("192.168.0.61"))
+    if (this->client->connectServer())
     {
         qDebug() << "connected";
 
@@ -27,7 +27,7 @@ MainWidget::MainWidget(QWidget *parent)
         this->receiveThread->start();
         this->client->sendReqRoomList();
 
-        connect(ui->btnMakeRoom, SIGNAL(clicked(bool)), this, SLOT(viewMakeRoomMessageBox()));
+        connect(ui->btn_makeRoom, SIGNAL(clicked(bool)), this, SLOT(viewMakeRoomMessageBox()));
     }
     else
     {
@@ -77,20 +77,32 @@ void MainWidget::sendImage(cv::Mat const & image)
 
 void MainWidget::responseRoomList(ResRoomList * resRoomList)
 {
-    ui->listWidgetRoomList->clear();
-    if (resRoomList->roomMemberCountList().size() == 0)
+    ipList = resRoomList->ipList();
+    portList = resRoomList->portList();
+    roomNameList = resRoomList->roomNameList();
+    roomMemberCountList = resRoomList->roomMemberCountList();
+
+    ui->lw_roomList->clear();
+//    if (ipList.size() == 0)
+    if (ipList.size() == 0)
     {
-        ui->listWidgetRoomList->addItem("방이 없습니다.");
+        ui->lw_roomList->addItem("방이 없습니다.");
     }
     else
     {
-        for (int i = 0; i < resRoomList->ipList().size(); i++)
+        for (int i = 0; i < ipList.size(); i++)
+//        for (int i = 0; i < resRoomList->ipList().size(); i++)
         {
-            ui->listWidgetRoomList->addItem(
-                QString::fromUtf8(resRoomList->roomNameList().at(i).c_str(), resRoomList->roomNameList().at(i).size())
-              + " " + QString::fromUtf8(resRoomList->ipList().at(i).c_str(), resRoomList->ipList().at(i).size())
-              + " " + QString::number(resRoomList->portList()[i])
+            ui->lw_roomList->addItem(
+                QString::fromUtf8(roomNameList.at(i).c_str(), roomNameList.at(i).size())
+              + " " + QString::fromUtf8(ipList.at(i).c_str(), ipList.at(i).size())
+              + " " + QString::number(portList[i])
             );
+//            ui->listWidgetRoomList->addItem(
+//                QString::fromUtf8(resRoomList->roomNameList().at(i).c_str(), resRoomList->roomNameList().at(i).size())
+//              + " " + QString::fromUtf8(resRoomList->ipList().at(i).c_str(), resRoomList->ipList().at(i).size())
+//              + " " + QString::number(resRoomList->portList()[i])
+//            );
         }
     }
 }

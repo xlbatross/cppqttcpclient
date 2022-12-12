@@ -41,6 +41,8 @@ set(PROJECT_SOURCES
         request.cpp
         response.h
         response.cpp
+        room.ui
+        picture.ui
 )
 
 if(WIN32)

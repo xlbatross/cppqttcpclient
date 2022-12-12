@@ -7,8 +7,8 @@
 #include <QDebug>
 #include <QMessageBox>
 #include "opencvimagelabel.h"
-//#include "wtcpclient.h"
-#include "ltcpclient.h"
+#include "wtcpclient.h"
+//#include "ltcpclient.h"
 #include "receivethread.h"
 #include "response.h"
 
@@ -27,8 +27,8 @@ public:
 private:
     Ui::MainWidget *ui;
 
-//    WTCPClient * client;
-    LTCPClient * client;
+    WTCPClient * client;
+//    LTCPClient * client;
 
     ReceiveThread * receiveThread;
 
@@ -37,6 +37,12 @@ private:
 
     QTimer * timer;
     OpenCVImageLabel * label;
+
+    // roomList
+    std::vector<std::string> ipList;
+    std::vector<int> portList;
+    std::vector<std::string> roomNameList;
+    std::vector<int> roomMemberCountList;
 
 private slots:
     void disconnectServer();

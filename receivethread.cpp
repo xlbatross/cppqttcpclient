@@ -3,13 +3,13 @@
 
 
 ReceiveThread::ReceiveThread(
-//        WTCPClient * client,
-        LTCPClient * client,
+        WTCPClient * client,
+//        LTCPClient * client,
         QObject *parent
     )
     : QThread{parent}
-    , client(client)
     , isRunning(false)
+    , client(client)
     , headerBytes(NULL)
     , dataBytesList(NULL)
     , headSize(0)
@@ -78,7 +78,6 @@ void ReceiveThread::run()
                 delete resRoomList;
             resRoomList = new ResRoomList(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resRoomListSignal(resRoomList);
-//            emit viewRoomListSignal(this->receiveHeader, this->receiveDataList);
             break;
         case Response::MakeRoom:
             qDebug() << "response Make Room";
@@ -86,7 +85,6 @@ void ReceiveThread::run()
                 delete resMakeRoom;
             resMakeRoom = new ResMakeRoom(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resMakeRoomSignal(resMakeRoom);
-//            emit ResMakeRoomSignal(this->receiveHeader, this->receiveDataList);
             break;
         }
     }
