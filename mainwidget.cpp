@@ -4,8 +4,8 @@
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
-    , client(new WTCPClient)
-//    , client(new LTCPClient)
+//    , client(new WTCPClient)
+    , client(new LTCPClient)
     , receiveThread(new ReceiveThread(this->client))
 {
     ui->setupUi(this);
@@ -62,7 +62,7 @@ void MainWidget::readCapture()
     {
         this->cap.read(img);
         cv::resize(img, img, cv::Size(320, 240));
-//      this->client->sendReqImage(image);
+        this->client->sendReqImage(img);
     }
     else
     {
@@ -115,18 +115,18 @@ void MainWidget::viewMakeRoomMessageBox()
 
 void MainWidget::responseMakeRoom(ResMakeRoom * resMakeRoom)
 {
-    QMessageBox msgBox;
     if (resMakeRoom->isMake())
-        msgBox.setText("방이 생성되었습니다.");
-    else
-        msgBox.setText("방을 생성하지 못하였습니다.");
-    msgBox.exec();
-
-    if (resMakeRoom->isMake())
+    {
+        ui->tb_chatPro->clear();
         ui->stackedWidget->setCurrentIndex(4);
-//        this->client->sendReqRoomList();
+    }
     else
+    {
+        QMessageBox msgBox;
+        msgBox.setText("방을 생성하지 못하였습니다.");
+        msgBox.exec();
         this->client->sendReqRoomList();
+    }
 }
 
 void MainWidget::enterRoom(QListWidgetItem * item)
@@ -141,7 +141,10 @@ void MainWidget::enterRoom(QListWidgetItem * item)
 void MainWidget::responseEnterRoom(ResEnterRoom * resEnterRoom)
 {
     if (resEnterRoom->isEnter())
+    {
+        ui->tb_chatStu->clear();
         ui->stackedWidget->setCurrentIndex(3);
+    }
     else
     {
         QMessageBox msgBox;
@@ -153,7 +156,15 @@ void MainWidget::responseEnterRoom(ResEnterRoom * resEnterRoom)
 
 void MainWidget::responseJoinRoom(ResJoinRoom * resJoinRoom)
 {
-
+    QString appear = QString::fromUtf8(resJoinRoom->name().c_str(), resJoinRoom->name().size()) + "님이 등장하셨습니다.";
+    if (resJoinRoom->isProfessor())
+    {
+        ui->tb_chatPro->append(appear);
+    }
+    else
+    {
+        ui->tb_chatStu->append(appear);
+    }
 }
 
 

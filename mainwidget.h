@@ -8,8 +8,8 @@
 #include <QDebug>
 #include <QMessageBox>
 #include "opencvimagelabel.h"
-#include "wtcpclient.h"
-//#include "ltcpclient.h"
+//#include "wtcpclient.h"
+#include "ltcpclient.h"
 #include "receivethread.h"
 #include "response.h"
 
@@ -28,8 +28,8 @@ public:
 private:
     Ui::MainWidget *ui;
 
-    WTCPClient * client;
-//    LTCPClient * client;
+//    WTCPClient * client;
+    LTCPClient * client;
 
     ReceiveThread * receiveThread;
 

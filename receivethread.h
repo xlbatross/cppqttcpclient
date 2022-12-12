@@ -3,8 +3,8 @@
 
 #include <QThread>
 #include <QDebug>
-#include "wtcpclient.h"
-//#include "ltcpclient.h"
+//#include "wtcpclient.h"
+#include "ltcpclient.h"
 #include "response.h"
 
 class ReceiveThread : public QThread
@@ -12,8 +12,8 @@ class ReceiveThread : public QThread
     Q_OBJECT
 public:
     explicit ReceiveThread(
-        WTCPClient * client,
-//        LTCPClient * client,
+//        WTCPClient * client,
+        LTCPClient * client,
         QObject *parent = nullptr
     );
     ~ReceiveThread();
@@ -27,8 +27,8 @@ public:
 private:
     bool isRunning;
 
-    WTCPClient * client;
-//    LTCPClient * client;
+//    WTCPClient * client;
+    LTCPClient * client;
 
     char * headerBytes;
     char ** dataBytesList;

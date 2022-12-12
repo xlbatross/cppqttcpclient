@@ -78,11 +78,11 @@ class ResJoinRoom : public Response
 public:
     ResJoinRoom(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
     const std::string & name();
-    const int isProfessor();
+    const bool isProfessor();
 
 private:
     std::string _name;
-    int _isProfessor;
+    bool _isProfessor;
 };
 
 
