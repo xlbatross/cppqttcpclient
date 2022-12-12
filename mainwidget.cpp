@@ -98,7 +98,7 @@ void MainWidget::responseRoomList(ResRoomList * resRoomList)
               + " " + QString::fromUtf8(ipList.at(i).c_str(), ipList.at(i).size())
               + " " + QString::number(portList[i])
             );
-//            ui->listWidgetRoomList->addItem(
+//            ui->lw_roomList->addItem(
 //                QString::fromUtf8(resRoomList->roomNameList().at(i).c_str(), resRoomList->roomNameList().at(i).size())
 //              + " " + QString::fromUtf8(resRoomList->ipList().at(i).c_str(), resRoomList->ipList().at(i).size())
 //              + " " + QString::number(resRoomList->portList()[i])

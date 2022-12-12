@@ -15,6 +15,7 @@ ReceiveThread::ReceiveThread(
     , headSize(0)
     , responseType(0)
     , resRoomList(NULL)
+    , resMakeRoom(NULL)
 {
     this->dataLengthList.resize(0);
 }
