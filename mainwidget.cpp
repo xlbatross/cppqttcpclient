@@ -25,20 +25,14 @@ MainWidget::MainWidget(QWidget *parent)
         connect(this->receiveThread, SIGNAL(resEnterRoomSignal(ResEnterRoom*)), this, SLOT(responseEnterRoom(ResEnterRoom*)));
         connect(this->receiveThread, SIGNAL(resJoinRoomSignal(ResJoinRoom*)), this, SLOT(responseJoinRoom(ResJoinRoom*)));
         connect(this->receiveThread, SIGNAL(resDisjoinRoomSignal(ResDisjoinRoom*)), this, SLOT(responseDisjoinRoom(ResDisjoinRoom*)));
-<<<<<<< HEAD
         connect(this->receiveThread, SIGNAL(resLoginSignal(ResLogin*)), this, SLOT(responseLogin(ResLogin *)));
-=======
->>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
         connect(ui->btn_makeRoom, SIGNAL(clicked(bool)), this, SLOT(viewMakeRoomMessageBox()));
         connect(ui->lw_roomList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(enterRoom(QListWidgetItem*)));
         connect(ui->btn_backFromStudent, SIGNAL(clicked(bool)), this, SLOT(backClicked()));
         connect(ui->btn_endLecture, SIGNAL(clicked(bool)), this, SLOT(backClicked()));
         connect(ui->btn_refreshList, SIGNAL(clicked(bool)), this, SLOT(refeashRoomList()));
-<<<<<<< HEAD
         connect(ui->btn_login, SIGNAL(clicked(bool)), this, SLOT(Login()));
         connect(ui->btn_submit, SIGNAL(clicked(bool)), this, SLOT(SignUp()));
-=======
->>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
         this->receiveThread->start();
         this->client->sendReqRoomList();
 
@@ -109,7 +103,7 @@ void MainWidget::refeashRoomList()
     this->client->sendReqRoomList();
 }
 
-<<<<<<< HEAD
+
 void MainWidget::Login()
 {
     QString num = ui->edt_loginNum->text();
@@ -139,8 +133,6 @@ void MainWidget::SignUp()
     qDebug() << cate;
 }
 
-=======
->>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
 void MainWidget::disconnectServer()
 {
     QMessageBox msgBox;
@@ -341,7 +333,6 @@ void MainWidget::responseDisjoinRoom(ResDisjoinRoom * resDisjoinRoom)
     else if (ui->stackedWidget->currentIndex() == 3)
     {
         ui->tb_chatStu->append(disappear);
-<<<<<<< HEAD
     }
 }
 
@@ -358,8 +349,6 @@ void MainWidget::responseLogin(ResLogin * resLogin)
         msgBox.exec();
         ui->edt_loginNum->clear();
         ui->edt_loginPw->clear();
-=======
->>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
     }
 }
 

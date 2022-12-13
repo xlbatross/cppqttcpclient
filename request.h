@@ -8,11 +8,8 @@
 class Request
 {
 public:
-<<<<<<< HEAD
     enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, LeaveRoom, Login, SignUp};
-=======
     enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, LeaveRoom};
->>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
     Request();
     ~Request();
 
@@ -61,7 +58,6 @@ public:
     ReqLeaveRoom();
 };
 
-<<<<<<< HEAD
 class ReqLogin : public Request
 {
 public:
@@ -73,7 +69,5 @@ class ReqSignUp : public Request
 public:
     ReqSignUp(std::string name, std::string num, std::string pw, std::string cate );
 };
-=======
->>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
 
 #endif // REQUEST_H

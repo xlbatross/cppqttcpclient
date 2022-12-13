@@ -173,10 +173,7 @@ ResDisjoinRoom::ResDisjoinRoom(const char *headerBytes, const char * const *data
      * responseType : 6(DisJoinRoom) (32bite, 4byte, int)
      * dataSize : string length + sizeof int
      */
-<<<<<<< HEAD
 
-=======
->>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
     int c;
     this->_name = std::string(this->dataBytesList[0], this->dataLengthList[0]);
     memcpy(&c, this->dataBytesList[1], this->dataLengthList[1]);
@@ -193,7 +190,6 @@ const bool ResDisjoinRoom::isProfessorOut()
     return this->_isProfessorOut;
 }
 
-<<<<<<< HEAD
 ResLogin::ResLogin(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
     : Response(headerBytes, dataBytesList, headSize, dataLengthList)
 {
@@ -219,6 +215,4 @@ const std::string &ResLogin::ment()
 {
     return this->_ment;
 }
-=======
 
->>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b

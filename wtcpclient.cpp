@@ -58,7 +58,6 @@ bool WTCPClient::sendReqLeaveRoom()
     return this->sendRequest(&reqLeaveRoom);
 }
 
-<<<<<<< HEAD
 bool WTCPClient::sendReqLogin(const std::string &num, const std::string &pw)
 {
     ReqLogin reqLogin(num, pw);
@@ -71,8 +70,6 @@ bool WTCPClient::sendReqSignUp(const std::string &name, const std::string &num, 
     return this->sendRequest(&reqSignUp);
 }
 
-=======
->>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
 bool WTCPClient::sendRequest(Request * request)
 {
     if (!this->sendByteData(request->headerBytes(), request->headerSize()))
