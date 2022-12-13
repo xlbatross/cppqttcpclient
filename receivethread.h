@@ -36,13 +36,17 @@ private:
     std::vector<int> dataLengthList;
     int responseType;
 
-    ResImage * resImage;
+    ResProImage * resProImage;
     ResRoomList * resRoomList;
     ResMakeRoom * resMakeRoom;
     ResEnterRoom * resEnterRoom;
     ResJoinRoom * resJoinRoom;
     ResDisjoinRoom * resDisjoinRoom;
     ResLogin * resLogin;
+    ResFirstImage * resFirstImage;
+    ResSecondImage * resSecondImage;
+    ResThirdImage * resThirdImage;
+    ResForthImage * resForthImage;
 
 
 public slots:
@@ -50,13 +54,17 @@ public slots:
 
 signals:
     void disconnectServerSignal();
-    void resImageSignal(ResImage *);
+    void resProImageSignal(ResProImage *);
     void resRoomListSignal(ResRoomList *);
     void resMakeRoomSignal(ResMakeRoom *);
     void resEnterRoomSignal(ResEnterRoom *);
     void resJoinRoomSignal(ResJoinRoom *);
     void resDisjoinRoomSignal(ResDisjoinRoom *);
     void resLoginSignal(ResLogin *);
+    void resFirstImageSignal(ResFirstImage *);
+    void resSecondImageSignal(ResSecondImage *);
+    void resThirdImageSignal(ResThirdImage *);
+    void resForthImageSignal(ResForthImage *);
 };
 
 #endif // RECEIVETHREAD_H

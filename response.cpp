@@ -31,27 +31,21 @@ void Response::initDataBytesList()
     }
 }
 
-ResImage::ResImage(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
+ResProImage::ResProImage(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
     : Response(headerBytes, dataBytesList, headSize, dataLengthList)
 {
     /*
-     * resImage header example
-     * receiveCount : 2 <32bit, 4byte, int>
+     * ResProImage header example
+     * receiveCount : 1 <32bit, 4byte, int>
      * responseType : 1(resRoomList) (32bite, 4byte, int)
-     * dataSize : <32bit, 4byte, int>
+     * dataSize : 240 * 320 * 3 <32bit, 4byte, int>
      */
     this->_img = cv::Mat(240, 320, CV_8UC3, (unsigned char *)(dataBytesList[0]));
-    memcpy(&_number, dataBytesList[1], sizeof(int));
 }
 
-const cv::Mat &ResImage::img()
+const cv::Mat &ResProImage::img()
 {
     return this->_img;
-}
-
-const int ResImage::number()
-{
-    return this->_number;
 }
 
 ResRoomList::ResRoomList(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
@@ -216,3 +210,70 @@ const std::string &ResLogin::ment()
     return this->_ment;
 }
 
+ResFirstImage::ResFirstImage(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
+    : Response(headerBytes, dataBytesList, headSize, dataLengthList)
+{
+    /*
+     * ResFirstImage header example
+     * receiveCount : 1 <32bit, 4byte, int>
+     * responseType : 1(resRoomList) (32bite, 4byte, int)
+     * dataSize : 240 * 320 * 3 <32bit, 4byte, int>
+     */
+    this->_img = cv::Mat(240, 320, CV_8UC3, (unsigned char *)(dataBytesList[0]));
+}
+
+const cv::Mat &ResFirstImage::img()
+{
+    return this->_img;
+}
+
+ResSecondImage::ResSecondImage(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
+    : Response(headerBytes, dataBytesList, headSize, dataLengthList)
+{
+    /*
+     * ResSecondImage header example
+     * receiveCount : 1 <32bit, 4byte, int>
+     * responseType : 1(resRoomList) (32bite, 4byte, int)
+     * dataSize : 240 * 320 * 3 <32bit, 4byte, int>
+     */
+    this->_img = cv::Mat(240, 320, CV_8UC3, (unsigned char *)(dataBytesList[0]));
+}
+
+const cv::Mat &ResSecondImage::img()
+{
+    return this->_img;
+}
+
+ResThirdImage::ResThirdImage(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
+    : Response(headerBytes, dataBytesList, headSize, dataLengthList)
+{
+    /*
+     * ResThirdImage header example
+     * receiveCount : 1 <32bit, 4byte, int>
+     * responseType : 1(resRoomList) (32bite, 4byte, int)
+     * dataSize : 240 * 320 * 3 <32bit, 4byte, int>
+     */
+    this->_img = cv::Mat(240, 320, CV_8UC3, (unsigned char *)(dataBytesList[0]));
+}
+
+const cv::Mat &ResThirdImage::img()
+{
+    return this->_img;
+}
+
+ResForthImage::ResForthImage(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
+    : Response(headerBytes, dataBytesList, headSize, dataLengthList)
+{
+    /*
+     * ResForthImage header example
+     * receiveCount : 1 <32bit, 4byte, int>
+     * responseType : 1(resRoomList) (32bite, 4byte, int)
+     * dataSize : 240 * 320 * 3 <32bit, 4byte, int>
+     */
+    this->_img = cv::Mat(240, 320, CV_8UC3, (unsigned char *)(dataBytesList[0]));
+}
+
+const cv::Mat &ResForthImage::img()
+{
+    return this->_img;
+}

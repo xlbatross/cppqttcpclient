@@ -9,7 +9,6 @@ class Request
 {
 public:
     enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, LeaveRoom, Login, SignUp};
-    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, LeaveRoom};
     Request();
     ~Request();
 

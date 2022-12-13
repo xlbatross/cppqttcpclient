@@ -145,8 +145,6 @@ void MainWidget::responseImage(ResImage * resImage)
 {
     QLabel * current = NULL;
 
-    std::cout << resImage->number() << std::endl;
-
     switch(resImage->number())
     {
     case 0:
@@ -168,7 +166,13 @@ void MainWidget::responseImage(ResImage * resImage)
 
     if (current != NULL)
     {
+        cv::Mat img = resImage->img().clone();
+        if (resImage->number() == 0)
+        {
+            cv::resize(img, img, cv::Size(current->size().width(), current->size().height()));
+        }
         QImage qtImage((const unsigned char *) (resImage->img().data), resImage->img().cols, resImage->img().rows, QImage::Format_RGB888);
+
         current->setPixmap(QPixmap::fromImage(qtImage));
     }
 }

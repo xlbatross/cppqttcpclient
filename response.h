@@ -8,8 +8,7 @@
 class Response
 {
 public:
-    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom, Login};
-    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom};
+    enum Type{ProImage = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom, Login, FirstImage, SecondImage, ThirdImage, ForthImage};
     Response(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
     ~Response();
 
@@ -20,17 +19,15 @@ protected:
     std::vector<int> dataLengthList;
 };
 
-class ResImage : public Response
+class ResProImage : public Response
 {
 public:
-    ResImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+    ResProImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
 
     const cv::Mat & img();
-    const int number();
 
 private:
     cv::Mat _img;
-    int _number;
 };
 
 class ResRoomList : public Response
@@ -102,6 +99,50 @@ public:
 private:
     bool _isSuccessed;
     std::string _ment;
+};
+
+class ResFirstImage : public Response
+{
+public:
+    ResFirstImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+
+    const cv::Mat & img();
+
+private:
+    cv::Mat _img;
+};
+
+class ResSecondImage : public Response
+{
+public:
+    ResSecondImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+
+    const cv::Mat & img();
+
+private:
+    cv::Mat _img;
+};
+
+class ResThirdImage : public Response
+{
+public:
+    ResThirdImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+
+    const cv::Mat & img();
+
+private:
+    cv::Mat _img;
+};
+
+class ResForthImage : public Response
+{
+public:
+    ResForthImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+
+    const cv::Mat & img();
+
+private:
+    cv::Mat _img;
 };
 
 
