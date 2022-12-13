@@ -172,8 +172,12 @@ void MainWidget::responseMakeRoom(ResMakeRoom * resMakeRoom)
     if (resMakeRoom->isMake())
     {
         ui->tb_chatPro->clear();
-        ui->stackedWidget->setCurrentIndex(4);
         this->myRoomMemberCount = 0;
+        ui->lb_stuImage1->hide();
+        ui->lb_stuImage2->hide();
+        ui->lb_stuImage3->hide();
+        ui->lb_stuImage4->hide();
+        ui->stackedWidget->setCurrentIndex(4);
     }
     else
     {
@@ -208,6 +212,33 @@ void MainWidget::responseJoinRoom(ResJoinRoom * resJoinRoom)
     {
         ui->tb_chatPro->append(appear);
         this->myRoomMemberCount += 1;
+        switch(this->myRoomMemberCount)
+        {
+        case 1:
+            ui->lb_stuImage1->show();
+            ui->lb_stuImage2->hide();
+            ui->lb_stuImage3->hide();
+            ui->lb_stuImage4->hide();
+            break;
+        case 2:
+            ui->lb_stuImage1->show();
+            ui->lb_stuImage2->show();
+            ui->lb_stuImage3->hide();
+            ui->lb_stuImage4->hide();
+            break;
+        case 3:
+            ui->lb_stuImage1->show();
+            ui->lb_stuImage2->show();
+            ui->lb_stuImage3->show();
+            ui->lb_stuImage4->hide();
+            break;
+        case 4:
+            ui->lb_stuImage1->show();
+            ui->lb_stuImage2->show();
+            ui->lb_stuImage3->show();
+            ui->lb_stuImage4->show();
+            break;
+        }
         if (this->myRoomMemberCount > 0)
             this->timer->start(33);
     }
@@ -222,9 +253,9 @@ void MainWidget::responseDisjoinRoom(ResDisjoinRoom * resDisjoinRoom)
     QString disappear = QString::fromUtf8(resDisjoinRoom->name().c_str(), resDisjoinRoom->name().size()) + "님이 퇴장하셨습니다.";
     if (resDisjoinRoom->isProfessorOut())
     {
+        this->client->sendReqRoomList();
         ui->stackedWidget->setCurrentIndex(2);
         this->timer->stop();
-        this->client->sendReqRoomList();
         QMessageBox msgBox;
         msgBox.setText("강의가 종료되었습니다.");
         msgBox.exec();
@@ -233,6 +264,33 @@ void MainWidget::responseDisjoinRoom(ResDisjoinRoom * resDisjoinRoom)
     {
         ui->tb_chatPro->append(disappear);
         this->myRoomMemberCount -= 1;
+        switch(this->myRoomMemberCount)
+        {
+        case 0:
+            ui->lb_stuImage1->hide();
+            ui->lb_stuImage2->hide();
+            ui->lb_stuImage3->hide();
+            ui->lb_stuImage4->hide();
+            break;
+        case 1:
+            ui->lb_stuImage1->show();
+            ui->lb_stuImage2->hide();
+            ui->lb_stuImage3->hide();
+            ui->lb_stuImage4->hide();
+            break;
+        case 2:
+            ui->lb_stuImage1->show();
+            ui->lb_stuImage2->show();
+            ui->lb_stuImage3->hide();
+            ui->lb_stuImage4->hide();
+            break;
+        case 3:
+            ui->lb_stuImage1->show();
+            ui->lb_stuImage2->show();
+            ui->lb_stuImage3->show();
+            ui->lb_stuImage4->hide();
+            break;
+        }
         if (this->myRoomMemberCount == 0)
             this->timer->stop();
     }
