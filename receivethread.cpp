@@ -3,8 +3,8 @@
 
 
 ReceiveThread::ReceiveThread(
-//        WTCPClient * client,
-        LTCPClient * client,
+        WTCPClient * client,
+//        LTCPClient * client,
         QObject *parent
     )
     : QThread{parent}

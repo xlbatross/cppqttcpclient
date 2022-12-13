@@ -23,7 +23,8 @@ public:
     bool sendReqRoomList();
     bool sendReqMakeRoom(const std::string & roomName);
     bool sendReqEnterRoom(const std::string & ip, const int port);
-
+    bool sendReqLeaveRoom();
+    
     bool sendRequest(Request * request);
     bool sendByteData(const char * data, const int dataSize);//실질적으로 데이터를 보내는 것
 

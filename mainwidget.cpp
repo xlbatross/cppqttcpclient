@@ -4,9 +4,10 @@
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
-//    , client(new WTCPClient)
-    , client(new LTCPClient)
+    , client(new WTCPClient)
+//    , client(new LTCPClient)
     , receiveThread(new ReceiveThread(this->client))
+    , myRoomMemberCount(-1)
 {
     ui->setupUi(this);
 
@@ -16,10 +17,9 @@ MainWidget::MainWidget(QWidget *parent)
     if (this->client->connectServer())
     {
         qDebug() << "connected";
-//        connect(this->timer, SIGNAL(timeout()), this, SLOT(readCapture()));
-//        connect(this->receiveThread, SIGNAL(viewImageSignal(DataHeader*,const char*const*)), this->label, SLOT(setOpenCVImage()), Qt::BlockingQueuedConnection);
-//        connect(this, SIGNAL(sendImageSignal(cv::Mat)), this, SLOT(sendImage(cv::Mat)));
+        connect(this->timer, SIGNAL(timeout()), this, SLOT(readCapture()));
         connect(this->receiveThread, SIGNAL(disconnectServerSignal()), this, SLOT(disconnectServer()));
+        connect(this->receiveThread, SIGNAL(resImageSignal(ResImage*)), this, SLOT(responseImage(ResImage*)), Qt::BlockingQueuedConnection);
         connect(this->receiveThread, SIGNAL(resRoomListSignal(ResRoomList*)), this, SLOT(responseRoomList(ResRoomList*)));
         connect(this->receiveThread, SIGNAL(resMakeRoomSignal(ResMakeRoom*)), this, SLOT(responseMakeRoom(ResMakeRoom*)));
         connect(this->receiveThread, SIGNAL(resEnterRoomSignal(ResEnterRoom*)), this, SLOT(responseEnterRoom(ResEnterRoom*)));
@@ -31,7 +31,6 @@ MainWidget::MainWidget(QWidget *parent)
         connect(ui->btn_endLecture, SIGNAL(clicked(bool)), this, SLOT(backClicked()));
         connect(ui->btn_refreshList, SIGNAL(clicked(bool)), this, SLOT(refeashRoomList()));
         this->receiveThread->start();
-//        this->timer->start(33);
         this->client->sendReqRoomList();
     }
     else
@@ -89,6 +88,8 @@ void MainWidget::enterRoom(QListWidgetItem * item)
 void MainWidget::backClicked()
 {
     ui->stackedWidget->setCurrentIndex(2);
+    this->myRoomMemberCount = -1;
+    this->timer->stop();
     this->client->sendReqLeaveRoom();
     this->client->sendReqRoomList();
 }
@@ -104,6 +105,36 @@ void MainWidget::disconnectServer()
     msgBox.setText("서버와의 접속을 유지할 수 없습니다.");
     msgBox.exec();
     this->deleteLater();
+}
+
+void MainWidget::responseImage(ResImage * resImage)
+{
+    QLabel * current = NULL;
+
+    switch(resImage->number())
+    {
+    case 0:
+        current = ui->lb_proImage;
+        break;
+    case 1:
+        current = ui->lb_stuImage1;
+        break;
+    case 2:
+        current = ui->lb_stuImage2;
+        break;
+    case 3:
+        current = ui->lb_stuImage3;
+        break;
+    case 4:
+        current = ui->lb_stuImage4;
+        break;
+    }
+
+    if (current != NULL)
+    {
+        QImage qtImage((const unsigned char *) (resImage->img().data), resImage->img().cols, resImage->img().rows, QImage::Format_RGB888);
+        current->setPixmap(QPixmap::fromImage(qtImage));
+    }
 }
 
 void MainWidget::responseRoomList(ResRoomList * resRoomList)
@@ -142,6 +173,7 @@ void MainWidget::responseMakeRoom(ResMakeRoom * resMakeRoom)
     {
         ui->tb_chatPro->clear();
         ui->stackedWidget->setCurrentIndex(4);
+        this->myRoomMemberCount = 0;
     }
     else
     {
@@ -158,6 +190,7 @@ void MainWidget::responseEnterRoom(ResEnterRoom * resEnterRoom)
     {
         ui->tb_chatStu->clear();
         ui->stackedWidget->setCurrentIndex(3);
+        this->timer->start(33);
     }
     else
     {
@@ -174,6 +207,9 @@ void MainWidget::responseJoinRoom(ResJoinRoom * resJoinRoom)
     if (ui->stackedWidget->currentIndex() == 4)
     {
         ui->tb_chatPro->append(appear);
+        this->myRoomMemberCount += 1;
+        if (this->myRoomMemberCount > 0)
+            this->timer->start(33);
     }
     else if (ui->stackedWidget->currentIndex() == 3)
     {
@@ -195,6 +231,9 @@ void MainWidget::responseDisjoinRoom(ResDisjoinRoom * resDisjoinRoom)
     else if (ui->stackedWidget->currentIndex() == 4)
     {
         ui->tb_chatPro->append(disappear);
+        this->myRoomMemberCount -= 1;
+        if (this->myRoomMemberCount == 0)
+            this->timer->stop();
     }
     else if (ui->stackedWidget->currentIndex() == 3)
     {

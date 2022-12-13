@@ -48,6 +48,12 @@ bool WTCPClient::sendReqEnterRoom(const std::string &ip, const int port)
     return this->sendRequest(&reqEnterRoom);
 }
 
+bool WTCPClient::sendReqLeaveRoom()
+{
+    ReqLeaveRoom reqLeaveRoom;
+    return this->sendRequest(&reqLeaveRoom);
+}
+
 bool WTCPClient::sendRequest(Request * request)
 {
     if (!this->sendByteData(request->headerBytes(), request->headerSize()))
