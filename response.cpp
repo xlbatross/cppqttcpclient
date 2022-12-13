@@ -3,11 +3,6 @@
 Response::Response(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList)
     : dataLengthList(dataLengthList)
 {
-    memcpy(&this->dataSize, headerBytes + sizeof(int) * 2, sizeof(int));
-    this->dataTypeList.resize(this->dataSize);
-    for (int i = 0; i < this->dataTypeList.size(); i++)
-        memcpy(&(this->dataTypeList[i]), headerBytes + sizeof(int) * (3 + i), sizeof(int));
-
     this->dataBytesList = new char * [this->dataLengthList.size()]();
     for (int i = 0; i < this->dataLengthList.size(); i++)
     {

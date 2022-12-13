@@ -5,7 +5,7 @@ WTCPClient::WTCPClient()
     this->cSock = socket(PF_INET, SOCK_STREAM, 0);
 
     // 소켓 수신 타임 아웃 세팅
-    this->timeout = 1000;
+    this->timeout = 5000;
     setsockopt(this->cSock, SOL_SOCKET, SO_RCVTIMEO, (char*)&this->timeout, sizeof(this->timeout));
 }
 

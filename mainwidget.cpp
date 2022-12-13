@@ -111,6 +111,8 @@ void MainWidget::responseImage(ResImage * resImage)
 {
     QLabel * current = NULL;
 
+    std::cout << resImage->number() << std::endl;
+
     switch(resImage->number())
     {
     case 0:

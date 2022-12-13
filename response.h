@@ -17,9 +17,6 @@ public:
 protected:
     char ** dataBytesList;
     std::vector<int> dataLengthList;
-
-    int dataSize;
-    std::vector<int> dataTypeList;
 };
 
 class ResImage : public Response
