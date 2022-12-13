@@ -21,9 +21,11 @@ public:
     ~LTCPClient();
     bool connectServer(std::string serverIp = "127.0.0.1", short serverPort = 2500);
 
-//    bool sendReqImage(const cv::Mat & img);
+    bool sendReqImage(const cv::Mat & img);
     bool sendReqRoomList();
     bool sendReqMakeRoom(const std::string & roomName);
+    bool sendReqEnterRoom(const std::string & ip, const int port);
+    bool sendReqLeaveRoom();
 
     bool sendRequest(Request * request);
     bool sendByteData(const char * data, const int dataSize);

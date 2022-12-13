@@ -3,6 +3,10 @@ WTCPClient::WTCPClient()
 {
     WSAStartup(MAKEWORD(2, 2), &this->wsaData);
     this->cSock = socket(PF_INET, SOCK_STREAM, 0);
+
+    // 소켓 수신 타임 아웃 세팅
+    this->timeout = 5000;
+    setsockopt(this->cSock, SOL_SOCKET, SO_RCVTIMEO, (char*)&this->timeout, sizeof(this->timeout));
 }
 
 WTCPClient::~WTCPClient()
@@ -24,16 +28,11 @@ bool WTCPClient::connectServer(std::string serverIp, short serverPort)
         return true;
 }
 
-//bool WTCPClient::sendReqImage(const cv::Mat & img)
-//{
-//    int headerDataSize = this->dataHeader->encodeReqImage(img);
-
-//    if (!this->sendByteData(this->dataHeader->sendByteArray(), headerDataSize)
-//     || !this->sendByteData((char *)(img.data), img.total() * img.channels()))
-//        return false;
-
-//    return true;
-//}
+bool WTCPClient::sendReqImage(const cv::Mat & img)
+{
+    ReqImage reqImage(img);
+    return this->sendRequest(&reqImage);
+}
 
 bool WTCPClient::sendReqRoomList()
 {
@@ -53,13 +52,30 @@ bool WTCPClient::sendReqEnterRoom(const std::string &ip, const int port)
     return this->sendRequest(&reqEnterRoom);
 }
 
+bool WTCPClient::sendReqLeaveRoom()
+{
+    ReqLeaveRoom reqLeaveRoom;
+    return this->sendRequest(&reqLeaveRoom);
+}
+
+bool WTCPClient::sendReqLogin(const std::string &num, const std::string &pw)
+{
+    ReqLogin reqLogin(num, pw);
+    return this->sendRequest(&reqLogin);
+}
+
+bool WTCPClient::sendReqSignUp(const std::string &name, const std::string &num, const std::string &pw, const std::string &cate)
+{
+    ReqSignUp reqSignUp(name,num,pw,cate);
+    return this->sendRequest(&reqSignUp);
+}
+
 bool WTCPClient::sendRequest(Request * request)
 {
     if (!this->sendByteData(request->headerBytes(), request->headerSize()))
         return false;
     for (int i = 0; i < request->dataLengthList().size(); i++)
     {
-        std::cout << i << std::endl;
         if (!this->sendByteData(request->dataBytesList()[i], request->dataLengthList()[i]))
         {
             return false;
@@ -118,13 +134,16 @@ bool WTCPClient::sendByteData(const char *data, const int dataSize)
 int WTCPClient::receive(char **headerBytes, char ***dataBytesList, std::vector<int> & dataLengthList)
 {
     int dataCount = 0;
+    int totalDataSize = 0;
+    int receiveTotalSize = 0;
     int headSize = this->receiveByteData(headerBytes);
     // receive header data
-    if (headSize == -1)
-        return -1;
-
+    if (headSize < 0)
+        return headSize;
 
     memcpy(&dataCount, *headerBytes, sizeof(int));
+    memcpy(&totalDataSize, *headerBytes + sizeof(int) * 2, sizeof(int));
+
     dataLengthList.resize(dataCount);
 
     // receive real data
@@ -132,11 +151,16 @@ int WTCPClient::receive(char **headerBytes, char ***dataBytesList, std::vector<i
     for (int i = 0; i < dataCount; i++)
     {
         dataLengthList[i] = this->receiveByteData(&((*dataBytesList)[i]));
-        if (dataLengthList[i] == -1)
-            return -1;
+        if (dataLengthList[i] < 0)
+            return dataLengthList[i];
+        else
+            receiveTotalSize += dataLengthList[i];
     }
 
-    return headSize;
+    if (receiveTotalSize != totalDataSize)
+        return -2;
+    else
+        return headSize;
 }
 
 
@@ -147,8 +171,15 @@ int WTCPClient::receiveByteData(char **data)
     int packet = 0;
     int totalReceiveSize = 0;
     bool isSizeReceive = true;
-    if (recv(this->cSock, (char *)(&dataSize), sizeof(int), 0) == SOCKET_ERROR)
-        return -1;
+
+    int error = recv(this->cSock, (char *)(&dataSize), sizeof(int), 0);
+    if (error == SOCKET_ERROR)
+    {
+        if (WSAGetLastError() == WSAETIMEDOUT)
+            return -2;
+        else
+            return -1;
+    }
 
     if (*data != NULL)
         delete [] *data;
@@ -160,7 +191,12 @@ int WTCPClient::receiveByteData(char **data)
         packetSize = (totalReceiveSize + 1024 < dataSize) ? 1024 : dataSize - totalReceiveSize;
         packet = recv(this->cSock, (*data) + totalReceiveSize, packetSize, 0);
         if (packet == SOCKET_ERROR)
-            return -1;
+        {
+            if (WSAGetLastError() == WSAETIMEDOUT)
+                return -2;
+            else
+                return -1;
+        }
         totalReceiveSize += packet;
     }
     return dataSize;

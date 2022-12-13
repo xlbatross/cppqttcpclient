@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="loginPage">
     <widget class="QPushButton" name="btn_faceLogin">
@@ -52,7 +52,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;ID&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="edt_loginStuNum">
+    <widget class="QLineEdit" name="edt_loginNum">
      <property name="geometry">
       <rect>
        <x>380</x>
@@ -78,7 +78,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;PW&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_join">
+    <widget class="QPushButton" name="btn_signUp">
      <property name="geometry">
       <rect>
        <x>450</x>
@@ -112,6 +112,9 @@
        <width>113</width>
        <height>20</height>
       </rect>
+     </property>
+     <property name="echoMode">
+      <enum>QLineEdit::Password</enum>
      </property>
      <property name="placeholderText">
       <string>비밀번호 입력</string>
@@ -171,7 +174,7 @@
       <string>사진찍기</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="edt_joinPw">
+    <widget class="QLineEdit" name="edt_signUpPw">
      <property name="geometry">
       <rect>
        <x>340</x>
@@ -197,7 +200,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;회원가입&lt;/p&gt;&lt;p&gt;이름/학번/비밀번호/사진등록&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="edt_joinStuNum">
+    <widget class="QLineEdit" name="edt_signUpNum">
      <property name="geometry">
       <rect>
        <x>340</x>
@@ -249,7 +252,7 @@
       <string>회원등록</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="edt_joinName">
+    <widget class="QLineEdit" name="edt_signUpName">
      <property name="geometry">
       <rect>
        <x>340</x>
@@ -286,6 +289,9 @@
      </property>
      <property name="text">
       <string>학생</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QRadioButton" name="radio_proType">

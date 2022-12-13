@@ -8,8 +8,7 @@
 class Request
 {
 public:
-    enum Type{sendImage = 1, RoomList, MakeRoom, EnterRoom};
-    enum Data{String = 0, Int, Image};
+    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, LeaveRoom, Login, SignUp};
     Request();
     ~Request();
 
@@ -26,6 +25,12 @@ protected:
     char ** _dataBytesList;
     int _headerSize;
     std::vector<int> _dataLengthList;
+};
+
+class ReqImage : public Request
+{
+public:
+    ReqImage(const cv::Mat & img);
 };
 
 class ReqRoomList : public Request
@@ -46,5 +51,22 @@ public:
     ReqEnterRoom(std::string ip, int port);
 };
 
+class ReqLeaveRoom : public Request
+{
+public:
+    ReqLeaveRoom();
+};
+
+class ReqLogin : public Request
+{
+public:
+    ReqLogin(std::string num, std::string pw);
+};
+
+class ReqSignUp : public Request
+{
+public:
+    ReqSignUp(std::string name, std::string num, std::string pw, std::string cate );
+};
 
 #endif // REQUEST_H

@@ -45,17 +45,29 @@ private:
     std::vector<std::string> roomNameList;
     std::vector<int> roomMemberCountList;
 
+    // roomCount
+    int myRoomMemberCount;
+
 private slots:
-    void disconnectServer();
+
     void readCapture();
-    void sendImage(cv::Mat const &);
-    void responseRoomList(ResRoomList *);
     void viewMakeRoomMessageBox();
-    void responseMakeRoom(ResMakeRoom *);
     void enterRoom(QListWidgetItem *);
+    void backClicked();
+    void refeashRoomList();
+    void Login();
+    void SignUp();
+
+    void disconnectServer();
+    void responseImage(ResImage *);
+    void responseRoomList(ResRoomList *);
+    void responseMakeRoom(ResMakeRoom *);
+    void responseEnterRoom(ResEnterRoom *);
+    void responseJoinRoom(ResJoinRoom *);
+    void responseDisjoinRoom(ResDisjoinRoom *);
+    void responseLogin(ResLogin *);
 
 signals:
     void setOpenCVImageSignal(cv::Mat);
-    void sendImageSignal(cv::Mat);
 };
 #endif // MAINWIDGET_H
