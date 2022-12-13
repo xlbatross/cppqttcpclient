@@ -159,7 +159,7 @@ int LTCPClient::receiveByteData(char **data)
         packet = read(this->cSock, *data + totalReceiveSize, packetSize);
         if (packet == -1)
         {
-            if (errno == ETIMEDOUT)
+            if (errno == EAGAIN)
                 return -2;
             else
                 return -1;
