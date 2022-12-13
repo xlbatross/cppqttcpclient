@@ -8,7 +8,7 @@
 class Response
 {
 public:
-    enum Type{ProImage = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom, Login, FirstImage, SecondImage, ThirdImage, ForthImage};
+    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom, Login, ProImage, FirstImage, SecondImage, ThirdImage, ForthImage};
     Response(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
     ~Response();
 
@@ -19,15 +19,17 @@ protected:
     std::vector<int> dataLengthList;
 };
 
-class ResProImage : public Response
+class ResImage : public Response
 {
 public:
-    ResProImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+    ResImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
 
     const cv::Mat & img();
+    const int number();
 
 private:
     cv::Mat _img;
+    int _number;
 };
 
 class ResRoomList : public Response
@@ -99,6 +101,17 @@ public:
 private:
     bool _isSuccessed;
     std::string _ment;
+};
+
+class ResProImage : public Response
+{
+public:
+    ResProImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+
+    const cv::Mat & img();
+
+private:
+    cv::Mat _img;
 };
 
 class ResFirstImage : public Response

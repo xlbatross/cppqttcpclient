@@ -3,8 +3,8 @@
 
 #include <QThread>
 #include <QDebug>
-#include "wtcpclient.h"
-//#include "ltcpclient.h"
+//#include "wtcpclient.h"
+#include "ltcpclient.h"
 #include "response.h"
 
 class ReceiveThread : public QThread
@@ -12,8 +12,8 @@ class ReceiveThread : public QThread
     Q_OBJECT
 public:
     explicit ReceiveThread(
-        WTCPClient * client,
-//        LTCPClient * client,
+//        WTCPClient * client,
+        LTCPClient * client,
         QObject *parent = nullptr
     );
     ~ReceiveThread();
@@ -27,8 +27,8 @@ public:
 private:
     bool isRunning;
 
-    WTCPClient * client;
-//    LTCPClient * client;
+//    WTCPClient * client;
+    LTCPClient * client;
 
     char * headerBytes;
     char ** dataBytesList;
@@ -36,13 +36,14 @@ private:
     std::vector<int> dataLengthList;
     int responseType;
 
-    ResProImage * resProImage;
+    ResImage * resImage;
     ResRoomList * resRoomList;
     ResMakeRoom * resMakeRoom;
     ResEnterRoom * resEnterRoom;
     ResJoinRoom * resJoinRoom;
     ResDisjoinRoom * resDisjoinRoom;
     ResLogin * resLogin;
+    ResProImage * resProImage;
     ResFirstImage * resFirstImage;
     ResSecondImage * resSecondImage;
     ResThirdImage * resThirdImage;
@@ -54,13 +55,15 @@ public slots:
 
 signals:
     void disconnectServerSignal();
-    void resProImageSignal(ResProImage *);
+    void resImageSignal(ResImage *);
     void resRoomListSignal(ResRoomList *);
     void resMakeRoomSignal(ResMakeRoom *);
     void resEnterRoomSignal(ResEnterRoom *);
     void resJoinRoomSignal(ResJoinRoom *);
     void resDisjoinRoomSignal(ResDisjoinRoom *);
     void resLoginSignal(ResLogin *);
+
+    void resProImageSignal(ResProImage *);
     void resFirstImageSignal(ResFirstImage *);
     void resSecondImageSignal(ResSecondImage *);
     void resThirdImageSignal(ResThirdImage *);
