@@ -223,6 +223,7 @@ void MainWidget::responseDisjoinRoom(ResDisjoinRoom * resDisjoinRoom)
     if (resDisjoinRoom->isProfessorOut())
     {
         ui->stackedWidget->setCurrentIndex(2);
+        this->timer->stop();
         this->client->sendReqRoomList();
         QMessageBox msgBox;
         msgBox.setText("강의가 종료되었습니다.");

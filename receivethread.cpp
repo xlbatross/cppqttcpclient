@@ -68,6 +68,10 @@ void ReceiveThread::run()
             emit disconnectServerSignal();
             break;
         }
+        else if (this->headSize == -2)
+        {
+            continue;
+        }
 
         memcpy(&this->responseType, this->headerBytes + sizeof(int) * 1, sizeof(int));
 

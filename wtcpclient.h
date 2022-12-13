@@ -13,6 +13,7 @@ private:
     WSADATA wsaData;
     SOCKADDR_IN servAddr;
     SOCKET cSock;
+    DWORD timeout;
 
 public:
     WTCPClient();

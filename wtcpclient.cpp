@@ -3,6 +3,10 @@ WTCPClient::WTCPClient()
 {
     WSAStartup(MAKEWORD(2, 2), &this->wsaData);
     this->cSock = socket(PF_INET, SOCK_STREAM, 0);
+
+    // 소켓 수신 타임 아웃 세팅
+    this->timeout = 1000;
+    setsockopt(this->cSock, SOL_SOCKET, SO_RCVTIMEO, (char*)&this->timeout, sizeof(this->timeout));
 }
 
 WTCPClient::~WTCPClient()
@@ -120,9 +124,8 @@ int WTCPClient::receive(char **headerBytes, char ***dataBytesList, std::vector<i
     int dataCount = 0;
     int headSize = this->receiveByteData(headerBytes);
     // receive header data
-    if (headSize == -1)
-        return -1;
-
+    if (headSize < 0)
+        return headSize;
 
     memcpy(&dataCount, *headerBytes, sizeof(int));
     dataLengthList.resize(dataCount);
@@ -132,8 +135,8 @@ int WTCPClient::receive(char **headerBytes, char ***dataBytesList, std::vector<i
     for (int i = 0; i < dataCount; i++)
     {
         dataLengthList[i] = this->receiveByteData(&((*dataBytesList)[i]));
-        if (dataLengthList[i] == -1)
-            return -1;
+        if (dataLengthList[i] < 0)
+            return dataLengthList[i];
     }
 
     return headSize;
@@ -147,8 +150,15 @@ int WTCPClient::receiveByteData(char **data)
     int packet = 0;
     int totalReceiveSize = 0;
     bool isSizeReceive = true;
-    if (recv(this->cSock, (char *)(&dataSize), sizeof(int), 0) == SOCKET_ERROR)
-        return -1;
+
+    int error = recv(this->cSock, (char *)(&dataSize), sizeof(int), 0);
+    if (error == SOCKET_ERROR)
+    {
+        if (WSAGetLastError() == WSAETIMEDOUT)
+            return -2;
+        else
+            return -1;
+    }
 
     if (*data != NULL)
         delete [] *data;
@@ -160,7 +170,12 @@ int WTCPClient::receiveByteData(char **data)
         packetSize = (totalReceiveSize + 1024 < dataSize) ? 1024 : dataSize - totalReceiveSize;
         packet = recv(this->cSock, (*data) + totalReceiveSize, packetSize, 0);
         if (packet == SOCKET_ERROR)
-            return -1;
+        {
+            if (WSAGetLastError() == WSAETIMEDOUT)
+                return -2;
+            else
+                return -1;
+        }
         totalReceiveSize += packet;
     }
     return dataSize;
