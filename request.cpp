@@ -185,6 +185,7 @@ ReqLeaveRoom::ReqLeaveRoom()
     memcpy(this->_headerBytes + sizeof(int) * 1, &requestType, sizeof(int)); // requestType
     memcpy(this->_headerBytes + sizeof(int) * 2, &totalDataSize, sizeof(int)); // attrSize;
 }
+<<<<<<< HEAD
 
 ReqLogin::ReqLogin(std::string num, std::string pw)
     : Request() //super.__int__(): 상위 생성자를 실행한다.
@@ -260,3 +261,5 @@ ReqSignUp::ReqSignUp(std::string name, std::string num, std::string pw, std::str
     memcpy(this->_dataBytesList[3], cate.c_str(), cate.size());
     this->_dataLengthList[3] = cate.size();
 }
+=======
+>>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b

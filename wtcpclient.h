@@ -25,8 +25,11 @@ public:
     bool sendReqMakeRoom(const std::string & roomName);
     bool sendReqEnterRoom(const std::string & ip, const int port);
     bool sendReqLeaveRoom();
+<<<<<<< HEAD
     bool sendReqLogin(const std::string & num, const std::string &pw );
     bool sendReqSignUp(const std::string & name, const std::string & num, const std::string & pw, const std::string & cate);
+=======
+>>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
     
     bool sendRequest(Request * request);
     bool sendByteData(const char * data, const int dataSize);//실질적으로 데이터를 보내는 것

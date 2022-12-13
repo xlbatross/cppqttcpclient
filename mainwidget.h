@@ -55,8 +55,11 @@ private slots:
     void enterRoom(QListWidgetItem *);
     void backClicked();
     void refeashRoomList();
+<<<<<<< HEAD
     void Login();
     void SignUp();
+=======
+>>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
 
     void disconnectServer();
     void responseImage(ResImage *);
@@ -65,7 +68,10 @@ private slots:
     void responseEnterRoom(ResEnterRoom *);
     void responseJoinRoom(ResJoinRoom *);
     void responseDisjoinRoom(ResDisjoinRoom *);
+<<<<<<< HEAD
     void responseLogin(ResLogin *);
+=======
+>>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
 
 signals:
     void setOpenCVImageSignal(cv::Mat);

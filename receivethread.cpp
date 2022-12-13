@@ -20,7 +20,10 @@ ReceiveThread::ReceiveThread(
     , resEnterRoom(NULL)
     , resJoinRoom(NULL)
     , resDisjoinRoom(NULL)
+<<<<<<< HEAD
     , resLogin(NULL)
+=======
+>>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
 {
     this->dataLengthList.resize(0);
 }
@@ -120,6 +123,7 @@ void ReceiveThread::run()
             resDisjoinRoom = new ResDisjoinRoom(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resDisjoinRoomSignal(resDisjoinRoom);
             break;
+<<<<<<< HEAD
         case Response::Login:
             qDebug() << "response Login";
             if (resLogin != NULL)
@@ -127,6 +131,8 @@ void ReceiveThread::run()
             resLogin = new ResLogin(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resLoginSignal(resLogin);
             break;
+=======
+>>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
         }
     }
 }

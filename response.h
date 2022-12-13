@@ -8,7 +8,11 @@
 class Response
 {
 public:
+<<<<<<< HEAD
     enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom, Login};
+=======
+    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom};
+>>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
     Response(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
     ~Response();
 
@@ -91,6 +95,7 @@ private:
     bool _isProfessorOut;
 };
 
+<<<<<<< HEAD
 class ResLogin : public Response
 {
 public:
@@ -103,5 +108,7 @@ private:
     std::string _ment;
 };
 
+=======
+>>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
 
 #endif // RESPONSE_H

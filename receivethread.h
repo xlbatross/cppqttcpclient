@@ -42,7 +42,10 @@ private:
     ResEnterRoom * resEnterRoom;
     ResJoinRoom * resJoinRoom;
     ResDisjoinRoom * resDisjoinRoom;
+<<<<<<< HEAD
     ResLogin * resLogin;
+=======
+>>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
 
 public slots:
     void start();
@@ -55,7 +58,10 @@ signals:
     void resEnterRoomSignal(ResEnterRoom *);
     void resJoinRoomSignal(ResJoinRoom *);
     void resDisjoinRoomSignal(ResDisjoinRoom *);
+<<<<<<< HEAD
     void resLoginSignal(ResLogin *);
+=======
+>>>>>>> eb5fbce6a906683b9992b73f22f876f3e0feff9b
 };
 
 #endif // RECEIVETHREAD_H
