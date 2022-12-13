@@ -4,7 +4,7 @@ LTCPClient::LTCPClient()
     this->cSock = socket(PF_INET, SOCK_STREAM, 0);
     this->sttTime.tv_sec = 5;
     this->sttTime.tv_usec = 0;
-    setsockopt(this->cSock, SOL_SOCKET, SO_SNDTIMEO, (const char*)&this->sttTime, sizeof(this->sttTime) );
+    setsockopt(this->cSock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&this->sttTime, sizeof(this->sttTime) );
 }
 
 LTCPClient::~LTCPClient()
@@ -142,8 +142,7 @@ int LTCPClient::receiveByteData(char **data)
     int error = read(this->cSock, (char *)(&dataSize), sizeof(int));
     if (error == -1)
     {
-        std::cout << std::endl;
-        if (errno == ETIMEDOUT)
+        if (errno == EAGAIN)
             return -2;
         else
             return -1;
