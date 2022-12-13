@@ -60,7 +60,6 @@ bool WTCPClient::sendRequest(Request * request)
         return false;
     for (int i = 0; i < request->dataLengthList().size(); i++)
     {
-        std::cout << i << std::endl;
         if (!this->sendByteData(request->dataBytesList()[i], request->dataLengthList()[i]))
         {
             return false;

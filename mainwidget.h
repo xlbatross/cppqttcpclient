@@ -57,6 +57,7 @@ private slots:
     void refeashRoomList();
 
     void disconnectServer();
+    void responseImage(ResImage *);
     void responseRoomList(ResRoomList *);
     void responseMakeRoom(ResMakeRoom *);
     void responseEnterRoom(ResEnterRoom *);

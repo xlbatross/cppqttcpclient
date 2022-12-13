@@ -71,9 +71,9 @@ ReqImage::ReqImage(const cv::Mat &img)
      */
 
     this->_headerSize = sizeof(int) * 4;
-    int receiveCount = 0;
-    int requestType = Request::RoomList;
-    int dataSize = 0;
+    int receiveCount = 1;
+    int requestType = Request::Image;
+    int dataSize = 1;
     int firstDataType = Request::OpenCVImage;
 
     this->_headerBytes = new char[this->_headerSize];
@@ -81,6 +81,8 @@ ReqImage::ReqImage(const cv::Mat &img)
     memcpy(this->_headerBytes + sizeof(int) * 1, &requestType, sizeof(int)); // requestType
     memcpy(this->_headerBytes + sizeof(int) * 2, &dataSize, sizeof(int)); // attrSize;
     memcpy(this->_headerBytes + sizeof(int) * 3, &firstDataType, sizeof(int));
+
+//    std::cout << img.total() << " " << img.rows << " " << img.cols << " " << img.channels() << std::endl;
 
     this->_dataLengthList.resize(1);
     this->_dataBytesList = new char * [1]();
