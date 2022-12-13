@@ -9,7 +9,6 @@ class Request
 {
 public:
     enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, LeaveRoom};
-    enum Data{String = 0, Int, OpenCVImage};
     Request();
     ~Request();
 

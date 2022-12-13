@@ -43,10 +43,7 @@ ResImage::ResImage(const char *headerBytes, const char * const *dataBytesList, i
      * resImage header example
      * receiveCount : 2 <32bit, 4byte, int>
      * responseType : 1(resRoomList) (32bite, 4byte, int)
-     * dataSize : 2
-     * dataType:
-     *     2 : OpenCVImage
-     *     1 : int
+     * dataSize : <32bit, 4byte, int>
      */
     this->_img = cv::Mat(240, 320, CV_8UC3, (unsigned char *)(dataBytesList[0]));
     memcpy(&_number, dataBytesList[1], sizeof(int));
@@ -69,18 +66,13 @@ ResRoomList::ResRoomList(const char *headerBytes, const char * const *dataBytesL
      * resRoomList header example
      * receiveCount : 24 <32bit, 4byte, int>
      * responseType : 2(resRoomList) (32bite, 4byte, int)
-     * dataSize : 4
-     * dataType:
-     *     0 : string
-     *     1 : int
-     *     0 : string
-     *     1 : int
+     * dataSize : something
      */
     int port = 0;
     int roomMemberCount = 0;
     for (int i = 0; i < this->dataLengthList.size(); i++)
     {
-        switch(i % dataSize)
+        switch(i % 4)
         {
         case 0:
             this->_ipList.push_back(std::string(this->dataBytesList[i], this->dataLengthList[i]));
@@ -97,10 +89,6 @@ ResRoomList::ResRoomList(const char *headerBytes, const char * const *dataBytesL
             this->_roomMemberCountList.push_back(roomMemberCount);
             break;
         }
-//        std::cout << this->_ipList[i] << std::endl;
-//        std::cout << this->_portList[i] << std::endl;
-//        std::cout << this->_roomNameList[i] << std::endl;
-//        std::cout << this->_roomMemberCountList[i] << std::endl;
     }
 }
 
@@ -131,12 +119,10 @@ ResMakeRoom::ResMakeRoom(const char *headerBytes, const char * const *dataBytesL
      * resMakeRoom header example
      * receiveCount : 1 <32bit, 4byte, int>
      * responseType : 3(resMakeRoom) (32bite, 4byte, int)
-     * dataSize : 1
-     * dataType:
-     *     1 : Int <32bit, 4byte, int>
+     * dataSize : 4
      */
     int c;
-    memcpy(&c, this->dataBytesList[0], sizeof(int));
+    memcpy(&c, this->dataBytesList[0], this->dataLengthList[0]);
 
     this->_isMake = (c == 1);
 }
@@ -153,12 +139,10 @@ ResEnterRoom::ResEnterRoom(const char *headerBytes, const char * const *dataByte
      * resEnterRoom header example
      * receiveCount : 1 <32bit, 4byte, int>
      * responseType : 4(ResEnterRoom) (32bite, 4byte, int)
-     * dataSize : 1
-     * dataType:
-     *     1 : Int <32bit, 4byte, int>
+     * dataSize : 4
      */
     int c;
-    memcpy(&c, this->dataBytesList[0], sizeof(int));
+    memcpy(&c, this->dataBytesList[0], this->dataLengthList[0]);
 
     this->_isEnter = (c == 1);
 }
@@ -175,9 +159,7 @@ ResJoinRoom::ResJoinRoom(const char *headerBytes, const char * const *dataBytesL
      * resJoinRoom header example
      * receiveCount : 1 <32bit, 4byte, int>
      * responseType : 5(ResJoinRoom) (32bite, 4byte, int)
-     * dataSize : 1
-     * dataType:
-     *     0 : string <32bit, 4byte, int>
+     * dataSize : string length
      */
     this->_name = std::string(this->dataBytesList[0], this->dataLengthList[0]);
 }
@@ -194,14 +176,11 @@ ResDisjoinRoom::ResDisjoinRoom(const char *headerBytes, const char * const *data
      * resDisJoinRoom header example
      * receiveCount : 2 <32bit, 4byte, int>
      * responseType : 6(DisJoinRoom) (32bite, 4byte, int)
-     * dataSize : 2
-     * dataType:
-     *     0 : string <32bit, 4byte, int>
-     *     1 : int <32bit, 4byte, int>
+     * dataSize : string length + sizeof int
      */
     int c;
     this->_name = std::string(this->dataBytesList[0], this->dataLengthList[0]);
-    memcpy(&c, this->dataBytesList[1], sizeof(int));
+    memcpy(&c, this->dataBytesList[1], this->dataLengthList[1]);
     this->_isProfessorOut = (c == 1);
 }
 

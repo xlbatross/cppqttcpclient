@@ -122,12 +122,16 @@ bool WTCPClient::sendByteData(const char *data, const int dataSize)
 int WTCPClient::receive(char **headerBytes, char ***dataBytesList, std::vector<int> & dataLengthList)
 {
     int dataCount = 0;
+    int totalDataSize = 0;
+    int receiveTotalSize = 0;
     int headSize = this->receiveByteData(headerBytes);
     // receive header data
     if (headSize < 0)
         return headSize;
 
     memcpy(&dataCount, *headerBytes, sizeof(int));
+    memcpy(&totalDataSize, *headerBytes + sizeof(int) * 2, sizeof(int));
+
     dataLengthList.resize(dataCount);
 
     // receive real data
@@ -137,9 +141,14 @@ int WTCPClient::receive(char **headerBytes, char ***dataBytesList, std::vector<i
         dataLengthList[i] = this->receiveByteData(&((*dataBytesList)[i]));
         if (dataLengthList[i] < 0)
             return dataLengthList[i];
+        else
+            receiveTotalSize += dataLengthList[i];
     }
 
-    return headSize;
+    if (receiveTotalSize != totalDataSize)
+        return -2;
+    else
+        return headSize;
 }
 
 

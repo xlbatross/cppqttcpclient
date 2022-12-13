@@ -173,10 +173,10 @@ void MainWidget::responseMakeRoom(ResMakeRoom * resMakeRoom)
     {
         ui->tb_chatPro->clear();
         this->myRoomMemberCount = 0;
-        ui->lb_stuImage1->hide();
-        ui->lb_stuImage2->hide();
-        ui->lb_stuImage3->hide();
-        ui->lb_stuImage4->hide();
+        ui->lb_stuImage1->setVisible(false);
+        ui->lb_stuImage2->setVisible(false);
+        ui->lb_stuImage3->setVisible(false);
+        ui->lb_stuImage4->setVisible(false);
         ui->stackedWidget->setCurrentIndex(4);
     }
     else
@@ -215,28 +215,28 @@ void MainWidget::responseJoinRoom(ResJoinRoom * resJoinRoom)
         switch(this->myRoomMemberCount)
         {
         case 1:
-            ui->lb_stuImage1->show();
-            ui->lb_stuImage2->hide();
-            ui->lb_stuImage3->hide();
-            ui->lb_stuImage4->hide();
+            ui->lb_stuImage1->setVisible(true);
+            ui->lb_stuImage2->setVisible(false);
+            ui->lb_stuImage3->setVisible(false);
+            ui->lb_stuImage4->setVisible(false);
             break;
         case 2:
-            ui->lb_stuImage1->show();
-            ui->lb_stuImage2->show();
-            ui->lb_stuImage3->hide();
-            ui->lb_stuImage4->hide();
+            ui->lb_stuImage1->setVisible(true);
+            ui->lb_stuImage2->setVisible(true);
+            ui->lb_stuImage3->setVisible(false);
+            ui->lb_stuImage4->setVisible(false);
             break;
         case 3:
-            ui->lb_stuImage1->show();
-            ui->lb_stuImage2->show();
-            ui->lb_stuImage3->show();
-            ui->lb_stuImage4->hide();
+            ui->lb_stuImage1->setVisible(true);
+            ui->lb_stuImage2->setVisible(true);
+            ui->lb_stuImage3->setVisible(true);
+            ui->lb_stuImage4->setVisible(false);
             break;
         case 4:
-            ui->lb_stuImage1->show();
-            ui->lb_stuImage2->show();
-            ui->lb_stuImage3->show();
-            ui->lb_stuImage4->show();
+            ui->lb_stuImage1->setVisible(true);
+            ui->lb_stuImage2->setVisible(true);
+            ui->lb_stuImage3->setVisible(true);
+            ui->lb_stuImage4->setVisible(false);
             break;
         }
         if (this->myRoomMemberCount > 0)
@@ -267,28 +267,28 @@ void MainWidget::responseDisjoinRoom(ResDisjoinRoom * resDisjoinRoom)
         switch(this->myRoomMemberCount)
         {
         case 0:
-            ui->lb_stuImage1->hide();
-            ui->lb_stuImage2->hide();
-            ui->lb_stuImage3->hide();
-            ui->lb_stuImage4->hide();
+            ui->lb_stuImage1->setVisible(false);
+            ui->lb_stuImage2->setVisible(false);
+            ui->lb_stuImage3->setVisible(false);
+            ui->lb_stuImage4->setVisible(false);
             break;
         case 1:
-            ui->lb_stuImage1->show();
-            ui->lb_stuImage2->hide();
-            ui->lb_stuImage3->hide();
-            ui->lb_stuImage4->hide();
+            ui->lb_stuImage1->setVisible(true);
+            ui->lb_stuImage2->setVisible(false);
+            ui->lb_stuImage3->setVisible(false);
+            ui->lb_stuImage4->setVisible(false);
             break;
         case 2:
-            ui->lb_stuImage1->show();
-            ui->lb_stuImage2->show();
-            ui->lb_stuImage3->hide();
-            ui->lb_stuImage4->hide();
+            ui->lb_stuImage1->setVisible(true);
+            ui->lb_stuImage2->setVisible(true);
+            ui->lb_stuImage3->setVisible(false);
+            ui->lb_stuImage4->setVisible(false);
             break;
         case 3:
-            ui->lb_stuImage1->show();
-            ui->lb_stuImage2->show();
-            ui->lb_stuImage3->show();
-            ui->lb_stuImage4->hide();
+            ui->lb_stuImage1->setVisible(true);
+            ui->lb_stuImage2->setVisible(true);
+            ui->lb_stuImage3->setVisible(true);
+            ui->lb_stuImage4->setVisible(false);
             break;
         }
         if (this->myRoomMemberCount == 0)

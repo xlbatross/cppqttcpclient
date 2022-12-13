@@ -9,7 +9,6 @@ class Response
 {
 public:
     enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom};
-    enum Data{String = 0, Int, OpenCVImage};
     Response(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
     ~Response();
 
