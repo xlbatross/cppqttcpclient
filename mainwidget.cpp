@@ -4,8 +4,8 @@
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
-//    , client(new WTCPClient)
-    , client(new LTCPClient)
+    , client(new WTCPClient)
+//    , client(new LTCPClient)
     , receiveThread(new ReceiveThread(this->client))
     , myRoomMemberCount(-1)
 {

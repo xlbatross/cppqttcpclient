@@ -4,6 +4,12 @@ WTCPClient::WTCPClient()
     WSAStartup(MAKEWORD(2, 2), &this->wsaData);
     this->cSock = socket(PF_INET, SOCK_STREAM, 0);
 
+    int buffSize = 1024 * 1000;
+    int size = 4;
+    setsockopt(this->cSock, SOL_SOCKET, SO_RCVBUF, (char*)&buffSize, sizeof(buffSize));
+    getsockopt(this->cSock, SOL_SOCKET, SO_RCVBUF, (char*)&buffSize, &size);
+    std::cout << buffSize << std::endl;
+
     // 소켓 수신 타임 아웃 세팅
     this->timeout = 5000;
     setsockopt(this->cSock, SOL_SOCKET, SO_RCVTIMEO, (char*)&this->timeout, sizeof(this->timeout));
