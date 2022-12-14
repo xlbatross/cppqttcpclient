@@ -21,11 +21,7 @@ ReceiveThread::ReceiveThread(
     , resJoinRoom(NULL)
     , resDisjoinRoom(NULL)
     , resLogin(NULL)
-    , resProImage(NULL)
-    , resFirstImage(NULL)
-    , resSecondImage(NULL)
-    , resThirdImage(NULL)
-    , resForthImage(NULL)
+    , resSignUp(NULL) //#####
 {
     this->dataLengthList.resize(0);
 }
@@ -132,40 +128,12 @@ void ReceiveThread::run()
             resLogin = new ResLogin(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resLoginSignal(resLogin);
             break;
-        case Response::ProImage:
-            qDebug() << "response pro Image";
-            if (resProImage != NULL)
-                delete resProImage;
-            resProImage = new ResProImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
-            emit resImageSignal(resProImage);
-            break;
-        case Response::FirstImage:
-            qDebug() << "response First Image";
-            if (resFirstImage != NULL)
-                delete resFirstImage;
-            resFirstImage = new ResFirstImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
-            emit resImageSignal(resFirstImage);
-            break;
-        case Response::SecondImage:
-            qDebug() << "response second Image";
-            if (resSecondImage != NULL)
-                delete resSecondImage;
-            resSecondImage = new ResSecondImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
-            emit resImageSignal(resSecondImage);
-            break;
-        case Response::ThirdImage:
-            qDebug() << "response third Image";
-            if (resThirdImage != NULL)
-                delete resThirdImage;
-            resThirdImage = new ResThirdImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
-            emit resImageSignal(resThirdImage);
-            break;
-        case Response::ForthImage:
-            qDebug() << "response Forth Image";
-            if (resForthImage != NULL)
-                delete resForthImage;
-            resForthImage = new ResForthImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
-            emit resImageSignal(resForthImage);
+        case Response::SignUp: //####
+            qDebug() << "response SignUp";
+            if (resSignUp != NULL)
+                delete resSignUp;
+            resSignUp = new ResSignUp(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
+            emit resSignUpSignal(resSignUp);
             break;
         }
     }

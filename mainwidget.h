@@ -57,6 +57,11 @@ private slots:
     void refeashRoomList();
     void Login();
     void SignUp();
+    void gotoSignUp(); //###회원가입페이지로 이동
+    void backToLogin(); //###로그인페이지로 이동
+    void backToRoom();//###강의룸리스트로 이동
+    void closeLecture();//###강의 종료
+
 
     void disconnectServer();
     void responseImage(ResImage *);
@@ -66,11 +71,9 @@ private slots:
     void responseJoinRoom(ResJoinRoom *);
     void responseDisjoinRoom(ResDisjoinRoom *);
     void responseLogin(ResLogin *);
+    void responseSignUp(ResSignUp *); //####
 
-//    void responseProImage(ResProImage *);
-//    void responseFirstImage(ResFirstImage *);
-//    void responseSecondImage(ResSecondImage *);
-//    void responseThirdImage(ResThirdImage *);
-//    void responseForthImage(ResForthImage *);
+signals:
+    void setOpenCVImageSignal(cv::Mat);
 };
 #endif // MAINWIDGET_H

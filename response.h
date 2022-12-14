@@ -8,8 +8,7 @@
 class Response
 {
 public:
-    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom, Login, SignUp,
-              ProImage, FirstImage, SecondImage, ThirdImage, ForthImage};
+    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom, Login, SignUp, ProImage, FirstImage, SecondImage, ThirdImage, ForthImage};
     Response(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
     ~Response();
 
@@ -104,36 +103,74 @@ private:
     std::string _ment;
 };
 
-class ResProImage : public ResImage
+//####
+class ResSignUp : public Response
+{
+public:
+    ResSignUp(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+    const bool isSuccessed();
+    const std::string & ment();
+
+private:
+    bool _isSuccessed;
+    std::string _ment;
+};
+//####
+
+
+class ResProImage : public Response
 {
 public:
     ResProImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+
+    const cv::Mat & img();
+
+private:
+    cv::Mat _img;
 };
 
-class ResFirstImage : public ResImage
+class ResFirstImage : public Response
 {
 public:
     ResFirstImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+
+    const cv::Mat & img();
+
+private:
+    cv::Mat _img;
 };
 
-class ResSecondImage : public ResImage
+class ResSecondImage : public Response
 {
 public:
     ResSecondImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+
+    const cv::Mat & img();
+
+private:
+    cv::Mat _img;
 };
 
-class ResThirdImage : public ResImage
+class ResThirdImage : public Response
 {
 public:
     ResThirdImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
 
+    const cv::Mat & img();
+
+private:
+    cv::Mat _img;
 };
 
-class ResForthImage : public ResImage
+class ResForthImage : public Response
 {
 public:
     ResForthImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
 
+    const cv::Mat & img();
+
+private:
+    cv::Mat _img;
 };
 
 

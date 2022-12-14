@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="loginPage">
     <widget class="QPushButton" name="btn_faceLogin">
@@ -122,7 +122,7 @@
     </widget>
    </widget>
    <widget class="QWidget" name="page_2">
-    <widget class="QPushButton" name="btn_backFromJoin">
+    <widget class="QPushButton" name="btn_backFromSignUp">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -409,10 +409,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="lb_proImage">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;기다리는 중...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;학생화면&lt;/p&gt;&lt;p&gt;-&amp;gt; 교수영상만 띄워주기&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>
@@ -489,40 +486,28 @@
       <item row="1" column="1">
        <widget class="QLabel" name="lb_stuImage4">
         <property name="text">
-         <string>기다리는 중...</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <string>TextLabel</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QLabel" name="lb_stuImage2">
         <property name="text">
-         <string>기다리는 중...</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <string>TextLabel</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="lb_stuImage3">
         <property name="text">
-         <string>기다리는 중...</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <string>TextLabel</string>
         </property>
        </widget>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="lb_stuImage1">
         <property name="text">
-         <string>기다리는 중...</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <string>TextLabel</string>
         </property>
        </widget>
       </item>

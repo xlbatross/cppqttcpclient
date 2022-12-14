@@ -43,13 +43,7 @@ private:
     ResJoinRoom * resJoinRoom;
     ResDisjoinRoom * resDisjoinRoom;
     ResLogin * resLogin;
-
-    ResProImage * resProImage;
-    ResFirstImage * resFirstImage;
-    ResSecondImage * resSecondImage;
-    ResThirdImage * resThirdImage;
-    ResForthImage * resForthImage;
-
+    ResSignUp * resSignUp; //####
 
 public slots:
     void start();
@@ -63,12 +57,7 @@ signals:
     void resJoinRoomSignal(ResJoinRoom *);
     void resDisjoinRoomSignal(ResDisjoinRoom *);
     void resLoginSignal(ResLogin *);
-
-//    void resProImageSignal(ResProImage *);
-//    void resFirstImageSignal(ResFirstImage *);
-//    void resSecondImageSignal(ResSecondImage *);
-//    void resThirdImageSignal(ResThirdImage *);
-//    void resForthImageSignal(ResForthImage *);
+    void resSignUpSignal(ResSignUp *); //####
 };
 
 #endif // RECEIVETHREAD_H

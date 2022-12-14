@@ -15,10 +15,11 @@ MainWidget::MainWidget(QWidget *parent)
     this->label = new OpenCVImageLabel(this);
 
     if (this->client->connectServer())
+    //if (this->client->connectServer("10.10.20.116"))
     {
         qDebug() << "connected";
+        ui->stackedWidget->setCurrentIndex(0);//###
         connect(this->timer, SIGNAL(timeout()), this, SLOT(readCapture()));
-
         connect(this->receiveThread, SIGNAL(disconnectServerSignal()), this, SLOT(disconnectServer()));
         connect(this->receiveThread, SIGNAL(resImageSignal(ResImage*)), this, SLOT(responseImage(ResImage*)), Qt::BlockingQueuedConnection);
         connect(this->receiveThread, SIGNAL(resRoomListSignal(ResRoomList*)), this, SLOT(responseRoomList(ResRoomList*)));
@@ -27,12 +28,7 @@ MainWidget::MainWidget(QWidget *parent)
         connect(this->receiveThread, SIGNAL(resJoinRoomSignal(ResJoinRoom*)), this, SLOT(responseJoinRoom(ResJoinRoom*)));
         connect(this->receiveThread, SIGNAL(resDisjoinRoomSignal(ResDisjoinRoom*)), this, SLOT(responseDisjoinRoom(ResDisjoinRoom*)));
         connect(this->receiveThread, SIGNAL(resLoginSignal(ResLogin*)), this, SLOT(responseLogin(ResLogin*)));
-//        connect(this->receiveThread, SIGNAL(resProImageSignal(ResProImage*)), this, SLOT(responseProImage(ResProImage*)), Qt::BlockingQueuedConnection);
-//        connect(this->receiveThread, SIGNAL(resFirstImageSignal(ResFirstImage*)), this, SLOT(responseFirstImage(ResFirstImage*)), Qt::BlockingQueuedConnection);
-//        connect(this->receiveThread, SIGNAL(resSecondImageSignal(ResSecondImage*)), this, SLOT(responseSecondImage(ResSecondImage*)), Qt::BlockingQueuedConnection);
-//        connect(this->receiveThread, SIGNAL(resThirdImageSignal(ResThirdImage*)), this, SLOT(responseThirdImage(ResThirdImage*)), Qt::BlockingQueuedConnection);
-//        connect(this->receiveThread, SIGNAL(resForthImageSignal(ResImage*)), this, SLOT(responseForthImage(ResForthImage*)), Qt::BlockingQueuedConnection);
-
+        connect(this->receiveThread, SIGNAL(resSignUpSignal(ResSignUp*)), this, SLOT(responseSignUp(ResSignUp*)));//###
         connect(ui->btn_makeRoom, SIGNAL(clicked(bool)), this, SLOT(viewMakeRoomMessageBox()));
         connect(ui->lw_roomList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(enterRoom(QListWidgetItem*)));
         connect(ui->btn_backFromStudent, SIGNAL(clicked(bool)), this, SLOT(backClicked()));
@@ -40,7 +36,15 @@ MainWidget::MainWidget(QWidget *parent)
         connect(ui->btn_refreshList, SIGNAL(clicked(bool)), this, SLOT(refeashRoomList()));
         connect(ui->btn_login, SIGNAL(clicked(bool)), this, SLOT(Login()));
         connect(ui->btn_submit, SIGNAL(clicked(bool)), this, SLOT(SignUp()));
+        connect(ui->btn_signUp, SIGNAL(clicked(bool)),this, SLOT(gotoSignUp())); //####
+        connect(ui->btn_backFromSignUp, SIGNAL(clicked(bool)), this, SLOT(backToLogin()));//####
+        connect(ui->btn_backFromRoom, SIGNAL(clicked(bool)), this, SLOT(backToLogin()));//####
+        connect(ui->btn_backFromStudent, SIGNAL(clicked(bool)), this, SLOT(backToRoom()));//####
+        connect(ui->btn_exitFromRoom, SIGNAL(clicked(bool)), this, SLOT(closeLecture()));//####
+        //connect(ui->btn_endLecture, SIGNAL(clicked(bool)), this, SLOT(closeLecture()));//####
         this->receiveThread->start();
+        this->client->sendReqRoomList();
+
     }
     else
     {
@@ -116,7 +120,7 @@ void MainWidget::Login()
     this->client->sendReqLogin(num.toStdString(), pw.toStdString());
 //    qDebug() << num;
 //    qDebug() << pw;
-//    ui->stackedWidget->setCurrentIndex(2);
+    //ui->stackedWidget->setCurrentIndex(2);
 }
 
 void MainWidget::SignUp()
@@ -131,12 +135,37 @@ void MainWidget::SignUp()
     if(ui->radio_stuType->isChecked()){
         cate = "stu";
     }
-
-    qDebug() << name;
-    qDebug() << num;
-    qDebug() << pw;
-    qDebug() << cate;
+    this->client->sendReqSignUp(name.toStdString(),num.toStdString(), pw.toStdString(),cate.toStdString());
+    ui->edt_signUpName->clear();
+    ui->edt_signUpNum->clear();
+    ui->edt_signUpPw->clear();
+    ui->stackedWidget->setCurrentIndex(0);
+//    qDebug() << name;
+//    qDebug() << num;
+//    qDebug() << pw;
+//    qDebug() << cate;
 }
+//###
+void MainWidget::gotoSignUp()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWidget::backToLogin()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWidget::backToRoom()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+}
+
+void MainWidget::closeLecture()
+{
+    this->close();
+}
+//####
 
 void MainWidget::disconnectServer()
 {
@@ -239,7 +268,7 @@ void MainWidget::responseEnterRoom(ResEnterRoom * resEnterRoom)
     {
         ui->tb_chatStu->clear();
         ui->stackedWidget->setCurrentIndex(3);
-        this->timer->start(50);
+        this->timer->start(33);
     }
     else
     {
@@ -285,7 +314,7 @@ void MainWidget::responseJoinRoom(ResJoinRoom * resJoinRoom)
             break;
         }
         if (this->myRoomMemberCount > 0)
-            this->timer->start(50);
+            this->timer->start(33);
     }
     else if (ui->stackedWidget->currentIndex() == 3)
     {
@@ -349,7 +378,6 @@ void MainWidget::responseLogin(ResLogin * resLogin)
 {
     if (resLogin->isSuccessed())
     {
-        this->client->sendReqRoomList();
         ui->stackedWidget->setCurrentIndex(2);
     }
     else
@@ -357,8 +385,28 @@ void MainWidget::responseLogin(ResLogin * resLogin)
         QMessageBox msgBox;
         msgBox.setText(QString::fromStdString(resLogin->ment()));
         msgBox.exec();
-        ui->edt_loginNum->clear();
-        ui->edt_loginPw->clear();
+    }
+    ui->edt_loginNum->clear();
+    ui->edt_loginPw->clear();
+}
+
+//####
+void MainWidget::responseSignUp(ResSignUp * resSignUp)
+{
+    if (resSignUp->isSuccessed())
+    {
+        QMessageBox msgBox;
+        msgBox.setText(QString::fromStdString(resSignUp->ment()));
+        msgBox.exec();
+        ui->stackedWidget->setCurrentIndex(0);
+    }
+    else
+    {
+        QMessageBox msgBox;
+        //msgBox.setText(QString::fromStdString(resSignUp->ment()));
+        msgBox.setText("회원가입 진행 불가");
+        msgBox.exec();
+        ui->stackedWidget->setCurrentIndex(0);
     }
 }
 

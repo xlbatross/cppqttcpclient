@@ -260,4 +260,3 @@ ReqSignUp::ReqSignUp(std::string name, std::string num, std::string pw, std::str
     memcpy(this->_dataBytesList[3], cate.c_str(), cate.size());
     this->_dataLengthList[3] = cate.size();
 }
-
