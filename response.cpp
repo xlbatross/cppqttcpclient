@@ -41,7 +41,7 @@ ResImage::ResImage(const char *headerBytes, const char * const *dataBytesList, i
      * responseType : 1(Image) (32bite, 4byte, int)
      * dataSize : 240 * 320 * 3 + 4 <32bit, 4byte, int>
      */
-    this->_img = cv::Mat(240, 320, CV_8UC3, (unsigned char *)(dataBytesList[0]));
+    this->_img = cv::Mat(480, 640, CV_8UC3, (unsigned char *)(dataBytesList[0]));
     memcpy(&this->_number, dataBytesList[1], dataLengthList[1]);
 }
 

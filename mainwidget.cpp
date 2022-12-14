@@ -67,14 +67,14 @@ void MainWidget::readCapture()
     if (this->cap.isOpened())
     {
         this->cap.read(img);
-        cv::resize(img, img, cv::Size(320, 240));
+        cv::resize(img, img, cv::Size(640, 480));
         this->client->sendReqImage(img);
     }
     else
     {
         this->cap.open(0);
-        this->cap.set(cv::CAP_PROP_FRAME_WIDTH, 320);
-        this->cap.set(cv::CAP_PROP_FRAME_HEIGHT, 240);
+        this->cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
+        this->cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
     }
 }
 
@@ -227,11 +227,6 @@ void MainWidget::responseRoomList(ResRoomList * resRoomList)
               + " " + QString::fromUtf8(ipList.at(i).c_str(), ipList.at(i).size())
               + " " + QString::number(portList[i])
             );
-//            ui->lw_roomList->addItem(
-//                QString::fromUtf8(resRoomList->roomNameList().at(i).c_str(), resRoomList->roomNameList().at(i).size())
-//              + " " + QString::fromUtf8(resRoomList->ipList().at(i).c_str(), resRoomList->ipList().at(i).size())
-//              + " " + QString::number(resRoomList->portList()[i])
-//            );
         }
     }
 }
