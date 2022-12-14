@@ -8,15 +8,17 @@
 class Response
 {
 public:
-    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom, Login, SignUp, ProImage, FirstImage, SecondImage, ThirdImage, ForthImage};
-    Response(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom, Login, SignUp,
+              ProImage, FirstImage, SecondImage, ThirdImage, ForthImage};
+//    Response(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+    Response();
     ~Response();
 
-    void initDataBytesList();
+//    void initDataBytesList();
 
-protected:
-    char ** dataBytesList;
-    std::vector<int> dataLengthList;
+//protected:
+//    char ** dataBytesList;
+//    std::vector<int> dataLengthList;
 };
 
 class ResImage : public Response

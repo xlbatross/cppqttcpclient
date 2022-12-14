@@ -45,6 +45,12 @@ private:
     ResLogin * resLogin;
     ResSignUp * resSignUp; //####
 
+    ResProImage * resProImage;
+    ResFirstImage * resFirstImage;
+    ResSecondImage * resSecondImage;
+    ResThirdImage * resThirdImage;
+    ResForthImage * resForthImage;
+
 public slots:
     void start();
 

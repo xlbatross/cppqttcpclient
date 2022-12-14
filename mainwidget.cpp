@@ -14,8 +14,8 @@ MainWidget::MainWidget(QWidget *parent)
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
-    if (this->client->connectServer())
-    //if (this->client->connectServer("10.10.20.116"))
+//    if (this->client->connectServer())
+    if (this->client->connectServer("10.10.20.97"))
     {
         qDebug() << "connected";
         ui->stackedWidget->setCurrentIndex(0);//###
