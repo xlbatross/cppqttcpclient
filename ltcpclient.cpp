@@ -73,7 +73,6 @@ bool LTCPClient::sendRequest(Request * request)
         return false;
     for (int i = 0; i < request->dataLengthList().size(); i++)
     {
-        std::cout << i << std::endl;
         if (!this->sendByteData(request->dataBytesList()[i], request->dataLengthList()[i]))
         {
             return false;
@@ -84,11 +83,6 @@ bool LTCPClient::sendRequest(Request * request)
 
 bool LTCPClient::sendByteData(const char *data, const int dataSize)
 {
-//    for (int i = 0; i < 4; i++)
-//    {
-//        std::cout << (int)(*((char *)(&dataSize) + i)) << " ";
-//    }
-//    std::cout << std::endl;
     // 이 컴퓨터 자체가 little endian이다
     // 다만 송신할 때 big endian으로 송신되지 않는다.
     // 즉 데이터 16 0 0 0이 이 코드 상에서는 4바이트 16으로 읽히지만

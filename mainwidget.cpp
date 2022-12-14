@@ -19,7 +19,7 @@ MainWidget::MainWidget(QWidget *parent)
         qDebug() << "connected";
         connect(this->timer, SIGNAL(timeout()), this, SLOT(readCapture()));
         connect(this->receiveThread, SIGNAL(disconnectServerSignal()), this, SLOT(disconnectServer()));
-        connect(this->receiveThread, SIGNAL(resImageSignal(ResImage*)), this, SLOT(responseImage(ResImage*)));
+        connect(this->receiveThread, SIGNAL(resImageSignal(ResImage*)), this, SLOT(responseImage(ResImage*)), Qt::BlockingQueuedConnection);
         connect(this->receiveThread, SIGNAL(resRoomListSignal(ResRoomList*)), this, SLOT(responseRoomList(ResRoomList*)));
         connect(this->receiveThread, SIGNAL(resMakeRoomSignal(ResMakeRoom*)), this, SLOT(responseMakeRoom(ResMakeRoom*)));
         connect(this->receiveThread, SIGNAL(resEnterRoomSignal(ResEnterRoom*)), this, SLOT(responseEnterRoom(ResEnterRoom*)));
@@ -234,7 +234,7 @@ void MainWidget::responseEnterRoom(ResEnterRoom * resEnterRoom)
     {
         ui->tb_chatStu->clear();
         ui->stackedWidget->setCurrentIndex(3);
-        this->timer->start(33);
+        this->timer->start(50);
     }
     else
     {
@@ -280,7 +280,7 @@ void MainWidget::responseJoinRoom(ResJoinRoom * resJoinRoom)
             break;
         }
         if (this->myRoomMemberCount > 0)
-            this->timer->start(33);
+            this->timer->start(50);
     }
     else if (ui->stackedWidget->currentIndex() == 3)
     {
