@@ -59,7 +59,7 @@ private slots:
     void SignUp();
 
     void disconnectServer();
-    void responseImage(ResImage);
+    void responseImage(ResImage *);
     void responseRoomList(ResRoomList *);
     void responseMakeRoom(ResMakeRoom *);
     void responseEnterRoom(ResEnterRoom *);
@@ -67,7 +67,10 @@ private slots:
     void responseDisjoinRoom(ResDisjoinRoom *);
     void responseLogin(ResLogin *);
 
-signals:
-    void setOpenCVImageSignal(cv::Mat);
+//    void responseProImage(ResProImage *);
+//    void responseFirstImage(ResFirstImage *);
+//    void responseSecondImage(ResSecondImage *);
+//    void responseThirdImage(ResThirdImage *);
+//    void responseForthImage(ResForthImage *);
 };
 #endif // MAINWIDGET_H

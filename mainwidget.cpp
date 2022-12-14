@@ -18,14 +18,21 @@ MainWidget::MainWidget(QWidget *parent)
     {
         qDebug() << "connected";
         connect(this->timer, SIGNAL(timeout()), this, SLOT(readCapture()));
+
         connect(this->receiveThread, SIGNAL(disconnectServerSignal()), this, SLOT(disconnectServer()));
-        connect(this->receiveThread, SIGNAL(resImageSignal(ResImage)), this, SLOT(responseImage(ResImage)), Qt::BlockingQueuedConnection);
+        connect(this->receiveThread, SIGNAL(resImageSignal(ResImage*)), this, SLOT(responseImage(ResImage*)), Qt::BlockingQueuedConnection);
         connect(this->receiveThread, SIGNAL(resRoomListSignal(ResRoomList*)), this, SLOT(responseRoomList(ResRoomList*)));
         connect(this->receiveThread, SIGNAL(resMakeRoomSignal(ResMakeRoom*)), this, SLOT(responseMakeRoom(ResMakeRoom*)));
         connect(this->receiveThread, SIGNAL(resEnterRoomSignal(ResEnterRoom*)), this, SLOT(responseEnterRoom(ResEnterRoom*)));
         connect(this->receiveThread, SIGNAL(resJoinRoomSignal(ResJoinRoom*)), this, SLOT(responseJoinRoom(ResJoinRoom*)));
         connect(this->receiveThread, SIGNAL(resDisjoinRoomSignal(ResDisjoinRoom*)), this, SLOT(responseDisjoinRoom(ResDisjoinRoom*)));
         connect(this->receiveThread, SIGNAL(resLoginSignal(ResLogin*)), this, SLOT(responseLogin(ResLogin*)));
+//        connect(this->receiveThread, SIGNAL(resProImageSignal(ResProImage*)), this, SLOT(responseProImage(ResProImage*)), Qt::BlockingQueuedConnection);
+//        connect(this->receiveThread, SIGNAL(resFirstImageSignal(ResFirstImage*)), this, SLOT(responseFirstImage(ResFirstImage*)), Qt::BlockingQueuedConnection);
+//        connect(this->receiveThread, SIGNAL(resSecondImageSignal(ResSecondImage*)), this, SLOT(responseSecondImage(ResSecondImage*)), Qt::BlockingQueuedConnection);
+//        connect(this->receiveThread, SIGNAL(resThirdImageSignal(ResThirdImage*)), this, SLOT(responseThirdImage(ResThirdImage*)), Qt::BlockingQueuedConnection);
+//        connect(this->receiveThread, SIGNAL(resForthImageSignal(ResImage*)), this, SLOT(responseForthImage(ResForthImage*)), Qt::BlockingQueuedConnection);
+
         connect(ui->btn_makeRoom, SIGNAL(clicked(bool)), this, SLOT(viewMakeRoomMessageBox()));
         connect(ui->lw_roomList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(enterRoom(QListWidgetItem*)));
         connect(ui->btn_backFromStudent, SIGNAL(clicked(bool)), this, SLOT(backClicked()));
@@ -139,11 +146,11 @@ void MainWidget::disconnectServer()
     this->deleteLater();
 }
 
-void MainWidget::responseImage(ResImage resImage)
+void MainWidget::responseImage(ResImage * resImage)
 {
     QLabel * current = NULL;
 
-    switch(resImage.number())
+    switch(resImage->number())
     {
     case 0:
         current = ui->lb_proImage;
@@ -164,12 +171,12 @@ void MainWidget::responseImage(ResImage resImage)
 
     if (current != NULL)
     {
-        cv::Mat img = resImage.img().clone();
-        if (resImage.number() == 0)
+        cv::Mat img = resImage->img().clone();
+        if (resImage->number() == 0)
         {
             cv::resize(img, img, cv::Size(current->size().width(), current->size().height()));
         }
-        QImage qtImage((const unsigned char *) (resImage.img().data), resImage.img().cols, resImage.img().rows, QImage::Format_RGB888);
+        QImage qtImage((const unsigned char *) (resImage->img().data), resImage->img().cols, resImage->img().rows, QImage::Format_RGB888);
 
         current->setPixmap(QPixmap::fromImage(qtImage));
     }
@@ -354,7 +361,6 @@ void MainWidget::responseLogin(ResLogin * resLogin)
         ui->edt_loginPw->clear();
     }
 }
-
 
 
 
