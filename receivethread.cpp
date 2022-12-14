@@ -138,30 +138,35 @@ void ReceiveThread::run()
                 delete resProImage;
             resProImage = new ResProImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resImageSignal(resProImage);
+            break;
         case Response::FirstImage:
             qDebug() << "response First Image";
             if (resFirstImage != NULL)
                 delete resFirstImage;
             resFirstImage = new ResFirstImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resImageSignal(resFirstImage);
+            break;
         case Response::SecondImage:
             qDebug() << "response second Image";
             if (resSecondImage != NULL)
                 delete resSecondImage;
             resSecondImage = new ResSecondImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resImageSignal(resSecondImage);
+            break;
         case Response::ThirdImage:
             qDebug() << "response third Image";
             if (resThirdImage != NULL)
                 delete resThirdImage;
             resThirdImage = new ResThirdImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resImageSignal(resThirdImage);
+            break;
         case Response::ForthImage:
             qDebug() << "response Forth Image";
             if (resForthImage != NULL)
                 delete resForthImage;
             resForthImage = new ResForthImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resImageSignal(resForthImage);
+            break;
         }
     }
 }
