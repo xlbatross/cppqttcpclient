@@ -14,8 +14,8 @@ MainWidget::MainWidget(QWidget *parent)
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
-//    if (this->client->connectServer())
-    if (this->client->connectServer("10.10.20.97"))
+    if (this->client->connectServer())
+//    if (this->client->connectServer("10.10.20.97"))
     {
         qDebug() << "connected";
         ui->stackedWidget->setCurrentIndex(0);//###
@@ -136,18 +136,13 @@ void MainWidget::SignUp()
         cate = "stu";
     }
     this->client->sendReqSignUp(name.toStdString(),num.toStdString(), pw.toStdString(),cate.toStdString());
-    ui->edt_signUpName->clear();
-    ui->edt_signUpNum->clear();
-    ui->edt_signUpPw->clear();
-    ui->stackedWidget->setCurrentIndex(0);
-//    qDebug() << name;
-//    qDebug() << num;
-//    qDebug() << pw;
-//    qDebug() << cate;
 }
 //###
 void MainWidget::gotoSignUp()
 {
+    ui->edt_signUpName->clear();
+    ui->edt_signUpNum->clear();
+    ui->edt_signUpPw->clear();
     ui->stackedWidget->setCurrentIndex(1);
 }
 
@@ -393,20 +388,18 @@ void MainWidget::responseLogin(ResLogin * resLogin)
 //####
 void MainWidget::responseSignUp(ResSignUp * resSignUp)
 {
+    QMessageBox msgBox;
+    msgBox.setText(QString::fromStdString(resSignUp->ment()));
+    msgBox.exec();
     if (resSignUp->isSuccessed())
     {
-        QMessageBox msgBox;
-        msgBox.setText(QString::fromStdString(resSignUp->ment()));
-        msgBox.exec();
-        ui->stackedWidget->setCurrentIndex(0);
+        this->backToLogin();
     }
     else
     {
-        QMessageBox msgBox;
-        //msgBox.setText(QString::fromStdString(resSignUp->ment()));
-        msgBox.setText("회원가입 진행 불가");
-        msgBox.exec();
-        ui->stackedWidget->setCurrentIndex(0);
+        ui->edt_signUpName->clear();
+        ui->edt_signUpNum->clear();
+        ui->edt_signUpPw->clear();
     }
 }
 

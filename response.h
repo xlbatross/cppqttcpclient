@@ -120,59 +120,35 @@ private:
 //####
 
 
-class ResProImage : public Response
+class ResProImage : public ResImage
 {
 public:
     ResProImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
-
-    const cv::Mat & img();
-
-private:
-    cv::Mat _img;
 };
 
-class ResFirstImage : public Response
+class ResFirstImage : public ResImage
 {
 public:
     ResFirstImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
-
-    const cv::Mat & img();
-
-private:
-    cv::Mat _img;
 };
 
-class ResSecondImage : public Response
+class ResSecondImage : public ResImage
 {
 public:
     ResSecondImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
-
-    const cv::Mat & img();
-
-private:
-    cv::Mat _img;
 };
 
-class ResThirdImage : public Response
+class ResThirdImage : public ResImage
 {
 public:
     ResThirdImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
 
-    const cv::Mat & img();
-
-private:
-    cv::Mat _img;
 };
 
-class ResForthImage : public Response
+class ResForthImage : public ResImage
 {
 public:
     ResForthImage(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
-
-    const cv::Mat & img();
-
-private:
-    cv::Mat _img;
 };
 
 
