@@ -55,7 +55,7 @@ public slots:
 
 signals:
     void disconnectServerSignal();
-    void resImageSignal(ResImage *);
+    void resImageSignal(ResImage);
     void resRoomListSignal(ResRoomList *);
     void resMakeRoomSignal(ResMakeRoom *);
     void resEnterRoomSignal(ResEnterRoom *);

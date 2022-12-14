@@ -4,7 +4,7 @@ WTCPClient::WTCPClient()
     WSAStartup(MAKEWORD(2, 2), &this->wsaData);
     this->cSock = socket(PF_INET, SOCK_STREAM, 0);
 
-    int buffSize = 1024 * 1000;
+    int buffSize = 1024 * 1024 * 8;
     int size = 4;
     setsockopt(this->cSock, SOL_SOCKET, SO_RCVBUF, (char*)&buffSize, sizeof(buffSize));
     getsockopt(this->cSock, SOL_SOCKET, SO_RCVBUF, (char*)&buffSize, &size);

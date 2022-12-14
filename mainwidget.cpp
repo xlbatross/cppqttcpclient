@@ -19,7 +19,7 @@ MainWidget::MainWidget(QWidget *parent)
         qDebug() << "connected";
         connect(this->timer, SIGNAL(timeout()), this, SLOT(readCapture()));
         connect(this->receiveThread, SIGNAL(disconnectServerSignal()), this, SLOT(disconnectServer()));
-        connect(this->receiveThread, SIGNAL(resImageSignal(ResImage*)), this, SLOT(responseImage(ResImage*)), Qt::BlockingQueuedConnection);
+        connect(this->receiveThread, SIGNAL(resImageSignal(ResImage)), this, SLOT(responseImage(ResImage)), Qt::BlockingQueuedConnection);
         connect(this->receiveThread, SIGNAL(resRoomListSignal(ResRoomList*)), this, SLOT(responseRoomList(ResRoomList*)));
         connect(this->receiveThread, SIGNAL(resMakeRoomSignal(ResMakeRoom*)), this, SLOT(responseMakeRoom(ResMakeRoom*)));
         connect(this->receiveThread, SIGNAL(resEnterRoomSignal(ResEnterRoom*)), this, SLOT(responseEnterRoom(ResEnterRoom*)));
@@ -34,8 +34,6 @@ MainWidget::MainWidget(QWidget *parent)
         connect(ui->btn_login, SIGNAL(clicked(bool)), this, SLOT(Login()));
         connect(ui->btn_submit, SIGNAL(clicked(bool)), this, SLOT(SignUp()));
         this->receiveThread->start();
-        this->client->sendReqRoomList();
-
     }
     else
     {
@@ -141,11 +139,11 @@ void MainWidget::disconnectServer()
     this->deleteLater();
 }
 
-void MainWidget::responseImage(ResImage * resImage)
+void MainWidget::responseImage(ResImage resImage)
 {
     QLabel * current = NULL;
 
-    switch(resImage->number())
+    switch(resImage.number())
     {
     case 0:
         current = ui->lb_proImage;
@@ -166,12 +164,12 @@ void MainWidget::responseImage(ResImage * resImage)
 
     if (current != NULL)
     {
-        cv::Mat img = resImage->img().clone();
-        if (resImage->number() == 0)
+        cv::Mat img = resImage.img().clone();
+        if (resImage.number() == 0)
         {
             cv::resize(img, img, cv::Size(current->size().width(), current->size().height()));
         }
-        QImage qtImage((const unsigned char *) (resImage->img().data), resImage->img().cols, resImage->img().rows, QImage::Format_RGB888);
+        QImage qtImage((const unsigned char *) (resImage.img().data), resImage.img().cols, resImage.img().rows, QImage::Format_RGB888);
 
         current->setPixmap(QPixmap::fromImage(qtImage));
     }
@@ -344,6 +342,7 @@ void MainWidget::responseLogin(ResLogin * resLogin)
 {
     if (resLogin->isSuccessed())
     {
+        this->client->sendReqRoomList();
         ui->stackedWidget->setCurrentIndex(2);
     }
     else

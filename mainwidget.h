@@ -59,7 +59,7 @@ private slots:
     void SignUp();
 
     void disconnectServer();
-    void responseImage(ResImage *);
+    void responseImage(ResImage);
     void responseRoomList(ResRoomList *);
     void responseMakeRoom(ResMakeRoom *);
     void responseEnterRoom(ResEnterRoom *);

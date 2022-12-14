@@ -83,7 +83,7 @@ void ReceiveThread::run()
             if (resImage != NULL)
                 delete resImage;
             resImage = new ResImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
-            emit resImageSignal(resImage);
+            emit resImageSignal(*resImage);
             break;
         case Response::RoomList:
             qDebug() << "response Room List";
