@@ -4,6 +4,9 @@ WTCPClient::WTCPClient()
     WSAStartup(MAKEWORD(2, 2), &this->wsaData);
     this->cSock = socket(PF_INET, SOCK_STREAM, 0);
 
+    int buffSize = 1024 * 1024 * 8;
+    setsockopt(this->cSock, SOL_SOCKET, SO_RCVBUF, (char*)&buffSize, sizeof(buffSize));
+
     // 소켓 수신 타임 아웃 세팅
     this->timeout = 5000;
     setsockopt(this->cSock, SOL_SOCKET, SO_RCVTIMEO, (char*)&this->timeout, sizeof(this->timeout));
@@ -188,7 +191,7 @@ int WTCPClient::receiveByteData(char **data)
 
     while (totalReceiveSize < dataSize)
     {
-        packetSize = (totalReceiveSize + 1024 < dataSize) ? 1024 : dataSize - totalReceiveSize;
+        packetSize = (totalReceiveSize + 100000 < dataSize) ? 100000 : dataSize - totalReceiveSize;
         packet = recv(this->cSock, (*data) + totalReceiveSize, packetSize, 0);
         if (packet == SOCKET_ERROR)
         {

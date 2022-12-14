@@ -67,14 +67,14 @@ void MainWidget::readCapture()
     if (this->cap.isOpened())
     {
         this->cap.read(img);
-        cv::resize(img, img, cv::Size(640, 480));
+        cv::resize(img, img, cv::Size(480, 360));
         this->client->sendReqImage(img);
     }
     else
     {
         this->cap.open(0);
-        this->cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
-        this->cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
+        this->cap.set(cv::CAP_PROP_FRAME_WIDTH, 480);
+        this->cap.set(cv::CAP_PROP_FRAME_HEIGHT, 360);
     }
 }
 
