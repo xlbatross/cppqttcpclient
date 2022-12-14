@@ -14,8 +14,8 @@ MainWidget::MainWidget(QWidget *parent)
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
-    if (this->client->connectServer())
-//    if (this->client->connectServer("10.10.20.97"))
+//    if (this->client->connectServer())
+    if (this->client->connectServer("10.10.20.116"))
     {
         qDebug() << "connected";
         ui->stackedWidget->setCurrentIndex(0);//###
@@ -24,7 +24,7 @@ MainWidget::MainWidget(QWidget *parent)
         connect(this->receiveThread, SIGNAL(resImageSignal(ResImage*)), this, SLOT(responseImage(ResImage*)), Qt::BlockingQueuedConnection);
         connect(this->receiveThread, SIGNAL(resRoomListSignal(ResRoomList*)), this, SLOT(responseRoomList(ResRoomList*)));
         connect(this->receiveThread, SIGNAL(resMakeRoomSignal(ResMakeRoom*)), this, SLOT(responseMakeRoom(ResMakeRoom*)));
-        connect(this->receiveThread, SIGNAL(resEnterRoomSignal(ResEnterRoom*)), this, SLOT(responseEnterRoom(ResEnterRoom*)));
+        connect(this->receiveThread, SIGNAL(resEnterRoomSignal(RessEnterRoom*)), this, SLOT(responseEnterRoom(ResEnterRoom*)));
         connect(this->receiveThread, SIGNAL(resJoinRoomSignal(ResJoinRoom*)), this, SLOT(responseJoinRoom(ResJoinRoom*)));
         connect(this->receiveThread, SIGNAL(resDisjoinRoomSignal(ResDisjoinRoom*)), this, SLOT(responseDisjoinRoom(ResDisjoinRoom*)));
         connect(this->receiveThread, SIGNAL(resLoginSignal(ResLogin*)), this, SLOT(responseLogin(ResLogin*)));
