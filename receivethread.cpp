@@ -27,6 +27,7 @@ ReceiveThread::ReceiveThread(
     , resSecondImage(NULL)
     , resThirdImage(NULL)
     , resForthImage(NULL)
+    , resChat(NULL)
 {
     this->dataLengthList.resize(0);
 }
@@ -174,6 +175,14 @@ void ReceiveThread::run()
                 delete resForthImage;
             resForthImage = new ResForthImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resImageSignal(resForthImage);
+            break;
+        //######
+        case Response::Chat:
+            qDebug() << "response Chat";
+            if (resChat != NULL)
+                delete resChat;
+            resChat = new ResChat(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
+            emit resChatSignal(resChat);
             break;
         }
     }

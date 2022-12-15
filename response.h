@@ -9,7 +9,8 @@ class Response
 {
 public:
     enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, JoinRoom, DisjoinRoom, Login, SignUp,
-              ProImage, FirstImage, SecondImage, ThirdImage, ForthImage};
+              ProImage, FirstImage, SecondImage, ThirdImage, ForthImage,
+              Chat};
 //    Response(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
     Response();
     ~Response();
@@ -97,12 +98,12 @@ class ResLogin : public Response
 {
 public:
     ResLogin(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
-    const bool isSuccessed();
     const std::string & ment();
+    const std::string & name();
 
 private:
-    bool _isSuccessed;
     std::string _ment;
+    std::string _name;
 };
 
 //####
@@ -117,8 +118,20 @@ private:
     bool _isSuccessed;
     std::string _ment;
 };
-//####
 
+//####
+class ResChat : public Response
+{
+public:
+    ResChat(const char * headerBytes, const char * const * dataBytesList, int headSize, std::vector<int> & dataLengthList);
+    const std::string & name();
+    const std::string & text();
+
+private:
+    std::string _name;
+    std::string _text;
+};
+//####
 
 class ResProImage : public ResImage
 {

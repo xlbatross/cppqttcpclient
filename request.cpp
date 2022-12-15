@@ -260,3 +260,36 @@ ReqSignUp::ReqSignUp(std::string name, std::string num, std::string pw, std::str
     memcpy(this->_dataBytesList[3], cate.c_str(), cate.size());
     this->_dataLengthList[3] = cate.size();
 }
+
+//####
+
+
+ReqChat::ReqChat(std::string text)
+    : Request()
+{
+    /*
+     * reqChat header
+     * receiveCount : 1 <32bit, 4byte, int>
+     * requestType : 8(Chat) (32bite, 4byte, int)
+     * totalDataSize : text length<32bit, 4byte, int>
+     */
+
+    this->_headerSize = sizeof(int) * 3;
+    int receiveCount = 1;
+    int requestType = Request::Chat;
+    int totalDataSize = text.size();
+
+    this->_headerBytes = new char[this->_headerSize];
+    memcpy(this->_headerBytes + sizeof(int) * 0, &receiveCount, sizeof(int)); // dataCount
+    memcpy(this->_headerBytes + sizeof(int) * 1, &requestType, sizeof(int)); // requestType
+    memcpy(this->_headerBytes + sizeof(int) * 2, &totalDataSize, sizeof(int)); // attrSize;
+
+    //실제 데이터를 담기
+    this->_dataLengthList.resize(receiveCount);
+    this->_dataBytesList = new char * [receiveCount]();
+
+    this->_dataBytesList[0] = new char[text.size()];
+    memcpy(this->_dataBytesList[0], text.c_str(), text.size());
+    this->_dataLengthList[0] = text.size();
+
+}

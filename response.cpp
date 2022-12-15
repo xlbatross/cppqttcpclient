@@ -198,23 +198,21 @@ ResLogin::ResLogin(const char *headerBytes, const char * const *dataBytesList, i
      * resLogin header example
      * receiveCount : 2 <32bit, 4byte, int>
      * responseType : 7(Login) (32bite, 4byte, int)
-     * dataSize : sizeof int + ment length
+     * dataSiconze : ment length + name length
      */
 
-    int c;
-    memcpy(&c, dataBytesList[0], dataLengthList[0]);
-    this->_isSuccessed = (c == 1);
-    this->_ment = std::string(dataBytesList[1], dataLengthList[1]);
-}
-
-const bool ResLogin::isSuccessed()
-{
-    return this->_isSuccessed;
+    this->_ment = std::string(dataBytesList[0], dataLengthList[0]);
+    this->_name = std::string(dataBytesList[1], dataLengthList[1]);
 }
 
 const std::string &ResLogin::ment()
 {
     return this->_ment;
+}
+
+const std::string &ResLogin::name()
+{
+    return this->_name;
 }
 
 //####
@@ -299,3 +297,27 @@ ResForthImage::ResForthImage(const char *headerBytes, const char * const *dataBy
      */
 }
 
+
+ResChat::ResChat(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)
+//    : Response(headerBytes, dataBytesList, headSize, dataLengthList)
+{
+    /*
+     * resChat header example
+     * receiveCount : 2 <32bit, 4byte, int>
+     * responseType : 14(Chat) (32bite, 4byte, int)
+     * dataSiconze : name length + text length
+     */
+
+    this->_name = std::string(dataBytesList[0], dataLengthList[0]);
+    this->_text = std::string(dataBytesList[1], dataLengthList[1]);
+}
+
+const std::string &ResChat::name()
+{
+    return this->_name;
+}
+
+const std::string &ResChat::text()
+{
+    return this->_text;
+}

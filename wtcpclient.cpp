@@ -73,6 +73,13 @@ bool WTCPClient::sendReqSignUp(const std::string &name, const std::string &num, 
     return this->sendRequest(&reqSignUp);
 }
 
+//####
+bool WTCPClient::sendReqChat(const std::string & text)
+{
+    ReqChat reqChat(text);
+    return this->sendRequest(&reqChat);
+}
+
 bool WTCPClient::sendRequest(Request * request)
 {
     if (!this->sendByteData(request->headerBytes(), request->headerSize()))

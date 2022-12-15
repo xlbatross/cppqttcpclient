@@ -8,7 +8,7 @@
 class Request
 {
 public:
-    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, LeaveRoom, Login, SignUp};
+    enum Type{Image = 1, RoomList, MakeRoom, EnterRoom, LeaveRoom, Login, SignUp, Chat};
     Request();
     ~Request();
 
@@ -68,5 +68,13 @@ class ReqSignUp : public Request
 public:
     ReqSignUp(std::string name, std::string num, std::string pw, std::string cate );
 };
+
+//####
+class ReqChat : public Request
+{
+public:
+    ReqChat(std::string text);
+};
+
 
 #endif // REQUEST_H

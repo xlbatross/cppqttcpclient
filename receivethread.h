@@ -44,6 +44,7 @@ private:
     ResDisjoinRoom * resDisjoinRoom;
     ResLogin * resLogin;
     ResSignUp * resSignUp; //####
+    ResChat * resChat; //###
 
     ResProImage * resProImage;
     ResFirstImage * resFirstImage;
@@ -64,6 +65,7 @@ signals:
     void resDisjoinRoomSignal(ResDisjoinRoom *);
     void resLoginSignal(ResLogin *);
     void resSignUpSignal(ResSignUp *); //####
+    void resChatSignal(ResChat * ); //####
 };
 
 #endif // RECEIVETHREAD_H

@@ -48,6 +48,9 @@ private:
     // roomCount
     int myRoomMemberCount;
 
+    // page ########
+    int nowPage;
+
 private slots:
 
     void readCapture();
@@ -57,10 +60,12 @@ private slots:
     void refeashRoomList();
     void Login();
     void SignUp();
+    void sendChat(); //####
     void gotoSignUp(); //###회원가입페이지로 이동
     void backToLogin(); //###로그인페이지로 이동
     void backToRoom();//###강의룸리스트로 이동
     void closeLecture();//###강의 종료
+
 
 
     void disconnectServer();
@@ -72,6 +77,7 @@ private slots:
     void responseDisjoinRoom(ResDisjoinRoom *);
     void responseLogin(ResLogin *);
     void responseSignUp(ResSignUp *); //####
+    void responseChat(ResChat *); //####
 
 signals:
     void setOpenCVImageSignal(cv::Mat);

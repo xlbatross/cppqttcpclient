@@ -14,8 +14,8 @@ MainWidget::MainWidget(QWidget *parent)
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
-//    if (this->client->connectServer())
-    if (this->client->connectServer("10.10.20.116"))
+    if (this->client->connectServer())
+//    if (this->client->connectServer("10.10.20.116"))
     {
         qDebug() << "connected";
         ui->stackedWidget->setCurrentIndex(0);//###
@@ -29,6 +29,7 @@ MainWidget::MainWidget(QWidget *parent)
         connect(this->receiveThread, SIGNAL(resDisjoinRoomSignal(ResDisjoinRoom*)), this, SLOT(responseDisjoinRoom(ResDisjoinRoom*)));
         connect(this->receiveThread, SIGNAL(resLoginSignal(ResLogin*)), this, SLOT(responseLogin(ResLogin*)));
         connect(this->receiveThread, SIGNAL(resSignUpSignal(ResSignUp*)), this, SLOT(responseSignUp(ResSignUp*)));//###
+        connect(this->receiveThread, SIGNAL(resChatSignal(ResChat*)), this, SLOT(responseChat(ResChat*)));//###
         connect(ui->btn_makeRoom, SIGNAL(clicked(bool)), this, SLOT(viewMakeRoomMessageBox()));
         connect(ui->lw_roomList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(enterRoom(QListWidgetItem*)));
         connect(ui->btn_backFromStudent, SIGNAL(clicked(bool)), this, SLOT(backClicked()));
@@ -41,6 +42,8 @@ MainWidget::MainWidget(QWidget *parent)
         connect(ui->btn_backFromRoom, SIGNAL(clicked(bool)), this, SLOT(backToLogin()));//####
         connect(ui->btn_backFromStudent, SIGNAL(clicked(bool)), this, SLOT(backToRoom()));//####
         connect(ui->btn_exitFromRoom, SIGNAL(clicked(bool)), this, SLOT(closeLecture()));//####
+        connect(ui->edt_chatStu, SIGNAL(returnPressed()),this,SLOT(sendChat()));//##
+        connect(ui->edt_chatPro, SIGNAL(returnPressed()),this,SLOT(sendChat()));//##
         //connect(ui->btn_endLecture, SIGNAL(clicked(bool)), this, SLOT(closeLecture()));//####
         this->receiveThread->start();
         this->client->sendReqRoomList();
@@ -133,6 +136,25 @@ void MainWidget::SignUp()
         cate = "stu";
     }
     this->client->sendReqSignUp(name.toStdString(),num.toStdString(), pw.toStdString(),cate.toStdString());
+}
+//####
+void MainWidget::sendChat()
+{
+    this->nowPage = ui->stackedWidget->currentIndex();
+    QString text;
+    if (this->nowPage == 3)
+    {
+        text = ui->edt_chatStu->text();
+        qDebug() << text;
+        ui->edt_chatStu->clear();
+    }
+    else
+    {
+        text = ui->edt_chatPro->text();
+        qDebug() << text;
+        ui->edt_chatPro->clear();
+    }
+    this->client->sendReqChat(text.toStdString());
 }
 //###
 void MainWidget::gotoSignUp()
@@ -363,18 +385,21 @@ void MainWidget::responseDisjoinRoom(ResDisjoinRoom * resDisjoinRoom)
 
 void MainWidget::responseLogin(ResLogin * resLogin)
 {
-    if (resLogin->isSuccessed())
+    QString ment = QString::fromStdString((resLogin->ment()));
+    QString name = QString::fromStdString(resLogin->name());
+    if (name!="")
     {
         ui->stackedWidget->setCurrentIndex(2);
     }
     else
     {
         QMessageBox msgBox;
-        msgBox.setText(QString::fromStdString(resLogin->ment()));
+        msgBox.setText(ment);
         msgBox.exec();
     }
     ui->edt_loginNum->clear();
     ui->edt_loginPw->clear();
+    ui->roomUserName->setText(name);
 }
 
 //####
@@ -394,6 +419,25 @@ void MainWidget::responseSignUp(ResSignUp * resSignUp)
         ui->edt_signUpPw->clear();
     }
 }
+
+void MainWidget::responseChat(ResChat * resChat)
+{
+    QString name = QString::fromStdString(resChat->name());
+    name = "(" + name + ")";
+    QString text = QString::fromStdString(resChat->text());
+
+    if (text!="")
+    {
+        ui->tb_chatPro->append(name);
+        ui->tb_chatPro->append(text);
+        ui->tb_chatPro->append("");
+        ui->tb_chatStu->append(name);
+        ui->tb_chatStu->append(text);
+        ui->tb_chatStu->append("");
+    }
+}
+
+
 
 
 
