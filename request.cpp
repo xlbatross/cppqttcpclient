@@ -143,7 +143,7 @@ ReqEnterRoom::ReqEnterRoom(std::string ip, int port)
      * totalDataSize : iplength + portlength <32bit, 4byte, int>
      */
 
-    this->_headerSize = sizeof(int) * 5;
+    this->_headerSize = sizeof(int) * 3;
     int receiveCount = 2;
     int requestType = Request::EnterRoom;
     int totalDataSize = ip.size() + 4;

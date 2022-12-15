@@ -106,7 +106,7 @@ void ReceiveThread::run()
             emit resMakeRoomSignal(resMakeRoom);
             break;
         case Response::EnterRoom:
-            qDebug() << "response Make Room";
+            qDebug() << "response Enter Room";
             if (resEnterRoom != NULL)
                 delete resEnterRoom;
             resEnterRoom = new ResEnterRoom(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);

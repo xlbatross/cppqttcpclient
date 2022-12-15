@@ -24,7 +24,7 @@ MainWidget::MainWidget(QWidget *parent)
         connect(this->receiveThread, SIGNAL(resImageSignal(ResImage*)), this, SLOT(responseImage(ResImage*)), Qt::BlockingQueuedConnection);
         connect(this->receiveThread, SIGNAL(resRoomListSignal(ResRoomList*)), this, SLOT(responseRoomList(ResRoomList*)));
         connect(this->receiveThread, SIGNAL(resMakeRoomSignal(ResMakeRoom*)), this, SLOT(responseMakeRoom(ResMakeRoom*)));
-        connect(this->receiveThread, SIGNAL(resEnterRoomSignal(RessEnterRoom*)), this, SLOT(responseEnterRoom(ResEnterRoom*)));
+        connect(this->receiveThread, SIGNAL(resEnterRoomSignal(ResEnterRoom*)), this, SLOT(responseEnterRoom(ResEnterRoom*)));
         connect(this->receiveThread, SIGNAL(resJoinRoomSignal(ResJoinRoom*)), this, SLOT(responseJoinRoom(ResJoinRoom*)));
         connect(this->receiveThread, SIGNAL(resDisjoinRoomSignal(ResDisjoinRoom*)), this, SLOT(responseDisjoinRoom(ResDisjoinRoom*)));
         connect(this->receiveThread, SIGNAL(resLoginSignal(ResLogin*)), this, SLOT(responseLogin(ResLogin*)));
@@ -118,9 +118,6 @@ void MainWidget::Login()
     QString num = ui->edt_loginNum->text();
     QString pw = ui->edt_loginPw->text();
     this->client->sendReqLogin(num.toStdString(), pw.toStdString());
-//    qDebug() << num;
-//    qDebug() << pw;
-    //ui->stackedWidget->setCurrentIndex(2);
 }
 
 void MainWidget::SignUp()
