@@ -246,7 +246,7 @@ void MainWidget::responseImage(ResImage * resImage)
         cv::Mat img = resImage->img().clone();
         if (resImage->number() == 0)
         {
-            cv::resize(img, img, cv::Size(current->size().width(), current->size().height()));
+//            cv::resize(img, img, cv::Size(current->size().width(), current->size().height()));
         }
         this->setOpenCVImage(current, img);
     }
