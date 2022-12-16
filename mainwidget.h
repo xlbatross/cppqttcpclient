@@ -8,8 +8,8 @@
 #include <QDebug>
 #include <QMessageBox>
 #include "opencvimagelabel.h"
-#include "wtcpclient.h"
-//#include "ltcpclient.h"
+//#include "wtcpclient.h"
+#include "ltcpclient.h"
 #include "receivethread.h"
 #include "response.h"
 
@@ -25,13 +25,13 @@ public:
     MainWidget(QWidget *parent = nullptr);
     ~MainWidget();
 
-    void setOpenCVImage(QLabel * label, cv::Mat & img);
+    void setOpenCVImage(QLabel * label, const cv::Mat & img);
 
 private:
     Ui::MainWidget *ui;
 
-    WTCPClient * client;
-//    LTCPClient * client;
+//    WTCPClient * client;
+    LTCPClient * client;
 
     ReceiveThread * receiveThread;
 
@@ -79,8 +79,5 @@ private slots:
     void responseLogin(ResLogin *);
     void responseSignUp(ResSignUp *); //####
     void responseChat(ResChat *); //####
-
-signals:
-    void setOpenCVImageSignal(cv::Mat);
 };
 #endif // MAINWIDGET_H

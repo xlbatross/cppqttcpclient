@@ -147,7 +147,7 @@ int LTCPClient::receiveByteData(char **data)
     int totalReceiveSize = 0;
     bool isSizeReceive = true;
 
-    int error = read(this->cSock, (char *)(&dataSize), sizeof(int))
+    int error = read(this->cSock, (char *)(&dataSize), sizeof(int));
 
     if (error == -1)
     {
