@@ -14,8 +14,8 @@ MainWidget::MainWidget(QWidget *parent)
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
-    if (this->client->connectServer())
-//    if (this->client->connectServer("10.10.20.116"))
+//    if (this->client->connectServer())
+    if (this->client->connectServer("10.10.20.116"))
     {
         qDebug() << "connected";
         ui->stackedWidget->setCurrentIndex(0);//###
@@ -38,9 +38,9 @@ MainWidget::MainWidget(QWidget *parent)
         connect(ui->btn_login, SIGNAL(clicked(bool)), this, SLOT(Login()));
         connect(ui->btn_submit, SIGNAL(clicked(bool)), this, SLOT(SignUp()));
         connect(ui->btn_signUp, SIGNAL(clicked(bool)),this, SLOT(gotoSignUp())); //####
-        connect(ui->btn_backFromSignUp, SIGNAL(clicked(bool)), this, SLOT(backToLogin()));//####
-        connect(ui->btn_backFromRoom, SIGNAL(clicked(bool)), this, SLOT(backToLogin()));//####
-        connect(ui->btn_backFromStudent, SIGNAL(clicked(bool)), this, SLOT(backToRoom()));//####
+        connect(ui->btn_backFromSignUp, SIGNAL(clicked(bool)), this, SLOT(goToLogin()));//####
+        connect(ui->btn_backFromRoom, SIGNAL(clicked(bool)), this, SLOT(goToLogin()));//####
+        connect(ui->btn_backFromStudent, SIGNAL(clicked(bool)), this, SLOT(goToRoomList()));//####
         connect(ui->btn_exitFromRoom, SIGNAL(clicked(bool)), this, SLOT(closeLecture()));//####
         connect(ui->edt_chatStu, SIGNAL(returnPressed()),this,SLOT(sendChat()));//##
         connect(ui->edt_chatPro, SIGNAL(returnPressed()),this,SLOT(sendChat()));//##
@@ -64,14 +64,27 @@ MainWidget::~MainWidget()
     delete ui;
 }
 
+void MainWidget::setOpenCVImage(QLabel *label, cv::Mat &img)
+{
+    QImage qtImage((const unsigned char *) (img.data), img.cols, img.rows, QImage::Format_RGB888);
+    label->setPixmap(QPixmap::fromImage(qtImage));
+}
+
 // slots
 void MainWidget::readCapture()
 {
     if (this->cap.isOpened())
     {
         this->cap.read(img);
+        cv::flip(img, img, 1);
         cv::resize(img, img, cv::Size(480, 360));
         this->client->sendReqImage(img);
+        cv::resize(img, img, cv::Size(120, 90));
+        cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
+        if (this->nowPage == 3)
+            this->setOpenCVImage(ui->lb_myImgFromStu, img);
+        else if (this->nowPage == 4)
+            this->setOpenCVImage(ui->lb_myImgFromPro, img);
     }
     else
     {
@@ -103,18 +116,16 @@ void MainWidget::enterRoom(QListWidgetItem * item)
 
 void MainWidget::backClicked()
 {
-    ui->stackedWidget->setCurrentIndex(2);
     this->myRoomMemberCount = -1;
     this->timer->stop();
     this->client->sendReqLeaveRoom();
-    this->client->sendReqRoomList();
+    this->goToRoomList();
 }
 
 void MainWidget::refeashRoomList()
 {
     this->client->sendReqRoomList();
 }
-
 
 void MainWidget::Login()
 {
@@ -140,7 +151,6 @@ void MainWidget::SignUp()
 //####
 void MainWidget::sendChat()
 {
-    this->nowPage = ui->stackedWidget->currentIndex();
     QString text;
     if (this->nowPage == 3)
     {
@@ -159,24 +169,43 @@ void MainWidget::sendChat()
 //###
 void MainWidget::gotoSignUp()
 {
+    this->timer->stop();
     ui->edt_signUpName->clear();
     ui->edt_signUpNum->clear();
     ui->edt_signUpPw->clear();
     ui->stackedWidget->setCurrentIndex(1);
 }
 
-void MainWidget::backToLogin()
+void MainWidget::gotoMyRoom()
 {
+    this->timer->start(33);
+    ui->stackedWidget->setCurrentIndex(4);
+    this->nowPage = ui->stackedWidget->currentIndex();
+}
+
+void MainWidget::gotoOtherRoom()
+{
+    this->timer->start(33);
+    ui->stackedWidget->setCurrentIndex(3);
+    this->nowPage = ui->stackedWidget->currentIndex();
+}
+
+void MainWidget::goToLogin()
+{
+    this->timer->stop();
     ui->stackedWidget->setCurrentIndex(0);
 }
 
-void MainWidget::backToRoom()
+void MainWidget::goToRoomList()
 {
+    this->timer->stop();
+    this->client->sendReqRoomList();
     ui->stackedWidget->setCurrentIndex(2);
 }
 
 void MainWidget::closeLecture()
 {
+    this->timer->stop();
     this->close();
 }
 //####
@@ -219,9 +248,7 @@ void MainWidget::responseImage(ResImage * resImage)
         {
             cv::resize(img, img, cv::Size(current->size().width(), current->size().height()));
         }
-        QImage qtImage((const unsigned char *) (resImage->img().data), resImage->img().cols, resImage->img().rows, QImage::Format_RGB888);
-
-        current->setPixmap(QPixmap::fromImage(qtImage));
+        this->setOpenCVImage(current, img);
     }
 }
 
@@ -260,7 +287,7 @@ void MainWidget::responseMakeRoom(ResMakeRoom * resMakeRoom)
         ui->lb_stuImage2->setVisible(false);
         ui->lb_stuImage3->setVisible(false);
         ui->lb_stuImage4->setVisible(false);
-        ui->stackedWidget->setCurrentIndex(4);
+        this->gotoMyRoom();
     }
     else
     {
@@ -276,8 +303,7 @@ void MainWidget::responseEnterRoom(ResEnterRoom * resEnterRoom)
     if (resEnterRoom->isEnter())
     {
         ui->tb_chatStu->clear();
-        ui->stackedWidget->setCurrentIndex(3);
-        this->timer->start(33);
+        this->gotoOtherRoom();
     }
     else
     {
@@ -291,7 +317,7 @@ void MainWidget::responseEnterRoom(ResEnterRoom * resEnterRoom)
 void MainWidget::responseJoinRoom(ResJoinRoom * resJoinRoom)
 {
     QString appear = QString::fromUtf8(resJoinRoom->name().c_str(), resJoinRoom->name().size()) + "님이 등장하셨습니다.";
-    if (ui->stackedWidget->currentIndex() == 4)
+    if (this->nowPage == 4)
     {
         ui->tb_chatPro->append(appear);
         this->myRoomMemberCount += 1;
@@ -322,10 +348,8 @@ void MainWidget::responseJoinRoom(ResJoinRoom * resJoinRoom)
             ui->lb_stuImage4->setVisible(false);
             break;
         }
-        if (this->myRoomMemberCount > 0)
-            this->timer->start(33);
     }
-    else if (ui->stackedWidget->currentIndex() == 3)
+    else if (this->nowPage == 3)
     {
         ui->tb_chatStu->append(appear);
     }
@@ -336,14 +360,12 @@ void MainWidget::responseDisjoinRoom(ResDisjoinRoom * resDisjoinRoom)
     QString disappear = QString::fromUtf8(resDisjoinRoom->name().c_str(), resDisjoinRoom->name().size()) + "님이 퇴장하셨습니다.";
     if (resDisjoinRoom->isProfessorOut())
     {
-        this->client->sendReqRoomList();
-        ui->stackedWidget->setCurrentIndex(2);
-        this->timer->stop();
+        this->goToRoomList();
         QMessageBox msgBox;
         msgBox.setText("강의가 종료되었습니다.");
         msgBox.exec();
     }
-    else if (ui->stackedWidget->currentIndex() == 4)
+    else if (this->nowPage == 4)
     {
         ui->tb_chatPro->append(disappear);
         this->myRoomMemberCount -= 1;
@@ -374,10 +396,8 @@ void MainWidget::responseDisjoinRoom(ResDisjoinRoom * resDisjoinRoom)
             ui->lb_stuImage4->setVisible(false);
             break;
         }
-        if (this->myRoomMemberCount == 0)
-            this->timer->stop();
     }
-    else if (ui->stackedWidget->currentIndex() == 3)
+    else if (this->nowPage == 3)
     {
         ui->tb_chatStu->append(disappear);
     }
@@ -389,7 +409,7 @@ void MainWidget::responseLogin(ResLogin * resLogin)
     QString name = QString::fromStdString(resLogin->name());
     if (name!="")
     {
-        ui->stackedWidget->setCurrentIndex(2);
+        this->goToRoomList();
     }
     else
     {
@@ -410,7 +430,7 @@ void MainWidget::responseSignUp(ResSignUp * resSignUp)
     msgBox.exec();
     if (resSignUp->isSuccessed())
     {
-        this->backToLogin();
+        this->goToLogin();
     }
     else
     {
