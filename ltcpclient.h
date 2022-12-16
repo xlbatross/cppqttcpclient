@@ -26,6 +26,9 @@ public:
     bool sendReqMakeRoom(const std::string & roomName);
     bool sendReqEnterRoom(const std::string & ip, const int port);
     bool sendReqLeaveRoom();
+    bool sendReqLogin(const std::string & num, const std::string &pw );
+    bool sendReqSignUp(const std::string & name, const std::string & num, const std::string & pw, const std::string & cate);
+    bool sendReqChat(const std::string & text); //####
 
     bool sendRequest(Request * request);
     bool sendByteData(const char * data, const int dataSize);
