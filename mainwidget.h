@@ -25,6 +25,8 @@ public:
     MainWidget(QWidget *parent = nullptr);
     ~MainWidget();
 
+    void setOpenCVImage(QLabel * label, cv::Mat & img);
+
 private:
     Ui::MainWidget *ui;
 
@@ -52,7 +54,6 @@ private:
     int nowPage;
 
 private slots:
-
     void readCapture();
     void viewMakeRoomMessageBox();
     void enterRoom(QListWidgetItem *);
@@ -62,11 +63,11 @@ private slots:
     void SignUp();
     void sendChat(); //####
     void gotoSignUp(); //###회원가입페이지로 이동
-    void backToLogin(); //###로그인페이지로 이동
-    void backToRoom();//###강의룸리스트로 이동
+    void goToLogin(); //###로그인페이지로 이동
+    void goToRoomList();//###강의룸리스트로 이동
+    void gotoMyRoom();
+    void gotoOtherRoom();
     void closeLecture();//###강의 종료
-
-
 
     void disconnectServer();
     void responseImage(ResImage *);

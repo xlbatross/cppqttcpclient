@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="loginPage">
     <widget class="QPushButton" name="btn_faceLogin">
@@ -473,6 +473,22 @@
       <string>나가기</string>
      </property>
     </widget>
+    <widget class="QLabel" name="lb_myImgFromStu">
+     <property name="geometry">
+      <rect>
+       <x>390</x>
+       <y>340</y>
+       <width>120</width>
+       <height>90</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>내 화면 대기중</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="page_4">
     <widget class="QLineEdit" name="edt_chatPro">
@@ -495,7 +511,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>강의 종료</string>
+      <string>방 해산</string>
      </property>
     </widget>
     <widget class="QTextBrowser" name="tb_chatPro">
@@ -559,6 +575,22 @@
        </widget>
       </item>
      </layout>
+    </widget>
+    <widget class="QLabel" name="lb_myImgFromPro">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>340</y>
+       <width>120</width>
+       <height>90</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>내 화면 대기 중</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
    </widget>
   </widget>

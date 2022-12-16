@@ -176,7 +176,6 @@ void ReceiveThread::run()
             resForthImage = new ResForthImage(this->headerBytes, this->dataBytesList, this->headSize, this->dataLengthList);
             emit resImageSignal(resForthImage);
             break;
-        //######
         case Response::Chat:
             qDebug() << "response Chat";
             if (resChat != NULL)
