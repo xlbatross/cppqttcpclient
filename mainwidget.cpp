@@ -64,7 +64,7 @@ MainWidget::~MainWidget()
     delete ui;
 }
 
-void MainWidget::setOpenCVImage(QLabel *label, cv::Mat &img)
+void MainWidget::setOpenCVImage(QLabel *label, const cv::Mat &img)
 {
     QImage qtImage((const unsigned char *) (img.data), img.cols, img.rows, QImage::Format_RGB888);
     label->setPixmap(QPixmap::fromImage(qtImage));
@@ -73,6 +73,12 @@ void MainWidget::setOpenCVImage(QLabel *label, cv::Mat &img)
 // slots
 void MainWidget::readCapture()
 {
+    if (!this->cap.isOpened())
+    {
+        this->cap.open(0);
+        this->cap.set(cv::CAP_PROP_FRAME_WIDTH, 480);
+        this->cap.set(cv::CAP_PROP_FRAME_HEIGHT, 360);
+    }
     if (this->cap.isOpened())
     {
         this->cap.read(img);
@@ -85,12 +91,6 @@ void MainWidget::readCapture()
             this->setOpenCVImage(ui->lb_myImgFromStu, img);
         else if (this->nowPage == 4)
             this->setOpenCVImage(ui->lb_myImgFromPro, img);
-    }
-    else
-    {
-        this->cap.open(0);
-        this->cap.set(cv::CAP_PROP_FRAME_WIDTH, 480);
-        this->cap.set(cv::CAP_PROP_FRAME_HEIGHT, 360);
     }
 }
 
@@ -242,14 +242,7 @@ void MainWidget::responseImage(ResImage * resImage)
     }
 
     if (current != NULL)
-    {
-        cv::Mat img = resImage->img().clone();
-        if (resImage->number() == 0)
-        {
-            cv::resize(img, img, cv::Size(current->size().width(), current->size().height()));
-        }
-        this->setOpenCVImage(current, img);
-    }
+        this->setOpenCVImage(current, resImage->img());
 }
 
 void MainWidget::responseRoomList(ResRoomList * resRoomList)
