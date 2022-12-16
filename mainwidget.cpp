@@ -445,7 +445,6 @@ void MainWidget::responseChat(ResChat * resChat)
     QString name = QString::fromStdString(resChat->name());
     name = "(" + name + ")";
     QString text = QString::fromStdString(resChat->text());
-
     if (text!="")
     {
         ui->tb_chatPro->append(name);
