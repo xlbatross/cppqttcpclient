@@ -10,12 +10,14 @@ MainWidget::MainWidget(QWidget *parent)
     , myRoomMemberCount(-1)
 {
     ui->setupUi(this);
+//    RoomNameDialog -> setModal(true);
+//    RoomNameDialog -> exec();
 
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
-//    if (this->client->connectServer())
-    if (this->client->connectServer("192.168.0.41"))
+    if (this->client->connectServer())
+//    if (this->client->connectServer("192.168.0.41"))
     {
         qDebug() << "connected";
         ui->stackedWidget->setCurrentIndex(0);//###
@@ -96,13 +98,16 @@ void MainWidget::readCapture()
 
 void MainWidget::viewMakeRoomMessageBox()
 {
-    QMessageBox msgBox;
-    int ret;
-    msgBox.setText("방을 만드시겠습니까?");
-    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-    ret = msgBox.exec();
-    if (ret == QMessageBox::Ok)
-        this->client->sendReqMakeRoom("안녕하세요?");
+    RoomNameDialog *dialog = new RoomNameDialog;
+    int ret = dialog->exec();
+    if (ret == QDialog::Accepted)
+    {
+        QString roomName = dialog->getRoomName();
+        if (roomName != "")
+            this->client->sendReqMakeRoom(roomName.toStdString());
+    }
+
+    delete dialog;
 }
 
 void MainWidget::enterRoom(QListWidgetItem * item)
