@@ -41,8 +41,10 @@ set(PROJECT_SOURCES
         request.cpp
         response.h
         response.cpp
-        room.ui
         picture.ui
+        roomnamedialog.h
+        roomnamedialog.cpp
+        roomnamedialog.ui
 )
 
 if(WIN32)

@@ -10,12 +10,14 @@ MainWidget::MainWidget(QWidget *parent)
     , myRoomMemberCount(-1)
 {
     ui->setupUi(this);
+//    RoomNameDialog -> setModal(true);
+//    RoomNameDialog -> exec();
 
     this->timer = new QTimer(this);
     this->label = new OpenCVImageLabel(this);
 
 //    if (this->client->connectServer())
-    if (this->client->connectServer("10.10.20.116"))
+    if (this->client->connectServer("10.10.20.97"))
     {
         qDebug() << "connected";
         ui->stackedWidget->setCurrentIndex(0);//###
@@ -64,7 +66,7 @@ MainWidget::~MainWidget()
     delete ui;
 }
 
-void MainWidget::setOpenCVImage(QLabel *label, cv::Mat &img)
+void MainWidget::setOpenCVImage(QLabel *label, const cv::Mat &img)
 {
     QImage qtImage((const unsigned char *) (img.data), img.cols, img.rows, QImage::Format_RGB888);
     label->setPixmap(QPixmap::fromImage(qtImage));
@@ -73,6 +75,12 @@ void MainWidget::setOpenCVImage(QLabel *label, cv::Mat &img)
 // slots
 void MainWidget::readCapture()
 {
+    if (!this->cap.isOpened())
+    {
+        this->cap.open(0);
+        this->cap.set(cv::CAP_PROP_FRAME_WIDTH, 480);
+        this->cap.set(cv::CAP_PROP_FRAME_HEIGHT, 360);
+    }
     if (this->cap.isOpened())
     {
         this->cap.read(img);
@@ -86,23 +94,20 @@ void MainWidget::readCapture()
         else if (this->nowPage == 4)
             this->setOpenCVImage(ui->lb_myImgFromPro, img);
     }
-    else
-    {
-        this->cap.open(0);
-        this->cap.set(cv::CAP_PROP_FRAME_WIDTH, 480);
-        this->cap.set(cv::CAP_PROP_FRAME_HEIGHT, 360);
-    }
 }
 
 void MainWidget::viewMakeRoomMessageBox()
 {
-    QMessageBox msgBox;
-    int ret;
-    msgBox.setText("방을 만드시겠습니까?");
-    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-    ret = msgBox.exec();
-    if (ret == QMessageBox::Ok)
-        this->client->sendReqMakeRoom("안녕하세요?");
+    RoomNameDialog *dialog = new RoomNameDialog;
+    int ret = dialog->exec();
+    if (ret == QDialog::Accepted)
+    {
+        QString roomName = dialog->getRoomName();
+        if (roomName != "")
+            this->client->sendReqMakeRoom(roomName.toStdString());
+    }
+
+    delete dialog;
 }
 
 void MainWidget::enterRoom(QListWidgetItem * item)
@@ -242,14 +247,7 @@ void MainWidget::responseImage(ResImage * resImage)
     }
 
     if (current != NULL)
-    {
-        cv::Mat img = resImage->img().clone();
-        if (resImage->number() == 0)
-        {
-//            cv::resize(img, img, cv::Size(current->size().width(), current->size().height()));
-        }
-        this->setOpenCVImage(current, img);
-    }
+        this->setOpenCVImage(current, resImage->img());
 }
 
 void MainWidget::responseRoomList(ResRoomList * resRoomList)

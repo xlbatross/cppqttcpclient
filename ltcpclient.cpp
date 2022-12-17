@@ -2,6 +2,12 @@
 LTCPClient::LTCPClient()
 {
     this->cSock = socket(PF_INET, SOCK_STREAM, 0);
+    
+    // 소켓 수신 타임 아웃 세팅
+    struct timeval tv;
+    tv.tv_sec = 5;
+    setsockopt(this->cSock, SOL_SOCKET, SO_RCVTIMEO, (const char *)&tv, sizeof(tv));
+
 }
 
 LTCPClient::~LTCPClient()
@@ -52,13 +58,30 @@ bool LTCPClient::sendReqLeaveRoom()
     return this->sendRequest(&reqLeaveRoom);
 }
 
+bool LTCPClient::sendReqLogin(const std::string &num, const std::string &pw)
+{
+    ReqLogin reqLogin(num, pw);
+    return this->sendRequest(&reqLogin);
+}
+
+bool LTCPClient::sendReqSignUp(const std::string &name, const std::string &num, const std::string &pw, const std::string &cate)
+{
+    ReqSignUp reqSignUp(name,num,pw,cate);
+    return this->sendRequest(&reqSignUp);
+}
+
+bool LTCPClient::sendReqChat(const std::string & text)
+{
+    ReqChat reqChat(text);
+    return this->sendRequest(&reqChat);
+}
+
 bool LTCPClient::sendRequest(Request * request)
 {
     if (!this->sendByteData(request->headerBytes(), request->headerSize()))
         return false;
     for (int i = 0; i < request->dataLengthList().size(); i++)
     {
-        std::cout << i << std::endl;
         if (!this->sendByteData(request->dataBytesList()[i], request->dataLengthList()[i]))
         {
             return false;
@@ -87,12 +110,16 @@ bool LTCPClient::sendByteData(const char *data, const int dataSize)
 int LTCPClient::receive(char **headerBytes, char ***dataBytesList, std::vector<int> & dataLengthList)
 {
     int dataCount = 0;
+    int totalDataSize = 0;
+    int receiveTotalSize = 0;
     int headSize = this->receiveByteData(headerBytes);
     // receive header data
-    if (headSize == -1)
-        return -1;
+    if (headSize < 0)
+        return headSize;
 
     memcpy(&dataCount, *headerBytes, sizeof(int));
+    memcpy(&totalDataSize, *headerBytes + sizeof(int) * 2, sizeof(int));
+    
     dataLengthList.resize(dataCount);
 
     // receive real data
@@ -100,11 +127,16 @@ int LTCPClient::receive(char **headerBytes, char ***dataBytesList, std::vector<i
     for (int i = 0; i < dataCount; i++)
     {
         dataLengthList[i] = this->receiveByteData(&((*dataBytesList)[i]));
-        if (dataLengthList[i] == -1)
-            return -1;
+        if (dataLengthList[i] < 0)
+            return dataLengthList[i];
+        else
+            receiveTotalSize += dataLengthList[i];
     }
 
-    return headSize;
+    if (receiveTotalSize != totalDataSize)
+        return -2;
+    else
+        return headSize;
 }
 
 int LTCPClient::receiveByteData(char **data)
@@ -114,8 +146,17 @@ int LTCPClient::receiveByteData(char **data)
     int packet = 0;
     int totalReceiveSize = 0;
     bool isSizeReceive = true;
-    if (read(this->cSock, (char *)(&dataSize), sizeof(int)) == -1)
-        return -1;
+
+    int error = read(this->cSock, (char *)(&dataSize), sizeof(int));
+
+    if (error == -1)
+    {
+        if (errno == EAGAIN)
+            return -2;
+        else
+            return -1;
+    }
+        
 
     if (*data != NULL)
         delete [] *data;
@@ -127,7 +168,13 @@ int LTCPClient::receiveByteData(char **data)
         packetSize = (totalReceiveSize + 1024 < dataSize) ? 1024 : dataSize - totalReceiveSize;
         packet = read(this->cSock, *data + totalReceiveSize, packetSize);
         if (packet == -1)
-            return -1;
+        {
+            if (errno == EAGAIN)
+                return -2;
+            else
+                return -1;
+        }
+            
         totalReceiveSize += packet;
     }
     return dataSize;

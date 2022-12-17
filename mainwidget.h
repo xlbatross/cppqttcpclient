@@ -12,9 +12,10 @@
 //#include "ltcpclient.h"
 #include "receivethread.h"
 #include "response.h"
+#include "roomnamedialog.h" //ui_dialog 추가
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWidget; }
+namespace Ui { class MainWidget;};
 QT_END_NAMESPACE
 
 class MainWidget : public QWidget
@@ -25,13 +26,13 @@ public:
     MainWidget(QWidget *parent = nullptr);
     ~MainWidget();
 
-    void setOpenCVImage(QLabel * label, cv::Mat & img);
+    void setOpenCVImage(QLabel * label, const cv::Mat & img);
 
 private:
-    Ui::MainWidget *ui;
+    Ui::MainWidget *ui;//
 
     WTCPClient * client;
-//    LTCPClient * client;
+//    LTCPClient * client;s
 
     ReceiveThread * receiveThread;
 
@@ -52,7 +53,6 @@ private:
 
     // page ########
     int nowPage;
-
 private slots:
     void readCapture();
     void viewMakeRoomMessageBox();
@@ -79,8 +79,5 @@ private slots:
     void responseLogin(ResLogin *);
     void responseSignUp(ResSignUp *); //####
     void responseChat(ResChat *); //####
-
-signals:
-    void setOpenCVImageSignal(cv::Mat);
 };
 #endif // MAINWIDGET_H
