@@ -13,8 +13,16 @@ MainWidget::MainWidget(QWidget *parent)
     , myRoomMemberCount(-1)
 {
     ui->setupUi(this);
-    QPixmap login_bg("/Users/C/cppqttcpclient/picture/login_bg.jpg");
-    ui->loginImage->setPixmap(login_bg);
+    QPixmap login_img;
+    login_img.load("./picture/lecture.jpg");
+    ui->lb_loginImg->setPixmap(login_img);
+    ui->lb_loginImg->setScaledContents(true);
+
+    QPixmap signUp_img;
+    signUp_img.load("./picture/joinImg.png");
+    ui->lb_signUpImg->setPixmap(signUp_img);
+    ui->lb_signUpImg->setScaledContents(true);
+
 
     if (this->client->connectServer())
 //    if (this->client->connectServer("10.10.20.116"))
