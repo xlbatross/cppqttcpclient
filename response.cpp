@@ -37,12 +37,14 @@ ResImage::ResImage(const char *headerBytes, const char * const *dataBytesList, i
 {
     /*
      * ResProImage header example
-     * receiveCount : 2 <32bit, 4byte, int>
+     * receiveCount : 4 <32bit, 4byte, int>
      * responseType : 1(Image) (32bite, 4byte, int)
-     * dataSize : 240 * 320 * 3 + 4 <32bit, 4byte, int>
+     * dataSize : 240 * 320 * 3 + 4 + name length + sizeof state <32bit, 4byte, int>
      */
     this->_img = cv::Mat(360, 480, CV_8UC3, (unsigned char *)(dataBytesList[0]));
-    memcpy(&this->_number, dataBytesList[1], dataLengthList[1]);
+    memcpy(&this->_number, dataBytesList[1], dataLengthList[1]); //가히
+    this->_userNum = std::string(dataBytesList[2], dataLengthList[2]);
+    memcpy(&this->_state, dataBytesList[3], dataLengthList[3]);
 }
 
 const cv::Mat &ResImage::img()
@@ -53,6 +55,15 @@ const cv::Mat &ResImage::img()
 const int ResImage::number()
 {
     return this->_number;
+}
+const std::string ResImage::userNum()
+{
+    return this->_userNum;
+}
+
+const int ResImage::state()
+{
+    return this->_state;
 }
 
 ResRoomList::ResRoomList(const char *headerBytes, const char * const *dataBytesList, int headSize, std::vector<int> &dataLengthList)

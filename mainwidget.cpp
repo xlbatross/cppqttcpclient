@@ -1,5 +1,6 @@
 #include "mainwidget.h"
 #include "./ui_mainwidget.h"
+#include "roomnamedialog.h" //ui_dialog 추가
 
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
@@ -7,17 +8,13 @@ MainWidget::MainWidget(QWidget *parent)
     , client(new WTCPClient)
 //    , client(new LTCPClient)
     , receiveThread(new ReceiveThread(this->client))
+    , timer(new QTimer(this))
     , myRoomMemberCount(-1)
 {
     ui->setupUi(this);
-//    RoomNameDialog -> setModal(true);
-//    RoomNameDialog -> exec();
-
-    this->timer = new QTimer(this);
-    this->label = new OpenCVImageLabel(this);
 
     if (this->client->connectServer())
-//    if (this->client->connectServer("192.168.0.41"))
+//    if (this->client->connectServer("10.10.20.126"))
     {
         qDebug() << "connected";
         ui->stackedWidget->setCurrentIndex(0);//###
@@ -48,8 +45,6 @@ MainWidget::MainWidget(QWidget *parent)
         connect(ui->edt_chatPro, SIGNAL(returnPressed()),this,SLOT(sendChat()));//##
         //connect(ui->btn_endLecture, SIGNAL(clicked(bool)), this, SLOT(closeLecture()));//####
         this->receiveThread->start();
-        this->client->sendReqRoomList();
-
     }
     else
     {
@@ -60,7 +55,6 @@ MainWidget::MainWidget(QWidget *parent)
 MainWidget::~MainWidget()
 {
     delete timer;
-    delete label;
     delete client;
     this->cap.release();
     delete ui;
@@ -226,6 +220,7 @@ void MainWidget::disconnectServer()
 void MainWidget::responseImage(ResImage * resImage)
 {
     QLabel * current = NULL;
+    QString state_ment = NULL;
 
     switch(resImage->number())
     {
@@ -246,6 +241,30 @@ void MainWidget::responseImage(ResImage * resImage)
         break;
     }
 
+    switch(resImage->state())
+    {
+    case 1:
+        state_ment = "NoFace";
+        break;
+    case 2:
+        state_ment = "Close";
+        break;
+    case 3:
+        state_ment = "NoLook";
+        break;
+    }
+
+
+    if (state_ment != NULL)
+    {
+        cv::Mat temp;
+        QDate date = QDate::currentDate();
+        QTime time = QTime::currentTime();
+        cv::cvtColor(resImage->img(), temp, cv::COLOR_BGR2RGB);
+        QString currentDay = QString::number(date.year()) +"-"+ QString::number(date.month()) +"-"+ QString::number(date.day());
+        QString currentTime = QString::number(time.hour()) +"-"+ QString::number(time.minute()) +"-"+ QString::number(time.second());
+        cv::imwrite(resImage->userNum() + "_" + state_ment.toStdString() + "_" + currentDay.toStdString() + "_" + currentTime.toStdString() + ".jpg", temp);
+    }
     if (current != NULL)
         this->setOpenCVImage(current, resImage->img());
 }
