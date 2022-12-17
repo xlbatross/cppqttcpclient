@@ -29,10 +29,14 @@ public:
 
     const cv::Mat & img();
     const int number();
+    const std::string userNum(); //가히
+    const int state (); //가히
 
 private:
     cv::Mat _img;
     int _number;
+    std::string _userNum; //가히
+    int _state;
 };
 
 class ResRoomList : public Response

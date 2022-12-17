@@ -7,12 +7,12 @@
 #include <QTimer>
 #include <QDebug>
 #include <QMessageBox>
-#include "opencvimagelabel.h"
+#include <QTime>
+#include <QDateTime>
 #include "wtcpclient.h"
 //#include "ltcpclient.h"
 #include "receivethread.h"
 #include "response.h"
-#include "roomnamedialog.h" //ui_dialog 추가
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWidget;};
@@ -32,7 +32,7 @@ private:
     Ui::MainWidget *ui;//
 
     WTCPClient * client;
-//    LTCPClient * client;s
+//    LTCPClient * client;
 
     ReceiveThread * receiveThread;
 
@@ -40,7 +40,6 @@ private:
     cv::Mat img;
 
     QTimer * timer;
-    OpenCVImageLabel * label;
 
     // roomList
     std::vector<std::string> ipList;
