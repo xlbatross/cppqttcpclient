@@ -26,103 +26,6 @@
     <number>0</number>
    </property>
    <widget class="QWidget" name="loginPage">
-    <widget class="QPushButton" name="btn_faceLogin">
-     <property name="geometry">
-      <rect>
-       <x>690</x>
-       <y>230</y>
-       <width>91</width>
-       <height>111</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Face Login</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_7">
-     <property name="geometry">
-      <rect>
-       <x>460</x>
-       <y>230</y>
-       <width>51</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;ID&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="edt_loginNum">
-     <property name="geometry">
-      <rect>
-       <x>520</x>
-       <y>230</y>
-       <width>161</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="placeholderText">
-      <string>학번입력</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_8">
-     <property name="geometry">
-      <rect>
-       <x>460</x>
-       <y>270</y>
-       <width>51</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;PW&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btn_signUp">
-     <property name="geometry">
-      <rect>
-       <x>520</x>
-       <y>310</y>
-       <width>71</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>회원가입</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btn_login">
-     <property name="geometry">
-      <rect>
-       <x>610</x>
-       <y>310</y>
-       <width>71</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font: 10pt &quot;맑은 고딕&quot;;</string>
-     </property>
-     <property name="text">
-      <string>Login</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="edt_loginPw">
-     <property name="geometry">
-      <rect>
-       <x>520</x>
-       <y>270</y>
-       <width>161</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="echoMode">
-      <enum>QLineEdit::Password</enum>
-     </property>
-     <property name="placeholderText">
-      <string>비밀번호 입력</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_9">
      <property name="geometry">
       <rect>
@@ -133,7 +36,48 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(249, 249, 249);</string>
+      <string notr="true">background: transparent;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lb_loginImg">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>791</width>
+       <height>451</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255, 255, 255,0);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../Users/aaa/Downloads/build-cppqttcpclient-Desktop_Qt_5_15_2_MinGW_64_bit-Debug/picture/mainImg.jpg</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_12">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>190</y>
+       <width>351</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255, 255, 255, 0.5);</string>
      </property>
      <property name="text">
       <string/>
@@ -142,8 +86,8 @@
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
-       <x>490</x>
-       <y>120</y>
+       <x>70</x>
+       <y>200</y>
        <width>291</width>
        <height>91</height>
       </rect>
@@ -155,35 +99,114 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:700; color:#0000cb;&quot;&gt;강의 집중 &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:700; color:#0000cb;&quot;&gt;관리 프로그램&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
-    <widget class="QLabel" name="lb_loginImg">
+    <widget class="QLabel" name="label_8">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>451</width>
-       <height>431</height>
+       <x>40</x>
+       <y>350</y>
+       <width>51</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap>../Users/aaa/Downloads/build-cppqttcpclient-Desktop_Qt_5_15_2_MinGW_64_bit-Debug/picture/lecture.jpg</pixmap>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;PW&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="btn_login">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>390</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 10pt &quot;맑은 고딕&quot;;</string>
+     </property>
+     <property name="text">
+      <string>Login</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_signUp">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>390</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>회원가입</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>310</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;ID&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="edt_loginNum">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>310</y>
+       <width>161</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>학번입력</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="edt_loginPw">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>350</y>
+       <width>161</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="echoMode">
+      <enum>QLineEdit::Password</enum>
+     </property>
+     <property name="placeholderText">
+      <string>비밀번호 입력</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_faceLogin">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>310</y>
+       <width>91</width>
+       <height>111</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Face Login</string>
+     </property>
+    </widget>
+    <zorder>lb_loginImg</zorder>
     <zorder>label_9</zorder>
-    <zorder>btn_faceLogin</zorder>
+    <zorder>label_12</zorder>
+    <zorder>label</zorder>
+    <zorder>label_8</zorder>
+    <zorder>btn_login</zorder>
+    <zorder>btn_signUp</zorder>
     <zorder>label_7</zorder>
     <zorder>edt_loginNum</zorder>
-    <zorder>label_8</zorder>
-    <zorder>btn_signUp</zorder>
-    <zorder>btn_login</zorder>
     <zorder>edt_loginPw</zorder>
-    <zorder>label</zorder>
-    <zorder>lb_loginImg</zorder>
+    <zorder>btn_faceLogin</zorder>
    </widget>
    <widget class="QWidget" name="page_2">
     <widget class="QPushButton" name="btn_backFromSignUp">
@@ -233,6 +256,9 @@
        <width>221</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="echoMode">
+      <enum>QLineEdit::Password</enum>
      </property>
      <property name="placeholderText">
       <string>비밀번호를 입력해주세요</string>

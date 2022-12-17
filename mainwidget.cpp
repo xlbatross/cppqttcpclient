@@ -13,8 +13,9 @@ MainWidget::MainWidget(QWidget *parent)
     , myRoomMemberCount(-1)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Lecture Program");
     QPixmap login_img;
-    login_img.load("./picture/lecture.jpg");
+    login_img.load("./picture/mainImg.jpg");
     ui->lb_loginImg->setPixmap(login_img);
     ui->lb_loginImg->setScaledContents(true);
 
@@ -104,6 +105,7 @@ void MainWidget::readCapture()
 void MainWidget::viewMakeRoomMessageBox()
 {
     RoomNameDialog *dialog = new RoomNameDialog;
+    dialog->setWindowTitle("방만들기!");
     int ret = dialog->exec();
     if (ret == QDialog::Accepted)
     {
