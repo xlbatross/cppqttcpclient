@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>793</width>
-    <height>462</height>
+    <height>452</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,14 +23,14 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="loginPage">
     <widget class="QPushButton" name="btn_faceLogin">
      <property name="geometry">
       <rect>
-       <x>460</x>
-       <y>160</y>
+       <x>680</x>
+       <y>300</y>
        <width>91</width>
        <height>111</height>
       </rect>
@@ -42,8 +42,8 @@
     <widget class="QLabel" name="label_7">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>160</y>
+       <x>450</x>
+       <y>300</y>
        <width>51</width>
        <height>31</height>
       </rect>
@@ -55,8 +55,8 @@
     <widget class="QLineEdit" name="edt_loginNum">
      <property name="geometry">
       <rect>
-       <x>290</x>
-       <y>160</y>
+       <x>510</x>
+       <y>300</y>
        <width>161</width>
        <height>31</height>
       </rect>
@@ -68,8 +68,8 @@
     <widget class="QLabel" name="label_8">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>200</y>
+       <x>450</x>
+       <y>340</y>
        <width>51</width>
        <height>31</height>
       </rect>
@@ -81,8 +81,8 @@
     <widget class="QPushButton" name="btn_signUp">
      <property name="geometry">
       <rect>
-       <x>290</x>
-       <y>240</y>
+       <x>510</x>
+       <y>380</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -94,8 +94,8 @@
     <widget class="QPushButton" name="btn_login">
      <property name="geometry">
       <rect>
-       <x>380</x>
-       <y>240</y>
+       <x>600</x>
+       <y>380</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -110,8 +110,8 @@
     <widget class="QLineEdit" name="edt_loginPw">
      <property name="geometry">
       <rect>
-       <x>290</x>
-       <y>200</y>
+       <x>510</x>
+       <y>340</y>
        <width>161</width>
        <height>31</height>
       </rect>
@@ -123,6 +123,64 @@
       <string>비밀번호 입력</string>
      </property>
     </widget>
+    <widget class="QLabel" name="bg_loginImage">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>791</width>
+       <height>461</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(249, 249, 249);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>490</x>
+       <y>150</y>
+       <width>291</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:26pt; font-weight:700; color:#0000cb;&quot;&gt;강의 집중 &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:26pt; font-weight:700; color:#0000cb;&quot;&gt;관리 프로그램&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="loginImage">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>501</width>
+       <height>271</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>picture/login_bg.jpg</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <zorder>bg_loginImage</zorder>
+    <zorder>btn_faceLogin</zorder>
+    <zorder>label_7</zorder>
+    <zorder>edt_loginNum</zorder>
+    <zorder>label_8</zorder>
+    <zorder>btn_signUp</zorder>
+    <zorder>btn_login</zorder>
+    <zorder>edt_loginPw</zorder>
+    <zorder>label</zorder>
+    <zorder>loginImage</zorder>
    </widget>
    <widget class="QWidget" name="page_2">
     <widget class="QPushButton" name="btn_backFromSignUp">
@@ -297,6 +355,36 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;구분&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
+    <widget class="QLabel" name="bg_SignUpImage">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>791</width>
+       <height>461</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(249, 249, 249);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <zorder>bg_SignUpImage</zorder>
+    <zorder>btn_backFromSignUp</zorder>
+    <zorder>label_3</zorder>
+    <zorder>btn_picture</zorder>
+    <zorder>edt_signUpPw</zorder>
+    <zorder>edt_signUpNum</zorder>
+    <zorder>lb_checkPicture</zorder>
+    <zorder>btn_submit</zorder>
+    <zorder>edt_signUpName</zorder>
+    <zorder>radio_stuType</zorder>
+    <zorder>radio_proType</zorder>
+    <zorder>label_4</zorder>
+    <zorder>label_5</zorder>
+    <zorder>label_6</zorder>
    </widget>
    <widget class="QWidget" name="page">
     <widget class="QPushButton" name="btn_exitFromRoom">
@@ -393,6 +481,30 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;님 환영합니다!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
+    <widget class="QLabel" name="bg_roomListImage">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>791</width>
+       <height>461</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(249, 249, 249);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <zorder>bg_roomListImage</zorder>
+    <zorder>btn_exitFromRoom</zorder>
+    <zorder>lw_roomList</zorder>
+    <zorder>btn_backFromRoom</zorder>
+    <zorder>btn_refreshList</zorder>
+    <zorder>btn_makeRoom</zorder>
+    <zorder>roomUserName</zorder>
+    <zorder>label_10</zorder>
    </widget>
    <widget class="QWidget" name="page_3">
     <widget class="QTextBrowser" name="tb_chatStu">
@@ -466,6 +578,28 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
+    <widget class="QLabel" name="bg_stuImage">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>791</width>
+       <height>461</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(249, 249, 249);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <zorder>bg_stuImage</zorder>
+    <zorder>tb_chatStu</zorder>
+    <zorder>gridLayoutWidget</zorder>
+    <zorder>edt_chatStu</zorder>
+    <zorder>btn_backFromStudent</zorder>
+    <zorder>lb_myImgFromStu</zorder>
    </widget>
    <widget class="QWidget" name="page_4">
     <widget class="QLineEdit" name="edt_chatPro">
@@ -569,6 +703,28 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
+    <widget class="QLabel" name="bg_proImage">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>791</width>
+       <height>461</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(249, 249, 249);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <zorder>bg_proImage</zorder>
+    <zorder>edt_chatPro</zorder>
+    <zorder>btn_endLecture</zorder>
+    <zorder>tb_chatPro</zorder>
+    <zorder>gridLayoutWidget_2</zorder>
+    <zorder>lb_myImgFromPro</zorder>
    </widget>
   </widget>
  </widget>

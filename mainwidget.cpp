@@ -1,6 +1,7 @@
 #include "mainwidget.h"
 #include "./ui_mainwidget.h"
 #include "roomnamedialog.h" //ui_dialog 추가
+#include <QPixmap>
 
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
@@ -12,9 +13,11 @@ MainWidget::MainWidget(QWidget *parent)
     , myRoomMemberCount(-1)
 {
     ui->setupUi(this);
+    QPixmap login_bg("/Users/C/cppqttcpclient/picture/login_bg.jpg");
+    ui->loginImage->setPixmap(login_bg);
 
     if (this->client->connectServer())
-//    if (this->client->connectServer("10.10.20.126"))
+//    if (this->client->connectServer("10.10.20.116"))
     {
         qDebug() << "connected";
         ui->stackedWidget->setCurrentIndex(0);//###
@@ -168,6 +171,8 @@ void MainWidget::sendChat()
 //###
 void MainWidget::gotoSignUp()
 {
+    ui->edt_loginNum->clear();
+    ui->edt_loginPw->clear();
     this->timer->stop();
     ui->edt_signUpName->clear();
     ui->edt_signUpNum->clear();
