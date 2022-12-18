@@ -1,6 +1,7 @@
 #include "mainwidget.h"
 #include "./ui_mainwidget.h"
 #include "roomnamedialog.h" //ui_dialog 추가
+#include <QPixmap>
 
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
@@ -12,6 +13,17 @@ MainWidget::MainWidget(QWidget *parent)
     , myRoomMemberCount(-1)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Lecture Program");
+    QPixmap login_img;
+    login_img.load("./picture/mainImg.jpg");
+    ui->lb_loginImg->setPixmap(login_img);
+    ui->lb_loginImg->setScaledContents(true);
+
+    QPixmap signUp_img;
+    signUp_img.load("./picture/joinImg.png");
+    ui->lb_signUpImg->setPixmap(signUp_img);
+    ui->lb_signUpImg->setScaledContents(true);
+
 
 //    if (this->client->connectServer())
     if (this->client->connectServer("10.10.20.97"))
@@ -93,6 +105,7 @@ void MainWidget::readCapture()
 void MainWidget::viewMakeRoomMessageBox()
 {
     RoomNameDialog *dialog = new RoomNameDialog;
+    dialog->setWindowTitle("방만들기!");
     int ret = dialog->exec();
     if (ret == QDialog::Accepted)
     {
@@ -168,6 +181,8 @@ void MainWidget::sendChat()
 //###
 void MainWidget::gotoSignUp()
 {
+    ui->edt_loginNum->clear();
+    ui->edt_loginPw->clear();
     this->timer->stop();
     ui->edt_signUpName->clear();
     ui->edt_signUpNum->clear();
