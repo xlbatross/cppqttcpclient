@@ -13,7 +13,6 @@ MainWidget::MainWidget(QWidget *parent)
     , myRoomMemberCount(-1)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Lecture Program");
     QPixmap login_img;
     login_img.load("./picture/mainImg.jpg");
     ui->lb_loginImg->setPixmap(login_img);
@@ -193,6 +192,10 @@ void MainWidget::gotoSignUp()
 void MainWidget::gotoMyRoom()
 {
     this->timer->start(33);
+    ui->lb_stuImage1->clear();
+    ui->lb_stuImage2->clear();
+    ui->lb_stuImage3->clear();
+    ui->lb_stuImage4->clear();
     ui->stackedWidget->setCurrentIndex(4);
     this->nowPage = ui->stackedWidget->currentIndex();
 }
@@ -200,6 +203,7 @@ void MainWidget::gotoMyRoom()
 void MainWidget::gotoOtherRoom()
 {
     this->timer->start(33);
+    ui->lb_proImage->clear();
     ui->stackedWidget->setCurrentIndex(3);
     this->nowPage = ui->stackedWidget->currentIndex();
 }
